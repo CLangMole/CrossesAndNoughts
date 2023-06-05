@@ -15,12 +15,14 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         RecordsBackButton.Click += (sender, e) => GoBack(RecordsLabel, RecordsBackButton);
-        LoginBackButton.Click += (sender, e) => GoBack(LoginLabel, LoginBackButton);
+        LoginBackButton.Click += (sender, e) => GoBack(LoginLabel, LoginBackButton, StartGameButton, LoginTextBox);
     }
 
     private void StartButton_Click(object sender, RoutedEventArgs e)
     {
-        GoNext(LoginLabel, LoginBackButton)
+        GoNext(LoginLabel, LoginBackButton, StartGameButton, LoginTextBox);
+
+
     }
 
     private void RecordsButton_Click(object sender, RoutedEventArgs e)
