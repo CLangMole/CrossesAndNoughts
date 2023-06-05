@@ -14,20 +14,20 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        RecordsBackButton.Click += (sender, e) => GoBack(RecordsLabel, RecordsBackButton);
-        LoginBackButton.Click += (sender, e) => GoBack(LoginLabel, LoginBackButton, StartGameButton, LoginTextBox);
+        RecordsBackButton.Click += (sender, e) => GoBack(RecordsLabel);
+        LoginBackButton.Click += (sender, e) => GoBack(LoginLabel);
     }
 
     private void StartButton_Click(object sender, RoutedEventArgs e)
     {
-        GoNext(LoginLabel, LoginBackButton, StartGameButton, LoginTextBox);
+        GoNext(LoginLabel);
 
 
     }
 
     private void RecordsButton_Click(object sender, RoutedEventArgs e)
     {
-        GoNext(RecordsBackButton, RecordsLabel);
+        GoNext(RecordsLabel);
 
         using (ApplicationContext dataBase = new ApplicationContext())
         {
