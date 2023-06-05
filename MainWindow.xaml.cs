@@ -27,14 +27,6 @@ public partial class MainWindow : Window
 
     private void RecordsButton_Click(object sender, RoutedEventArgs e)
     {
-        //RecordsLabel.Visibility = Visibility.Visible;
-        //RecordsBackButton.Visibility = Visibility.Visible;
-        //foreach (UIElement control in MainGrid.Children)
-        //{
-        //    if (control == RecordsLabel || control == RecordsBackButton) continue;
-        //    control.Visibility = Visibility.Collapsed;
-        //}
-
         GoNext(RecordsBackButton, RecordsLabel);
 
         using (ApplicationContext dataBase = new ApplicationContext())
