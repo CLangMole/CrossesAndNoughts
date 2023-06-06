@@ -29,10 +29,9 @@ public partial class MainWindow : Window
     {
         GoNext(RecordsLabel);
 
-        using (ApplicationContext dataBase = new ApplicationContext())
+        using (IRecord records = new UserRecordsProxy())
         {
-            var records = dataBase.Records.ToList();
-            RecordsTable.ItemsSource = records;
+            RecordsTable.ItemsSource = records.GetRecords();
         }
     }
 
