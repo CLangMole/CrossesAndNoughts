@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\App.xaml
-11407045341
+2396499192
 
-7-1295175299
+8-265614078
 222-2092574512
-MainWindow.xaml;
+GameWindow.xaml;MainWindow.xaml;
 
-False
+True
 

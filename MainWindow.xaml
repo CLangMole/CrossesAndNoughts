@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CrossesAndNoughts"
         mc:Ignorable="d"
         Title="Crosses and Noughts" Height="450" Width="800" Background="LightBlue" MinHeight="430" MinWidth ="690">
-    <Grid x:Name="MainGrid">
+    <Grid x:Name="LayoutGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="*"/>
@@ -107,4 +107,5 @@
             </Label.Content>
         </Label>
     </Grid>
-</Window>    
+</Window>
+    
