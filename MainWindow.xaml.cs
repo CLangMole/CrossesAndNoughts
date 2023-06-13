@@ -19,7 +19,7 @@ public partial class MainWindow : Window
         _gameWindow.Hide();
 
         SoundPlayer startSoundPlayer = new SoundPlayer(@"C:\Users\probn\Fiverr\FiverrAssets\Poofy Reel.wav");
-        startSoundPlayer.Play();
+        startSoundPlayer.PlayLooping();
 
         Closed += (sender, e) => Application.Current.Shutdown();
         RecordsBackButton.Click += (sender, e) => GoBack(RecordsLabel);
@@ -90,6 +90,6 @@ public partial class MainWindow : Window
         _gameWindow.Show();
 
         SoundPlayer mainSoundPlayer = new SoundPlayer(@"C:\Users\probn\Fiverr\FiverrAssets\music-for-puzzle-game-146738.wav");
-        mainSoundPlayer.Play();
+        mainSoundPlayer.PlayLooping();
     }
 }
