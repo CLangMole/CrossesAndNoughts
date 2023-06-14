@@ -63,3 +63,5 @@ C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Debug\net6.0
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Debug\net6.0-windows\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Debug\net6.0-windows\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\CrossesAndNoughts.csproj.CopyComplete
+C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\GameWindow.g.cs
+C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\GameWindow.baml

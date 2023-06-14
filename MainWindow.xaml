@@ -6,7 +6,15 @@
         xmlns:local="clr-namespace:CrossesAndNoughts"
         mc:Ignorable="d"
         Title="Crosses and Noughts" Height="450" Width="800" Background="LightBlue" MinHeight="430" MinWidth ="690">
-    <Grid x:Name="MainGrid">
+    <Window.Resources>
+        <Style x:Key="ButtonStyle">
+            <Setter Property="ItemsControl.FontFamily" Value="Impact" />
+            <Setter Property="ItemsControl.Background" Value="CornflowerBlue" />
+            <Setter Property="ItemsControl.Foreground" Value="DarkSlateBlue" />
+            <Setter Property="ItemsControl.FontSize" Value="30" />
+        </Style>
+    </Window.Resources>
+    <Grid x:Name="LayoutGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="*"/>
@@ -18,33 +26,65 @@
             <RowDefinition Height="75"/>
         </Grid.RowDefinitions>
 
-        <Button x:Name="StartButton" Grid.Column="1" Grid.Row="2" Margin="10" Content="Start Game" FontSize="30" FontFamily="Impact" Background="CornflowerBlue" Foreground="DarkSlateBlue" 
+        <Button x:Name="StartButton" Grid.Column="1" Grid.Row="2" Margin="10" Content="Start Game" Style="{StaticResource ButtonStyle}" 
                     Click="StartButton_Click" Cursor="Hand"/>
 
-        <Button x:Name="QuitButton" Grid.Column="0" Grid.Row="2" Margin="10" Content="Quit"  FontSize="30" FontFamily="Impact" Background="CornflowerBlue" Foreground="DarkSlateBlue"
+        <Button x:Name="QuitButton" Grid.Column="0" Grid.Row="2" Margin="10" Content="Quit" Style="{StaticResource ButtonStyle}" 
                     Click="QuitButton_Click" Cursor="Hand"/>
 
-        <Button x:Name="RecordsButton" Grid.Column="2" Grid.Row="2" Margin="10" Content="Records" FontSize="30" FontFamily="Impact" Background="CornflowerBlue" Foreground="DarkSlateBlue"
+        <Button x:Name="RecordsButton" Grid.Column="2" Grid.Row="2" Margin="10" Content="Records" Style="{StaticResource ButtonStyle}" 
                     Click="RecordsButton_Click" Cursor="Hand"/>
 
         <TextBlock x:Name="Title" Grid.Row="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="5" Text="Crosses and Noughts" FontFamily="Impact" FontSize="50" Foreground="DarkSlateBlue" TextAlignment="Center"/>
 
-        <Image x:Name="TitleImage" Source="D:\Downloads\R5.png" Grid.Column="1" Grid.Row="1" RenderTransformOrigin="0.514,0.535"/>
+        <Image x:Name="TitleImage" Source="D:\Downloads\R5.png" Grid.Column="1" Grid.Row="1"/>
 
-        <Label Visibility="Collapsed" x:Name="RecordsLabel" Background="LightBlue" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" x:Uid="CollapsedAtStart">
+        <Label Visibility="Collapsed" x:Name="RecordsLabel" Background="LightBlue" Grid.Column="0" Grid.Row="0" Width="800" Height="450" Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" x:Uid="CollapsedAtStart">
             <Label.Content>
-                <DataGrid x:Name="RecordsTable" IsReadOnly="True" Background="SkyBlue" Foreground="DarkSlateBlue" RowBackground="Azure" Width="auto" Height="auto"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="400"/>
+                        <ColumnDefinition Width="200"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="112.5"/>
+                        <RowDefinition Height="225"/>
+                        <RowDefinition Height="112.5"/>
+                    </Grid.RowDefinitions>
+
+                    <DataGrid x:Name="RecordsTable" Grid.Column="1" Grid.Row="1" IsReadOnly="True" Background="SkyBlue" Foreground="DarkSlateBlue" RowBackground="Azure"/>
+
+                    <Button x:Name="RecordsBackButton" Grid.Column="1" Grid.Row="2" Margin="100, 20, 100, 40" Content="Back" Style="{StaticResource ButtonStyle}"  Cursor="Hand"/>
+                </Grid>
             </Label.Content>
         </Label>
 
-        <Button Visibility="Collapsed" x:Name="RecordsBackButton" Grid.Column="1" Grid.Row="2" Margin="10" Content="Back" FontSize="30" FontFamily="Impact" Background="CornflowerBlue" Foreground="DarkSlateBlue" Cursor="Hand" x:Uid="CollapsedAtStart" />
-
-        <Label Visibility="Collapsed" x:Name="LoginLabel" Background="Azure" HorizontalAlignment="Center" VerticalAlignment="Center" Height="284" Width="600" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="3" x:Uid="CollapsedAtStart">
+        <Label Visibility="Collapsed" x:Name="LoginLabel" Background="Azure" HorizontalAlignment="Center" VerticalAlignment="Center" Height="284" Width="600" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="3" BorderBrush="DarkSlateBlue" BorderThickness="2" x:Uid="CollapsedAtStart">
             <Label.Content>
-                <TextBlock Text="Enter your username:" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top" Width="600" FontSize="20" FontFamily="Impact" Foreground="DarkSlateBlue"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="150"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="124"/>
+                        <RowDefinition Height="80"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Enter your username:" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" FontFamily="Impact" Foreground="DarkSlateBlue" Grid.Column="1" Grid.Row="0"/>
+
+                    <TextBox x:Name="LoginTextBox" Grid.Row="1" FontSize="30" BorderBrush="DarkSlateBlue" BorderThickness="2" VerticalAlignment="Center" TextAlignment="Center" Height="60" Width="400" Grid.ColumnSpan="3" Margin="10" Cursor="IBeam"/>
+
+                    <Button x:Name="LoginBackButton" Grid.Row="2" Grid.Column="0" Margin="0, 0, 180, 10" VerticalAlignment="Center" Content="Back" Style="{StaticResource ButtonStyle}" Cursor="Hand" Grid.ColumnSpan="2" Width="270" Height="60"/>
+
+                    <Button x:Name="StartGameButton" Grid.Row="2" Grid.Column="1" Margin="165.5, 0, 14.5, 10" Content="Start Game" Style="{StaticResource ButtonStyle}" Cursor="Hand" Grid.ColumnSpan="2" Width="270" Height="60"/>
+                </Grid>
             </Label.Content>
         </Label>
-
-        <Button Visibility="Collapsed" x:Name="LoginBackButton" Grid.Column="1" Grid.Row="2" Margin="10" Content="Back" FontSize="30" FontFamily="Impact" Background="CornflowerBlue" Foreground="DarkSlateBlue" Cursor="Hand" x:Uid="CollapsedAtStart"/>
     </Grid>
-</Window>    
+</Window>
+    
