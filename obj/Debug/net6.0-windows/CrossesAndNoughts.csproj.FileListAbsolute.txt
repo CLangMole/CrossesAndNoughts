@@ -4,11 +4,9 @@ C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Debug\net6.0
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Debug\net6.0-windows\CrossesAndNoughts.dll
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Debug\net6.0-windows\CrossesAndNoughts.pdb
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\CrossesAndNoughts.csproj.AssemblyReference.cache
-C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\MainWindow.g.cs
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\App.g.cs
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\CrossesAndNoughts_MarkupCompile.cache
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\CrossesAndNoughts_MarkupCompile.lref
-C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\MainWindow.baml
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\CrossesAndNoughts.g.resources
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\CrossesAndNoughts.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\CrossesAndNoughts.AssemblyInfoInputs.cache
@@ -63,5 +61,7 @@ C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Debug\net6.0
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Debug\net6.0-windows\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Debug\net6.0-windows\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\CrossesAndNoughts.csproj.CopyComplete
-C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\GameWindow.g.cs
-C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\GameWindow.baml
+C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\View\GameWindow.g.cs
+C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\View\GameWindow.baml
+C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\View\StartWindow.g.cs
+C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Debug\net6.0-windows\View\StartWindow.baml
