@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 
 namespace CrossesAndNoughts;
 
@@ -33,7 +36,6 @@ class UserRecordsCollection : IRecord
     {
         _dataBase = new ApplicationContext();
     }
-
     public UserRecord GetRecord(int number)
     {
         return _dataBase.Records.FirstOrDefault(x => x.Place == number);
