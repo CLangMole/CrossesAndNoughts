@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using CrossesAndNoughts.View;
+using CrossesAndNoughts.ViewModel;
 
 namespace CrossesAndNoughts;
 
@@ -16,6 +17,7 @@ public class ApplicationHost
                 services.AddSingleton<App>();
                 services.AddSingleton<StartWindow>();
                 services.AddSingleton<GameWindow>();
+                services.AddSingleton<DBViewModel>();
             })
             .Build();
         var app = host.Services.GetService<App>();
