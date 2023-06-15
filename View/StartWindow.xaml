@@ -54,7 +54,7 @@
                         <RowDefinition Height="112.5"/>
                     </Grid.RowDefinitions>
 
-                    <DataGrid x:Name="RecordsTable" Grid.Column="1" Grid.Row="1" IsReadOnly="True" Background="SkyBlue" Foreground="DarkSlateBlue" RowBackground="Azure" ItemsSource="{}"/>
+                    <DataGrid x:Name="RecordsTable" Grid.Column="1" Grid.Row="1" IsReadOnly="True" Background="SkyBlue" Foreground="DarkSlateBlue" RowBackground="Azure"/>
 
                     <Button x:Name="RecordsBackButton" Grid.Column="1" Grid.Row="2" Margin="100, 20, 100, 40" Content="Back" Style="{StaticResource ButtonStyle}"  Cursor="Hand"/>
                 </Grid>

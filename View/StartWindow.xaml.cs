@@ -1,8 +1,6 @@
 ﻿using System.Media;
 using System.Windows;
-using System.Threading;
-using System.Threading.Tasks;
-using CrossesAndNoughts.ViewModel;
+using CrossesAndNoughts;
 
 namespace CrossesAndNoughts.View;
 
@@ -10,11 +8,10 @@ public partial class StartWindow : Window
 {
     private GameWindow _gameWindow;
     private string _userName = string.Empty;
-    public StartWindow(GameWindow gameWindow, DBViewModel viewModel)
+    public StartWindow(GameWindow gameWindow)
     {
         InitializeComponent();
         _gameWindow = gameWindow;
-        DataContext = viewModel;
 
         SoundPlayer startSoundPlayer = new SoundPlayer(@"C:\Users\probn\Fiverr\FiverrAssets\Poofy Reel.wav");
         startSoundPlayer.PlayLooping();
@@ -36,6 +33,7 @@ public partial class StartWindow : Window
     private void RecordsButton_Click(object sender, RoutedEventArgs e)
     {
         GoNext(RecordsLabel);
+
         using (IRecord records = new UserRecordsProxy())
         {
             RecordsTable.ItemsSource = records.GetRecords();
