@@ -6,12 +6,12 @@ namespace CrossesAndNoughts.View;
 
 public partial class StartWindow : Window
 {
-    private GameWindow _gameWindow = new GameWindow();
+    private GameWindow _gameWindow;
     private string _userName = string.Empty;
-    public StartWindow()
+    public StartWindow(GameWindow gameWindow)
     {
         InitializeComponent();
-        _gameWindow.Hide();
+        _gameWindow = gameWindow;
 
         SoundPlayer startSoundPlayer = new SoundPlayer(@"C:\Users\probn\Fiverr\FiverrAssets\Poofy Reel.wav");
         startSoundPlayer.PlayLooping();
