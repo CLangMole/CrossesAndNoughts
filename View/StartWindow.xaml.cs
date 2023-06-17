@@ -9,12 +9,10 @@ public partial class StartWindow : Window
 {
     private GameWindow _gameWindow;
     private string _userName = string.Empty;
-    private DBViewModel _viewModel;
     public StartWindow(GameWindow gameWindow, DBViewModel viewModel)
     {
         InitializeComponent();
-        _viewModel = viewModel;
-        DataContext = _viewModel;
+        DataContext = viewModel;
         _gameWindow = gameWindow;
 
         SoundPlayer startSoundPlayer = new SoundPlayer(@"C:\Users\probn\Fiverr\FiverrAssets\Poofy Reel.wav");

@@ -14,7 +14,12 @@
             <Setter Property="ItemsControl.FontSize" Value="30" />
         </Style>
     </Window.Resources>
-
+    <Window.CommandBindings>
+        <CommandBinding Command="GoNext"
+                        Executed="CommandBinding_Executed"
+                        CanExecute="CommandBinding_CanExecute"/>
+    </Window.CommandBindings>
+    
     <Grid x:Name="LayoutGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250"/>
