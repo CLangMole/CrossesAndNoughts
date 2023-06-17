@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using CrossesAndNoughts;
+using CrossesAndNoughts.Models;
 using CrossesAndNoughts.View;
 using CrossesAndNoughts.ViewModel.Commands;
 
@@ -15,6 +16,10 @@ namespace CrossesAndNoughts.ViewModel
 {
     public class DBViewModel : INotifyPropertyChanged
     {
+        public DelegateCommand GoNextCommand { get => _goNextCommand; }
+
+        private DelegateCommand _goNextCommand = new DelegateCommand(ClickMethods.GoNext);
+
         private List<UserRecord> _records()
         {
             using (IRecord records = new UserRecordsProxy())

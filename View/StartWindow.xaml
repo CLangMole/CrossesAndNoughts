@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CrossesAndNoughts.View"
+        xmlns:local="clr-namespace:CrossesAndNoughts.View" xmlns:viewmodel="clr-namespace:CrossesAndNoughts.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:DBViewModel}"
         mc:Ignorable="d"
         Title="Crosses and Noughts" Height="450" Width="800" Background="LightBlue" MinHeight="430" MinWidth ="690">
     <Window.Resources>
@@ -14,12 +14,7 @@
             <Setter Property="ItemsControl.FontSize" Value="30" />
         </Style>
     </Window.Resources>
-    <Window.CommandBindings>
-        <CommandBinding Command="GoNext"
-                        Executed="CommandBinding_Executed"
-                        CanExecute="CommandBinding_CanExecute"/>
-    </Window.CommandBindings>
-    
+
     <Grid x:Name="LayoutGrid">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="250"/>
@@ -33,7 +28,7 @@
         </Grid.RowDefinitions>
 
         <Button x:Name="StartButton" Grid.Column="1" Grid.Row="2" Margin="10" Content="Start Game" Style="{StaticResource ButtonStyle}" 
-                    Click="StartButton_Click" Cursor="Hand"/>
+                     Cursor="Hand" Command="{Binding Path=GoNextCommand}" CommandParameter="{Binding ElementName=LoginLabel}"/>
 
         <Button x:Name="QuitButton" Grid.Column="0" Grid.Row="2" Margin="10" Content="Quit" Style="{StaticResource ButtonStyle}" 
                     Click="QuitButton_Click" Cursor="Hand"/>
