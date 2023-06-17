@@ -1,5 +1,5 @@
 ﻿CrossesAndNoughts
-
+1.0.0.0
 
 winexe
 C#
@@ -12,9 +12,9 @@ TRACE;DEBUG;NET;NET6_0;NETCOREAPP
 
 2-1769746662
 
-10-2048267911
+10167411763
 2402079873843
 View\GameWindow.xaml;View\StartWindow.xaml;
 
-False
+True
 

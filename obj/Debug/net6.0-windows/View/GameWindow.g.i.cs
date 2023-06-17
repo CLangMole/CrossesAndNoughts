@@ -61,7 +61,7 @@ namespace CrossesAndNoughts.View {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/CrossesAndNoughts;V1.0.0.0;component/view/gamewindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/CrossesAndNoughts;component/view/gamewindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\View\GameWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
