@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,20 +11,23 @@ namespace CrossesAndNoughts.Models;
 
 public static class DependencyObjectExtensoins
 {
-    public static List<T>? GetChildrenOfType<T>(this DependencyObject dependencyObject) where T : DependencyObject
+    public static IEnumerable<T>? GetChildrenOfType<T>([NotNull] this DependencyObject dependencyObject) where T : DependencyObject
     {
-        if (dependencyObject == null) return null;
+        if (dependencyObject == null) throw new ArgumentNullException(nameof(dependencyObject));
+        var queue = new Queue<DependencyObject>(new[] { dependencyObject });
 
-        for(int i = 0; i < VisualTreeHelper.GetChildrenCount(dependencyObject); i++)
+        while (queue.Any())
         {
-            var child = VisualTreeHelper.GetChild(dependencyObject, i);
-            List<T> result = new List<T>(VisualTreeHelper.GetChildrenCount(dependencyObject))
-            {
-                (T)child
-            };
+            var item = queue.Dequeue();
+            var count = VisualTreeHelper.GetChildrenCount(item);
 
-            if (result != null && result.Count != 0) return result;
+            for (int i = 0; i < count; i++)
+            {
+                var child = VisualTreeHelper.GetChild(item, i);
+                if (child is T children) yield return children;
+
+                queue.Enqueue(child);
+            }
         }
-        return null;
     }
 }
