@@ -1,21 +1,20 @@
 ﻿using System.Media;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using CrossesAndNoughts;
+using CrossesAndNoughts.Models;
 using CrossesAndNoughts.ViewModel;
 
 namespace CrossesAndNoughts.View;
 
 public partial class StartWindow : Window
 {
-    private GameWindow _gameWindow;
-    //private string _userName = string.Empty;
-    public StartWindow(GameWindow gameWindow, DBViewModel viewModel)
+    public StartWindow(DBViewModel viewModel)
     {
         InitializeComponent();
         DataContext = viewModel;
-        _gameWindow = gameWindow;
-
+        
         //SoundPlayer startSoundPlayer = new SoundPlayer(@"C:\Users\probn\Fiverr\FiverrAssets\Poofy Reel.wav");
         //startSoundPlayer.PlayLooping();
 

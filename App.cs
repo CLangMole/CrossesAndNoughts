@@ -1,4 +1,5 @@
 ﻿using CrossesAndNoughts.View;
+using CrossesAndNoughts.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,8 @@ public class App : Application
     {
         _startWindow = startWindow;
         _gameWindow = gameWindow;
+        DBViewModel.StartWindow = _startWindow;
+        DBViewModel.GameWindow = _gameWindow;
     }
 
     protected override void OnStartup(StartupEventArgs e)

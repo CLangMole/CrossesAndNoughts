@@ -17,35 +17,45 @@ public static class ClickMethods
 {
     public static void GoNext(object? parameter)
     {
-        UIElement? nextControl = parameter as UIElement;
-        if (nextControl == null) throw new ArgumentNullException(nameof(parameter));
+        var nextControl = parameter as UIElement;
+
+        if (nextControl is null)
+            throw new ArgumentNullException(nameof(parameter));
         nextControl.Visibility = Visibility.Visible;
 
-        DependencyObject parent = VisualTreeHelper.GetParent(nextControl);
-        if (VisualTreeHelper.GetChildrenCount(parent) == 0) throw new IndexOutOfRangeException();
-        var childrenControls = parent.GetChildrenOfType<UIElement>();
-        if (childrenControls == null) throw new NullReferenceException();
+        var parent = VisualTreeHelper.GetParent(nextControl);
+        if (VisualTreeHelper.GetChildrenCount(parent) == 0)
+            throw new IndexOutOfRangeException();
+
+        var childrenControls = parent.GetChildrenOfType<UIElement>()?.Where(x => x != nextControl && x.Uid != "CollapsedAtStart");
+
+        if (childrenControls is null)
+            throw new NullReferenceException();
+
         foreach (UIElement childrenControl in childrenControls)
         {
-            if (childrenControl == nextControl || childrenControl.Uid == "CollapsedAtStart") continue;
             childrenControl.Visibility = Visibility.Collapsed;
         }
     }
 
     public static void GoBack(object? parameter)
     {
-        UIElement? currentControl = parameter as UIElement;
-        if (currentControl == null) throw new ArgumentNullException(nameof(parameter));
+        var currentControl = parameter as UIElement;
+
+        if (currentControl is null)
+            throw new ArgumentNullException(nameof(parameter));
         currentControl.Visibility = Visibility.Collapsed;
 
-        DependencyObject parent = VisualTreeHelper.GetParent(currentControl);
-        if (VisualTreeHelper.GetChildrenCount(parent) == 0) throw new IndexOutOfRangeException();
-        var childrenControls = parent.GetChildrenOfType<UIElement>();
-        if (childrenControls == null) return;
+        var parent = VisualTreeHelper.GetParent(currentControl);
+        if (VisualTreeHelper.GetChildrenCount(parent) == 0)
+            throw new IndexOutOfRangeException();
+
+        var childrenControls = parent.GetChildrenOfType<UIElement>()?.Where(x => x != currentControl && x.Uid != "CollapsedAtStart");
+        if (childrenControls is null) 
+            throw new NullReferenceException();
 
         foreach (UIElement childrenControl in childrenControls)
         {
-            if (childrenControl == currentControl || childrenControl.Uid == "CollapsedAtStart") continue;
             childrenControl.Visibility = Visibility.Visible;
         }
     }

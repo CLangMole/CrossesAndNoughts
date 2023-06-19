@@ -22,24 +22,23 @@ namespace CrossesAndNoughts.ViewModel
         public DelegateCommand QuitCommand { get => _quitCommand; }
         public DelegateCommand StartGameCommand { get => _startGameCommand; }
 
+        public static StartWindow? StartWindow { get; set; }
+        public static GameWindow? GameWindow { get; set; }
+
         #region
-        private DelegateCommand _goNextCommand = new DelegateCommand(ClickMethods.GoNext);
-        private DelegateCommand _goBackCommand = new DelegateCommand(ClickMethods.GoBack);
-        private DelegateCommand _quitCommand = new DelegateCommand(ClickMethods.Quit);
-        private DelegateCommand _startGameCommand = new DelegateCommand(StartGame);
+        private DelegateCommand _goNextCommand = new(ClickMethods.GoNext);
+        private DelegateCommand _goBackCommand = new(ClickMethods.GoBack);
+        private DelegateCommand _quitCommand = new(ClickMethods.Quit);
+        private DelegateCommand _startGameCommand = new(StartGame);
 
         #endregion
 
-        private static SoundPlayer _gameSound = new SoundPlayer(@"C:\Users\probn\Fiverr\FiverrAssets\music-for-puzzle-game-146738.wav");
-        private static SoundPlayer _startSound = new SoundPlayer(@"C:\Users\probn\Fiverr\FiverrAssets\Poofy Reel.wav");
+        private static SoundPlayer _gameSound = new(@"C:\Users\probn\Fiverr\FiverrAssets\music-for-puzzle-game-146738.wav");
+        private static SoundPlayer _startSound = new(@"C:\Users\probn\Fiverr\FiverrAssets\Poofy Reel.wav");
 
-        private static StartWindow? _startWindow;
-        private static GameWindow? _gameWindow;
 
-        public DBViewModel(StartWindow startWindow, GameWindow gameWindow)
+        public DBViewModel()
         {
-            _startWindow = startWindow;
-            _gameWindow = gameWindow;
             _startSound.PlayLooping();
         }
 
@@ -74,10 +73,10 @@ namespace CrossesAndNoughts.ViewModel
 
         private static void StartGame(object? parameter)
         {
-            _startWindow?.Hide();
+            StartWindow?.Hide();
             _startSound.Stop();
 
-            _gameWindow?.Show();
+            GameWindow?.Show();
 
             _gameSound.PlayLooping();
         }

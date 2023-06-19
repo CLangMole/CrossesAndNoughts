@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,6 @@ public class DelegateCommand : ICommand
     private readonly Action<object?> _execute;
 
     public DelegateCommand(Action<object?> execute) : this(null, execute) { }
-
     public DelegateCommand(Predicate<object?> canExecute, Action<object?> execute)
     {
         _canExecute = canExecute;
