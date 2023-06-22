@@ -20,17 +20,24 @@ public static class ClickMethods
         var nextControl = parameter as UIElement;
 
         if (nextControl is null)
+        {
             throw new ArgumentNullException(nameof(parameter));
-        nextControl.Visibility = Visibility.Visible;
+        }
 
+        nextControl.Visibility = Visibility.Visible;
         var parent = VisualTreeHelper.GetParent(nextControl);
+
         if (VisualTreeHelper.GetChildrenCount(parent) == 0)
+        {
             throw new IndexOutOfRangeException();
+        }
 
         var childrenControls = parent.GetChildrenOfType<UIElement>()?.Where(x => x != nextControl && x.Uid != "CollapsedAtStart");
 
         if (childrenControls is null)
+        {
             throw new NullReferenceException();
+        }  
 
         foreach (UIElement childrenControl in childrenControls)
         {
@@ -43,17 +50,25 @@ public static class ClickMethods
         var currentControl = parameter as UIElement;
 
         if (currentControl is null)
+        {
             throw new ArgumentNullException(nameof(parameter));
-        currentControl.Visibility = Visibility.Collapsed;
+        }
 
+        currentControl.Visibility = Visibility.Collapsed;
         var parent = VisualTreeHelper.GetParent(currentControl);
+
         if (VisualTreeHelper.GetChildrenCount(parent) == 0)
+        {
             throw new IndexOutOfRangeException();
+        }
 
         var childrenControls = parent.GetChildrenOfType<UIElement>()?.Where(x => x != currentControl && x.Uid != "CollapsedAtStart");
-        if (childrenControls is null) 
-            throw new NullReferenceException();
 
+        if (childrenControls is null)
+        {
+            throw new NullReferenceException();
+        }
+            
         foreach (UIElement childrenControl in childrenControls)
         {
             childrenControl.Visibility = Visibility.Visible;
