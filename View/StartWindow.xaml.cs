@@ -1,9 +1,4 @@
-﻿using System.Media;
-using System.Threading;
-using System.Windows;
-using System.Windows.Input;
-using CrossesAndNoughts;
-using CrossesAndNoughts.Models;
+﻿using System.Windows;
 using CrossesAndNoughts.ViewModel;
 
 namespace CrossesAndNoughts.View;

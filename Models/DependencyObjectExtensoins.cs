@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -29,5 +30,10 @@ public static class DependencyObjectExtensoins
                 queue.Enqueue(child);
             }
         }
+    }
+
+    public static string SurName(this DependencyObject dependencyObject)
+    {
+        return dependencyObject.SurName();
     }
 }

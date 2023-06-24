@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Media;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using CrossesAndNoughts;
-using CrossesAndNoughts.Models;
+﻿using CrossesAndNoughts.Models;
 using CrossesAndNoughts.View;
 using CrossesAndNoughts.ViewModel.Commands;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Media;
 
 namespace CrossesAndNoughts.ViewModel
 {
