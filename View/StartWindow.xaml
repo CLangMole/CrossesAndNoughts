@@ -40,7 +40,7 @@
 
         <Image x:Name="TitleImage" Source="D:\Downloads\R5.png" Grid.Column="1" Grid.Row="1"/>
 
-        <Label Visibility="Collapsed" x:Name="RecordsLabel" Background="LightBlue" Grid.Column="0" Grid.Row="0" Width="800" Height="450" Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" x:Uid="2">
+        <Label Visibility="Collapsed" x:Name="RecordsLabel" Background="LightBlue" Grid.Column="0" Grid.Row="0" Width="800" Height="450" Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" x:Uid="CollapsedAtStart">
             <Label.Content>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -62,7 +62,7 @@
             </Label.Content>
         </Label>
 
-        <Label Visibility="Collapsed" x:Name="LoginLabel" Background="Azure" HorizontalAlignment="Center" VerticalAlignment="Center" Height="284" Width="600" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="3" BorderBrush="DarkSlateBlue" BorderThickness="2" x:Uid="2">
+        <Label Visibility="Collapsed" x:Name="LoginLabel" Background="Azure" HorizontalAlignment="Center" VerticalAlignment="Center" Height="284" Width="600" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="3" BorderBrush="DarkSlateBlue" BorderThickness="2" x:Uid="CollapsedAtStart">
             <Label.Content>
                 <Grid>
                     <Grid.ColumnDefinitions>
