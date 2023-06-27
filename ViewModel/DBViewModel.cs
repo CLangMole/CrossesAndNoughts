@@ -1,4 +1,5 @@
 ﻿using CrossesAndNoughts.Models;
+using CrossesAndNoughts.Models.Strategies;
 using CrossesAndNoughts.View;
 using CrossesAndNoughts.ViewModel.Commands;
 using System;
@@ -26,13 +27,16 @@ namespace CrossesAndNoughts.ViewModel
 
         #endregion
 
-        private static SoundPlayer _gameSound = new(@"C:\Users\probn\Fiverr\FiverrAssets\music-for-puzzle-game-146738.wav");
-        private static SoundPlayer _startSound = new(@"C:\Users\probn\Fiverr\FiverrAssets\Poofy Reel.wav");
+        private static readonly SoundPlayer _gameSound = new(@"C:\Users\probn\Fiverr\FiverrAssets\music-for-puzzle-game-146738.wav");
+        private static readonly SoundPlayer _startSound = new(@"C:\Users\probn\Fiverr\FiverrAssets\Poofy Reel.wav");
 
+        private readonly ISymbolStrategy _symbolStrategy;
 
         public DBViewModel()
         {
             _startSound.PlayLooping();
+            _symbolStrategy = new CrossesStrategy();
+            _symbolStrategy.DrawSymbol(GameWindow?.GameGrid, 0, 0);
         }
 
         private List<UserRecord> _records()
