@@ -10,10 +10,14 @@ public abstract class SymbolsFactory
 {
     public abstract Image CreateSymbol();
 
-    protected static void SetStyle(Image image)
+    protected static Image CustomizedSymbol(string path)
     {
-        image.Visibility = Visibility.Visible;
-        image.Margin = new Thickness(10);
+        return new Image()
+        {
+            Source = BitmapFrame.Create(new Uri(path)),
+            Visibility = Visibility.Visible,
+            Margin = new Thickness(10)
+        };
     }
 }
 
@@ -21,9 +25,7 @@ public class CrossesFactory : SymbolsFactory
 {
     public override Image CreateSymbol()
     {
-        var image = new Image { Source = BitmapFrame.Create(new Uri(@"C:\Users\probn\Fiverr\FiverrAssets\Images\Cross.png")) };
-        SetStyle(image);
-        return image;
+        return CustomizedSymbol(@"C:\Users\probn\Fiverr\FiverrAssets\Images\Cross.png");
     }
 }
 
@@ -31,8 +33,6 @@ public class NoughtsFactory : SymbolsFactory
 {
     public override Image CreateSymbol()
     {
-        var image = new Image { Source = BitmapFrame.Create(new Uri(@"C:\Users\probn\Fiverr\FiverrAssets\Images\Nought.png")) };
-        SetStyle(image);
-        return image;
+        return CustomizedSymbol(@"C:\Users\probn\Fiverr\FiverrAssets\Images\Nought.png");
     }
 }

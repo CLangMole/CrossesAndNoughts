@@ -1,12 +1,18 @@
-﻿using System;
+﻿using CrossesAndNoughts.View;
+using CrossesAndNoughts.ViewModel;
+using System;
 using System.Windows;
 using System.Windows.Media;
 
 namespace CrossesAndNoughts.Models;
 
-public static class ClickMethods
+public sealed class ClickMethods
 {
-    public static void GoNext(object? parameter)
+    public static ClickMethods Instance { get => _instance.Value; }
+
+    private static readonly Lazy<ClickMethods> _instance = new(() => new ClickMethods());
+
+    public void GoNext(object? parameter)
     {
         if (parameter is not UIElement nextControl)
         {
@@ -34,7 +40,7 @@ public static class ClickMethods
         }
     }
 
-    public static void GoBack(object? parameter)
+    public void GoBack(object? parameter)
     {
         if (parameter is not UIElement currentControl)
         {
@@ -62,5 +68,5 @@ public static class ClickMethods
         }
     }
 
-    public static void Quit(object? parameter) => Application.Current.Shutdown();
+    public void Quit(object? parameter) => Application.Current.Shutdown();
 }

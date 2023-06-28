@@ -5,7 +5,9 @@ using CrossesAndNoughts.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Media;
+using System.Windows.Media;
 
 namespace CrossesAndNoughts.ViewModel
 {
@@ -20,12 +22,15 @@ namespace CrossesAndNoughts.ViewModel
         public static GameWindow? GameWindow { get; set; }
 
         #region
-        private DelegateCommand _goNextCommand = new(ClickMethods.GoNext);
-        private DelegateCommand _goBackCommand = new(ClickMethods.GoBack);
-        private DelegateCommand _quitCommand = new(ClickMethods.Quit);
-        private DelegateCommand _startGameCommand = new(StartGame);
+        private readonly DelegateCommand _goNextCommand = new(ClickMethods.Instance.GoNext);
+        private readonly DelegateCommand _goBackCommand = new(ClickMethods.Instance.GoBack);
+        private readonly DelegateCommand _quitCommand = new(ClickMethods.Instance.Quit);
+        private readonly DelegateCommand _startGameCommand = new(StartGame);
 
         #endregion
+
+        public static SoundPlayer GameSound { get => _gameSound; }
+        public static SoundPlayer StartSound { get => _startSound; }
 
         private static readonly SoundPlayer _gameSound = new(@"C:\Users\probn\Fiverr\FiverrAssets\music-for-puzzle-game-146738.wav");
         private static readonly SoundPlayer _startSound = new(@"C:\Users\probn\Fiverr\FiverrAssets\Poofy Reel.wav");
@@ -35,8 +40,9 @@ namespace CrossesAndNoughts.ViewModel
         public DBViewModel()
         {
             _startSound.PlayLooping();
+
             _symbolStrategy = new CrossesStrategy();
-            _symbolStrategy.DrawSymbol(GameWindow?.GameGrid, 0, 0);
+            _symbolStrategy.DrawSymbol(GameWindow?.Field, 1, 1);
         }
 
         private List<UserRecord> _records()
@@ -60,12 +66,9 @@ namespace CrossesAndNoughts.ViewModel
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-        public void NotifyPropertyChanged(String propertyName)
+        public void NotifyPropertyChanged(string propertyName)
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private static void StartGame(object? parameter)

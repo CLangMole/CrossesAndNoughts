@@ -16,7 +16,7 @@
                 <RowDefinition Height="2*"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Column="0" Margin="50">
+            <Grid Grid.Column="0" Margin="50" x:Name="Field">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
