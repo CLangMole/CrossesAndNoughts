@@ -1,5 +1,6 @@
 ﻿using CrossesAndNoughts.View;
 using CrossesAndNoughts.ViewModel;
+using System.Diagnostics;
 using System.Windows;
 
 namespace CrossesAndNoughts;
@@ -9,7 +10,7 @@ public class App : Application
     private readonly StartWindow _startWindow;
     private readonly GameWindow _gameWindow;
 
-    public App(StartWindow startWindow, GameWindow gameWindow, DBViewModel viewModel)
+    public App(StartWindow startWindow, GameWindow gameWindow)
     {
         _startWindow = startWindow;
         _gameWindow = gameWindow;

@@ -28,7 +28,7 @@ interface IRecord : IDisposable
 
 class UserRecordsCollection : IRecord
 {
-    private ApplicationContext _dataBase;
+    private readonly ApplicationContext _dataBase;
     public UserRecordsCollection()
     {
         _dataBase = new ApplicationContext();
@@ -65,8 +65,7 @@ public class UserRecordsProxy : IRecord
         UserRecord record = _records.FirstOrDefault(x => x.Place == number);
         if (record == null)
         {
-            if (_recordsCollection == null)
-                _recordsCollection = new UserRecordsCollection();
+            _recordsCollection ??= new UserRecordsCollection();
             record = _recordsCollection.GetRecord(number);
             _records.Add(record);
         }
@@ -77,8 +76,7 @@ public class UserRecordsProxy : IRecord
     {
         if(_records.Count == 0)
         {
-            if(_recordsCollection == null)
-                _recordsCollection = new UserRecordsCollection();
+            _recordsCollection ??= new UserRecordsCollection();
             _records = _recordsCollection.GetRecords();
         }
         return _records;
@@ -86,9 +84,6 @@ public class UserRecordsProxy : IRecord
 
     public void Dispose()
     {
-        if (_recordsCollection != null)
-        {
-            _recordsCollection.Dispose();
-        }
+        _recordsCollection?.Dispose();
     }
 }

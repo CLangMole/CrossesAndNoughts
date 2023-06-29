@@ -9,5 +9,6 @@ public partial class StartWindow : Window
     {
         InitializeComponent();
         DataContext = viewModel;
+        DBViewModel.StartWindow = this;
     }
 }    

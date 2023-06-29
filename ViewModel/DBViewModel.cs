@@ -6,17 +6,21 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Media;
+using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace CrossesAndNoughts.ViewModel
 {
     public class DBViewModel : INotifyPropertyChanged
     {
+        #region
         public DelegateCommand GoNextCommand { get => _goNextCommand; }
         public DelegateCommand GoBackCommand { get => _goBackCommand; }
         public DelegateCommand QuitCommand { get => _quitCommand; }
         public DelegateCommand StartGameCommand { get => _startGameCommand; }
+        #endregion
 
         public static StartWindow? StartWindow { get; set; }
         public static GameWindow? GameWindow { get; set; }
@@ -29,16 +33,15 @@ namespace CrossesAndNoughts.ViewModel
 
         #endregion
 
-        public static SoundPlayer GameSound { get => _gameSound; }
-        public static SoundPlayer StartSound { get => _startSound; }
-
         private static readonly SoundPlayer _gameSound = new(@"C:\Users\probn\Fiverr\FiverrAssets\music-for-puzzle-game-146738.wav");
         private static readonly SoundPlayer _startSound = new(@"C:\Users\probn\Fiverr\FiverrAssets\Poofy Reel.wav");
 
-        private readonly ISymbolStrategy _symbolStrategy;
+        private static ISymbolStrategy? _symbolStrategy;
 
         public DBViewModel()
         {
+            Debug.Assert(StartWindow != null);
+
             _startSound.PlayLooping();
 
             _symbolStrategy = new CrossesStrategy();
@@ -47,7 +50,7 @@ namespace CrossesAndNoughts.ViewModel
 
         private List<UserRecord> _records()
         {
-            using (IRecord records = new UserRecordsProxy())
+            using (IRecord? records = new UserRecordsProxy())
             {
                 if (records.GetRecords().Count <= 0)
                     throw new Exception();
@@ -66,6 +69,7 @@ namespace CrossesAndNoughts.ViewModel
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
         public void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

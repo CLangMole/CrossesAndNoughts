@@ -31,9 +31,4 @@ public static class DependencyObjectExtensoins
             }
         }
     }
-
-    public static string SurName(this DependencyObject dependencyObject)
-    {
-        return dependencyObject.SurName();
-    }
 }
