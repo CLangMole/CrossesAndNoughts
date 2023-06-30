@@ -5,6 +5,7 @@ using CrossesAndNoughts.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Media;
 
 namespace CrossesAndNoughts.ViewModel
@@ -29,8 +30,8 @@ namespace CrossesAndNoughts.ViewModel
 
         #endregion
 
-        private static readonly SoundPlayer _gameSound = new(@"C:\Users\probn\Fiverr\FiverrAssets\music-for-puzzle-game-146738.wav");
-        private static readonly SoundPlayer _startSound = new(@"C:\Users\probn\Fiverr\FiverrAssets\Poofy Reel.wav");
+        private static readonly SoundPlayer _gameSound = new(Directory.GetCurrentDirectory() + @"\music-for-puzzle-game-146738.wav");
+        private static readonly SoundPlayer _startSound = new(Directory.GetCurrentDirectory() + @"\Poofy Reel.wav");
 
         private static ISymbolStrategy? _symbolStrategy;
 

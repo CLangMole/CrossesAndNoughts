@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -24,7 +25,7 @@ public class CrossesFactory : SymbolsFactory
 {
     public override Image CreateSymbol()
     {
-        return CustomizedSymbol(@"C:\Users\probn\Fiverr\FiverrAssets\Images\Cross.png");
+        return CustomizedSymbol(Directory.GetCurrentDirectory() + @"\Cross.png");
     }
 }
 
@@ -32,6 +33,6 @@ public class NoughtsFactory : SymbolsFactory
 {
     public override Image CreateSymbol()
     {
-        return CustomizedSymbol(@"C:\Users\probn\Fiverr\FiverrAssets\Images\Nought.png");
+        return CustomizedSymbol(Directory.GetCurrentDirectory() + @"\Nought.png");
     }
 }
