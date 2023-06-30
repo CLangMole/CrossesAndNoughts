@@ -76,6 +76,8 @@ namespace CrossesAndNoughts.ViewModel
 
             _symbolStrategy = new CrossesStrategy();
             _symbolStrategy.DrawSymbol(GameWindow?.Field, 1, 1);
+            _symbolStrategy = new NoughtsStrategy();
+            _symbolStrategy.DrawSymbol(GameWindow?.Field, 0, 1);
         }
     }
 }

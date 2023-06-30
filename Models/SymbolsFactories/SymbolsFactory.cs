@@ -25,7 +25,7 @@ public class CrossesFactory : SymbolsFactory
 {
     public override Image CreateSymbol()
     {
-        return CustomizedSymbol(Directory.GetCurrentDirectory() + @"\Cross.png");
+        return CustomizedSymbol(Directory.GetCurrentDirectory() + @"\Cross2.jpg");
     }
 }
 
@@ -33,6 +33,6 @@ public class NoughtsFactory : SymbolsFactory
 {
     public override Image CreateSymbol()
     {
-        return CustomizedSymbol(Directory.GetCurrentDirectory() + @"\Nought.png");
+        return CustomizedSymbol(Directory.GetCurrentDirectory() + @"\Nought3.png");
     }
 }

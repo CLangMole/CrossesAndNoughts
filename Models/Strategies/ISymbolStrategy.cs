@@ -5,21 +5,21 @@ namespace CrossesAndNoughts.Models.Strategies;
 
 public interface ISymbolStrategy
 {
-    void DrawSymbol(Grid? field, int rowIndex, int columnIndex);
+    void DrawSymbol(Grid? field, int row, int column);
 }
 
 public class CrossesStrategy : ISymbolStrategy
 {
     private readonly SymbolsFactory _crossesFactory = new CrossesFactory();
 
-    public void DrawSymbol(Grid? field, int rowIndex, int columnIndex)
+    public void DrawSymbol(Grid? field, int row, int column)
     {
         Image symbol = _crossesFactory.CreateSymbol();
 
         field?.Children.Add(symbol);
 
-        symbol.SetValue(Grid.RowProperty, rowIndex);
-        symbol.SetValue(Grid.ColumnProperty, columnIndex);
+        symbol.SetValue(Grid.RowProperty, row);
+        symbol.SetValue(Grid.ColumnProperty, column);
     }
 }
 
@@ -27,13 +27,13 @@ public class NoughtsStrategy : ISymbolStrategy
 {
     private readonly SymbolsFactory _noughtsFactory = new NoughtsFactory();
 
-    public void DrawSymbol(Grid? field, int rowIndex, int columnIndex)
+    public void DrawSymbol(Grid? field, int row, int column)
     {
         Image symbol = _noughtsFactory.CreateSymbol();
 
         field?.Children.Add(symbol);
 
-        symbol.SetValue(Grid.RowProperty, rowIndex);
-        symbol.SetValue(Grid.ColumnProperty, columnIndex);
+        symbol.SetValue(Grid.RowProperty, row);
+        symbol.SetValue(Grid.ColumnProperty, column);
     }
 }
