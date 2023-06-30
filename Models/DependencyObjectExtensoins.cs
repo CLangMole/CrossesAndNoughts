@@ -14,7 +14,11 @@ public static class DependencyObjectExtensoins
 {
     public static IEnumerable<T>? GetChildrenOfType<T>([NotNull] this DependencyObject dependencyObject) where T : DependencyObject
     {
-        if (dependencyObject == null) throw new ArgumentNullException(nameof(dependencyObject));
+        if (dependencyObject is null)
+        {
+            throw new ArgumentNullException(nameof(dependencyObject));
+        }
+
         var queue = new Queue<DependencyObject>(new[] { dependencyObject });
 
         while (queue.Any())

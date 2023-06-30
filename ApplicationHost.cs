@@ -1,8 +1,8 @@
-﻿using System;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using CrossesAndNoughts.View;
+﻿using CrossesAndNoughts.View;
 using CrossesAndNoughts.ViewModel;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
 
 namespace CrossesAndNoughts;
 

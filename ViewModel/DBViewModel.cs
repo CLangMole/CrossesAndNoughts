@@ -5,11 +5,7 @@ using CrossesAndNoughts.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Media;
-using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace CrossesAndNoughts.ViewModel
 {
@@ -40,30 +36,23 @@ namespace CrossesAndNoughts.ViewModel
 
         public DBViewModel()
         {
-            Debug.Assert(StartWindow != null);
-
             _startSound.PlayLooping();
-
-            _symbolStrategy = new CrossesStrategy();
-            _symbolStrategy.DrawSymbol(GameWindow?.Field, 1, 1);
-        }
-
-        private List<UserRecord> _records()
-        {
-            using (IRecord? records = new UserRecordsProxy())
-            {
-                if (records.GetRecords().Count <= 0)
-                    throw new Exception();
-                return records.GetRecords();
-            }
         }
 
         public List<UserRecord> Records
         {
-            get { return _records(); }
+            get
+            {
+                using IRecord? records = new UserRecordsProxy();
+
+                if (records.GetRecords().Count <= 0)
+                {
+                    throw new IndexOutOfRangeException();
+                }
+                return records.GetRecords();
+            }
             private set
             {
-                Records = value;
                 NotifyPropertyChanged(nameof(Records));
             }
         }
@@ -83,6 +72,9 @@ namespace CrossesAndNoughts.ViewModel
             GameWindow?.Show();
 
             _gameSound.PlayLooping();
+
+            _symbolStrategy = new CrossesStrategy();
+            _symbolStrategy.DrawSymbol(GameWindow?.Field, 1, 1);
         }
     }
 }

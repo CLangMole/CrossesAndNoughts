@@ -1,6 +1,5 @@
 ﻿using CrossesAndNoughts.View;
 using CrossesAndNoughts.ViewModel;
-using System.Diagnostics;
 using System.Windows;
 
 namespace CrossesAndNoughts;
