@@ -50,6 +50,7 @@ namespace CrossesAndNoughts.ViewModel
                 {
                     throw new IndexOutOfRangeException();
                 }
+                
                 return records.GetRecords();
             }
             private set

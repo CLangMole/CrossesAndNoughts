@@ -36,7 +36,9 @@ class UserRecordsCollection : IRecord
 
     public UserRecord GetRecord(int number)
     {
-        return _dataBase.Records.FirstOrDefault(x => x.Place == number);
+        var record = _dataBase.Records.FirstOrDefault(x => x.Place == number);
+
+        return record is null ? throw new IndexOutOfRangeException() : record;
     }
 
     public List<UserRecord> GetRecords()
@@ -58,17 +60,21 @@ public class UserRecordsProxy : IRecord
     public UserRecordsProxy()
     {
         _records = new List<UserRecord>();
+
+        _recordsCollection ??= new UserRecordsCollection();
     }
 
     public UserRecord GetRecord(int number)
     {
-        UserRecord record = _records.FirstOrDefault(x => x.Place == number);
-        if (record == null)
+        UserRecord? record = _records.FirstOrDefault(x => x.Place == number);
+
+        if (record is null)
         {
             _recordsCollection ??= new UserRecordsCollection();
             record = _recordsCollection.GetRecord(number);
             _records.Add(record);
         }
+
         return record;
     }
 
@@ -79,11 +85,13 @@ public class UserRecordsProxy : IRecord
             _recordsCollection ??= new UserRecordsCollection();
             _records = _recordsCollection.GetRecords();
         }
+
         return _records;
     }
 
     public void Dispose()
     {
         _recordsCollection?.Dispose();
+        GC.SuppressFinalize(this);
     }
 }
