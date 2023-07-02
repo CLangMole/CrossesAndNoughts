@@ -1,8 +1,7 @@
-﻿using CrossesAndNoughts.View;
-using CrossesAndNoughts.ViewModel;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Media;
+using CrossesAndNoughts.Models.Extensions;
 
 namespace CrossesAndNoughts.Models;
 

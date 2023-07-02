@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CrossesAndNoughts;
+namespace CrossesAndNoughts.Models.DataBase;
 
 public class UserRecord
 {

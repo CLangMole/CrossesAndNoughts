@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CrossesAndNoughts;
+namespace CrossesAndNoughts.Models.DataBase;
 
 class ApplicationContext : DbContext
 {
@@ -80,7 +80,7 @@ public class UserRecordsProxy : IRecord
 
     public List<UserRecord> GetRecords()
     {
-        if(_records.Count == 0)
+        if (_records.Count == 0)
         {
             _recordsCollection ??= new UserRecordsCollection();
             _records = _recordsCollection.GetRecords();

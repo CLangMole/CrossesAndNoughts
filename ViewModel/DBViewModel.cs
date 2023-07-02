@@ -1,4 +1,5 @@
 ﻿using CrossesAndNoughts.Models;
+using CrossesAndNoughts.Models.DataBase;
 using CrossesAndNoughts.Models.Strategies;
 using CrossesAndNoughts.View;
 using CrossesAndNoughts.ViewModel.Commands;
@@ -34,6 +35,8 @@ namespace CrossesAndNoughts.ViewModel
         private static readonly SoundPlayer _startSound = new(Directory.GetCurrentDirectory() + @"\Poofy Reel.wav");
 
         private static ISymbolStrategy? _symbolStrategy;
+
+        private static User? _user;
 
         public DBViewModel()
         {
@@ -79,6 +82,9 @@ namespace CrossesAndNoughts.ViewModel
             _symbolStrategy.DrawSymbol(GameWindow?.Field, 1, 1);
             _symbolStrategy = new NoughtsStrategy();
             _symbolStrategy.DrawSymbol(GameWindow?.Field, 0, 1);
+
+            Player.Field = GameWindow?.Field;
+            _user ??= new User(new CrossesStrategy());
         }
     }
 }
