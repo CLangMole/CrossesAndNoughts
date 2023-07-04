@@ -7,6 +7,7 @@ using CrossesAndNoughts.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Media;
 using System.Windows;
@@ -38,12 +39,16 @@ namespace CrossesAndNoughts.ViewModel
 
         #endregion
 
+        public Symbol Cross { get => Symbol.Cross; private set => NotifyPropertyChanged(nameof(Cross)); }
+        public Symbol Nought { get => Symbol.Nought; private set => NotifyPropertyChanged(nameof(Cross)); }
+
         private static readonly SoundPlayer _gameSound = new(Directory.GetCurrentDirectory() + @"\music-for-puzzle-game-146738.wav");
         private static readonly SoundPlayer _startSound = new(Directory.GetCurrentDirectory() + @"\Poofy Reel.wav");
 
         private static ISymbolStrategy? _symbolStrategy;
-
         private static User? _user;
+
+
 
         public AppViewModel()
         {
@@ -98,7 +103,7 @@ namespace CrossesAndNoughts.ViewModel
         {
             if (parameter is not Symbol symbol)
             {
-                throw new ArgumentException(nameof(parameter));
+                throw new ArgumentException(null, nameof(parameter));
             }
 
             Dictionary<Symbol, Func<User>> user = new()

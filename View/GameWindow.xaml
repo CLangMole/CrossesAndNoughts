@@ -40,10 +40,10 @@
                 <Border Grid.Column="2" Grid.Row="1" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 0, 2"/>
                 <Border Grid.Column="2" Grid.Row="2" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 0, 0"/>
 
-                <Button Grid.Column="0" Command="{Binding Path=SelectSymbolCommand}" CommandParameter="Cross" Content="cross"/>
-                <Button Grid.Column="2" Command="{Binding Path=SelectSymbolCommand}" CommandParameter="Nought" Content="nought"/>
+                <Button Grid.Column="0" Command="{Binding SelectSymbolCommand}" CommandParameter="{Binding Cross}" Content="cross"/>
+                <Button Grid.Column="2" Command="{Binding SelectSymbolCommand}" CommandParameter="{Binding Nought}" Content="nought"/>
 
-                <Button Opacity="0" Grid.Column="0" Grid.Row="2" Command="{Binding DrawSymbolCommand}" CommandParameter="{x:Reference}"/>
+                <Button x:Name="Seven" Opacity="0" Grid.Column="0" Grid.Row="2" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Seven}"/>
             </Grid>
         </Grid>
     </Grid>

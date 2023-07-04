@@ -28,13 +28,13 @@
         </Grid.RowDefinitions>
 
         <Button x:Name="StartButton" Grid.Column="1" Grid.Row="2" Margin="10" Content="Start Game" Style="{StaticResource ButtonStyle}" 
-                     Cursor="Hand" Command="{Binding Path=GoNextCommand}" CommandParameter="{Binding ElementName=LoginLabel}"/>
+                     Cursor="Hand" Command="{Binding GoNextCommand}" CommandParameter="{Binding ElementName=LoginLabel}"/>
 
         <Button x:Name="QuitButton" Grid.Column="0" Grid.Row="2" Margin="10" Content="Quit" Style="{StaticResource ButtonStyle}" 
-                     Cursor="Hand" Command="{Binding Path=QuitCommand}"/>
+                     Cursor="Hand" Command="{Binding QuitCommand}"/>
 
         <Button x:Name="RecordsButton" Grid.Column="2" Grid.Row="2" Margin="10" Content="Records" Style="{StaticResource ButtonStyle}" 
-                     Cursor="Hand" Command="{Binding Path=GoNextCommand}" CommandParameter="{Binding ElementName=RecordsLabel}"/>
+                     Cursor="Hand" Command="{Binding GoNextCommand}" CommandParameter="{Binding ElementName=RecordsLabel}"/>
 
         <TextBlock x:Name="Title" Grid.Row="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="5" Text="Crosses and Noughts" FontFamily="Impact" FontSize="50" Foreground="DarkSlateBlue" TextAlignment="Center"/>
 
@@ -55,9 +55,9 @@
                         <RowDefinition Height="112.5"/>
                     </Grid.RowDefinitions>
 
-                    <DataGrid x:Name="RecordsTable" Grid.Column="1" Grid.Row="1" IsReadOnly="True" Background="SkyBlue" Foreground="DarkSlateBlue" RowBackground="Azure" ItemsSource="{Binding Path=Records}"/>
+                    <DataGrid x:Name="RecordsTable" Grid.Column="1" Grid.Row="1" IsReadOnly="True" Background="SkyBlue" Foreground="DarkSlateBlue" RowBackground="Azure" ItemsSource="{Binding Records}"/>
 
-                    <Button x:Name="RecordsBackButton" Grid.Column="1" Grid.Row="2" Margin="100, 20, 100, 40" Content="Back" Style="{StaticResource ButtonStyle}"  Cursor="Hand" Command="{Binding Path=GoBackCommand}" CommandParameter="{Binding ElementName=RecordsLabel}"/>
+                    <Button x:Name="RecordsBackButton" Grid.Column="1" Grid.Row="2" Margin="100, 20, 100, 40" Content="Back" Style="{StaticResource ButtonStyle}"  Cursor="Hand" Command="{Binding GoBackCommand}" CommandParameter="{Binding ElementName=RecordsLabel}"/>
                 </Grid>
             </Label.Content>
         </Label>
@@ -80,9 +80,9 @@
 
                     <TextBox x:Name="LoginTextBox" Grid.Row="1" FontSize="30" BorderBrush="DarkSlateBlue" BorderThickness="2" VerticalAlignment="Center" TextAlignment="Center" Height="60" Width="400" Grid.ColumnSpan="3" Margin="10" Cursor="IBeam"/>
 
-                    <Button x:Name="LoginBackButton" Grid.Row="2" Grid.Column="0" Margin="0, 0, 180, 10" VerticalAlignment="Center" Content="Back" Style="{StaticResource ButtonStyle}" Cursor="Hand" Grid.ColumnSpan="2" Width="270" Height="60" Command="{Binding Path=GoBackCommand}" CommandParameter="{Binding ElementName=LoginLabel}"/>
+                    <Button x:Name="LoginBackButton" Grid.Row="2" Grid.Column="0" Margin="0, 0, 180, 10" VerticalAlignment="Center" Content="Back" Style="{StaticResource ButtonStyle}" Cursor="Hand" Grid.ColumnSpan="2" Width="270" Height="60" Command="{Binding GoBackCommand}" CommandParameter="{Binding ElementName=LoginLabel}"/>
 
-                    <Button x:Name="StartGameButton" Grid.Row="2" Grid.Column="1" Margin="165.5, 0, 14.5, 10" Content="Start Game" Style="{StaticResource ButtonStyle}" Cursor="Hand" Grid.ColumnSpan="2" Width="270" Height="60" Command="{Binding Path=StartGameCommand}"/>
+                    <Button x:Name="StartGameButton" Grid.Row="2" Grid.Column="1" Margin="165.5, 0, 14.5, 10" Content="Start Game" Style="{StaticResource ButtonStyle}" Cursor="Hand" Grid.ColumnSpan="2" Width="270" Height="60" Command="{Binding StartGameCommand}"/>
                 </Grid>
             </Label.Content>
         </Label>
