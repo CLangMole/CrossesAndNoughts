@@ -14,8 +14,8 @@ public class App : Application
         _startWindow = startWindow;
         _gameWindow = gameWindow;
 
-        DBViewModel.StartWindow = _startWindow;
-        DBViewModel.GameWindow = _gameWindow;
+        AppViewModel.StartWindow = _startWindow;
+        AppViewModel.GameWindow = _gameWindow;
     }
 
     protected override void OnStartup(StartupEventArgs e)

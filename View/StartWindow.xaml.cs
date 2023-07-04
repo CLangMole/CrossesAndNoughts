@@ -5,10 +5,9 @@ namespace CrossesAndNoughts.View;
 
 public partial class StartWindow : Window
 {
-    public StartWindow(DBViewModel viewModel)
+    public StartWindow(AppViewModel viewModel)
     {
         InitializeComponent();
         DataContext = viewModel;
-        DBViewModel.StartWindow = this;
     }
 }    

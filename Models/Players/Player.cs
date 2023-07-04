@@ -1,10 +1,12 @@
 ﻿using CrossesAndNoughts.Models.Strategies;
+using CrossesAndNoughts.ViewModel.Commands;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace CrossesAndNoughts;
+namespace CrossesAndNoughts.Models.Players;
 
 public abstract class Player
 {

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CrossesAndNoughts.View"
         mc:Ignorable="d"
-        Title="GameWindow" Height="450" Width="800" Background="Azure" MinWidth="800" MinHeight="450">
+        Title="GameWindow" Height="450" Width="800" Background="Azure" MinWidth="800" MinHeight="450"  xmlns:viewmodel="clr-namespace:CrossesAndNoughts.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:AppViewModel}">
     <Grid>
         <Grid x:Name="GameGrid">
             <Grid.ColumnDefinitions>
@@ -39,6 +39,9 @@
                 <Border Grid.Column="2" Grid.Row="0" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 0, 2"/>
                 <Border Grid.Column="2" Grid.Row="1" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 0, 2"/>
                 <Border Grid.Column="2" Grid.Row="2" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 0, 0"/>
+
+                <Button Grid.Column="0" Command="{Binding Path=SelectSymbolCommand}" CommandParameter="Cross" Content="cross"/>
+                <Button Grid.Column="2" Command="{Binding Path=SelectSymbolCommand}" CommandParameter="Nought" Content="nought"/>
             </Grid>
         </Grid>
     </Grid>

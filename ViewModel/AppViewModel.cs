@@ -1,5 +1,6 @@
 ﻿using CrossesAndNoughts.Models;
 using CrossesAndNoughts.Models.DataBase;
+using CrossesAndNoughts.Models.Players;
 using CrossesAndNoughts.Models.Strategies;
 using CrossesAndNoughts.View;
 using CrossesAndNoughts.ViewModel.Commands;
@@ -11,13 +12,14 @@ using System.Media;
 
 namespace CrossesAndNoughts.ViewModel
 {
-    public class DBViewModel : INotifyPropertyChanged
+    public class AppViewModel : INotifyPropertyChanged
     {
         #region
         public DelegateCommand GoNextCommand { get => _goNextCommand; }
         public DelegateCommand GoBackCommand { get => _goBackCommand; }
         public DelegateCommand QuitCommand { get => _quitCommand; }
         public DelegateCommand StartGameCommand { get => _startGameCommand; }
+        public DelegateCommand SelectSymbolCommand { get => _selectSymbolCommand; }
         #endregion
 
         public static StartWindow? StartWindow { get; set; }
@@ -28,6 +30,7 @@ namespace CrossesAndNoughts.ViewModel
         private readonly DelegateCommand _goBackCommand = new(ClickMethods.Instance.GoBack);
         private readonly DelegateCommand _quitCommand = new(ClickMethods.Instance.Quit);
         private readonly DelegateCommand _startGameCommand = new(StartGame);
+        private readonly DelegateCommand _selectSymbolCommand = new(SelectSymbol);
 
         #endregion
 
@@ -38,7 +41,7 @@ namespace CrossesAndNoughts.ViewModel
 
         private static User? _user;
 
-        public DBViewModel()
+        public AppViewModel()
         {
             _startSound.PlayLooping();
         }
@@ -85,6 +88,22 @@ namespace CrossesAndNoughts.ViewModel
 
             Player.Field = GameWindow?.Field;
             _user ??= new User(new CrossesStrategy());
+        }
+
+        private static void SelectSymbol(object? parameter)
+        {
+            if (parameter is not Symbol symbol)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            Dictionary<Symbol, Func<User>> user = new()
+            {
+                { Symbol.Cross, () => new User(new CrossesStrategy()) },
+                { Symbol.Nought, () => new User(new NoughtsStrategy()) }
+            };
+
+            user[symbol].Invoke();
         }
     }
 }

@@ -37,3 +37,9 @@ public class NoughtsStrategy : ISymbolStrategy
         symbol.SetValue(Grid.ColumnProperty, column);
     }
 }
+
+public enum Symbol
+{
+    Cross,
+    Nought
+}

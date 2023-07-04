@@ -17,7 +17,7 @@ public class ApplicationHost
                 services.AddSingleton<App>();
                 services.AddSingleton<StartWindow>();
                 services.AddSingleton<GameWindow>();
-                services.AddSingleton<DBViewModel>();
+                services.AddSingleton<AppViewModel>();
             })
             .Build();
         var app = host.Services.GetService<App>();

@@ -8,9 +8,10 @@ namespace CrossesAndNoughts.View;
 /// </summary>
 public partial class GameWindow : Window
 {
-    public GameWindow()
+    public GameWindow(AppViewModel viewModel)
     {
         InitializeComponent();
+        DataContext = viewModel;
         Closed += (sender, e) => Application.Current.Shutdown();
     }
 }
