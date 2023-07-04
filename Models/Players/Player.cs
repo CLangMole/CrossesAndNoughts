@@ -21,9 +21,9 @@ public abstract class Player
         _symbolStrategy = symbolStrategy;
     }
 
-    public virtual void Draw()
+    public virtual void Draw(int row, int column)
     {
-        _symbolStrategy.DrawSymbol(null, 0, 0);
+        _symbolStrategy.DrawSymbol(null, row, column);
     }
 }
 
@@ -31,7 +31,7 @@ public class User : Player
 {
     public User(ISymbolStrategy symbolStrategy) : base(symbolStrategy) { }
 
-    public override void Draw()
+    public override void Draw(int row, int column)
     {
         if (SymbolStrategy is null)
         {
@@ -43,13 +43,7 @@ public class User : Player
             throw new NullReferenceException(nameof(Field));
         }
 
-        foreach (UIElement cell in Field.Children)
-        {
-            cell.MouseDown += (sender, e) =>
-            {
-                SymbolStrategy.DrawSymbol(Field, (int)cell.GetValue(Grid.RowProperty), (int)cell.GetValue(Grid.ColumnProperty));
-            };
-        }
+        SymbolStrategy.DrawSymbol(Field, row, column);
     }
 }
 

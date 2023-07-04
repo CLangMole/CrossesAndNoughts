@@ -42,6 +42,8 @@
 
                 <Button Grid.Column="0" Command="{Binding Path=SelectSymbolCommand}" CommandParameter="Cross" Content="cross"/>
                 <Button Grid.Column="2" Command="{Binding Path=SelectSymbolCommand}" CommandParameter="Nought" Content="nought"/>
+
+                <Button Opacity="0" Grid.Column="0" Grid.Row="2" Command="{Binding DrawSymbolCommand}" CommandParameter="{x:Reference}"/>
             </Grid>
         </Grid>
     </Grid>

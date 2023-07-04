@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Media;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace CrossesAndNoughts.ViewModel
 {
@@ -20,6 +22,7 @@ namespace CrossesAndNoughts.ViewModel
         public DelegateCommand QuitCommand { get => _quitCommand; }
         public DelegateCommand StartGameCommand { get => _startGameCommand; }
         public DelegateCommand SelectSymbolCommand { get => _selectSymbolCommand; }
+        public DelegateCommand DrawSymbolCommand { get => _drawSymbolCommand; }
         #endregion
 
         public static StartWindow? StartWindow { get; set; }
@@ -31,6 +34,7 @@ namespace CrossesAndNoughts.ViewModel
         private readonly DelegateCommand _quitCommand = new(ClickMethods.Instance.Quit);
         private readonly DelegateCommand _startGameCommand = new(StartGame);
         private readonly DelegateCommand _selectSymbolCommand = new(SelectSymbol);
+        private readonly DelegateCommand _drawSymbolCommand = new(DrawSymbol);
 
         #endregion
 
@@ -94,7 +98,7 @@ namespace CrossesAndNoughts.ViewModel
         {
             if (parameter is not Symbol symbol)
             {
-                throw new ArgumentNullException(nameof(parameter));
+                throw new ArgumentException(nameof(parameter));
             }
 
             Dictionary<Symbol, Func<User>> user = new()
@@ -103,7 +107,20 @@ namespace CrossesAndNoughts.ViewModel
                 { Symbol.Nought, () => new User(new NoughtsStrategy()) }
             };
 
-            user[symbol].Invoke();
+            _user = user[symbol].Invoke();
+        }
+
+        private static void DrawSymbol(object? parameter)
+        {
+            if (parameter is not UIElement control)
+            {
+                throw new ArgumentException(null, nameof(parameter));
+            }
+
+            int row = (int)control.GetValue(Grid.RowProperty);
+            int column = (int)control.GetValue(Grid.ColumnProperty);
+
+            _user?.Draw(row, column);
         }
     }
 }
