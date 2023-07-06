@@ -16,7 +16,31 @@
                 <RowDefinition Height="2*"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Column="0" Margin="50" x:Name="Field">
+            <Label Visibility="Visible" x:Name="SelectSymbolLabel" Background="LightBlue" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Height="450" Width="800">
+                <Label.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="400"/>
+                            <ColumnDefinition Width="400"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="100"/>
+                            <RowDefinition Height="350"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Select your symbol" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50" FontFamily="Impact" Foreground="DarkSlateBlue" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3"/>
+
+                        <Button Command="{Binding SelectSymbolCommand}" CommandParameter="{Binding Cross}" Grid.Row="1" Margin="70" Background="White">
+                            <Image Source="C:\Users\probn\Fiverr\FiverrAssets\Images\Cross2.jpg"/>
+                        </Button>
+                        <Button Command="{Binding SelectSymbolCommand}" CommandParameter="{Binding Nought}" Grid.Row="1" Grid.Column="1" Margin="70" Background="White">
+                            <Image Source="C:\Users\probn\Fiverr\FiverrAssets\Images\Nought3.png"/>
+                        </Button>
+                     </Grid>
+                </Label.Content>
+            </Label>
+
+            <Grid Visibility="Collapsed" Grid.Column="0" Margin="50" x:Name="Field" x:Uid="CollapsedAtStart">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -40,10 +64,19 @@
                 <Border Grid.Column="2" Grid.Row="1" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 0, 2"/>
                 <Border Grid.Column="2" Grid.Row="2" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 0, 0"/>
 
-                <Button Grid.Column="0" Command="{Binding SelectSymbolCommand}" CommandParameter="{Binding Cross}" Content="cross"/>
-                <Button Grid.Column="2" Command="{Binding SelectSymbolCommand}" CommandParameter="{Binding Nought}" Content="nought"/>
-
+                <!--Buttons for drawing symbols-->
+                
+                <Button x:Name="One" Opacity="0" Grid.Column="0" Grid.Row="0" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=One}"/>
+                <Button x:Name="Two" Opacity="0" Grid.Column="1" Grid.Row="0" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Two}"/>
+                <Button x:Name="Three" Opacity="0" Grid.Column="2" Grid.Row="0" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Three}"/>
+                
+                <Button x:Name="Four" Opacity="0" Grid.Column="0" Grid.Row="1" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Four}"/>
+                <Button x:Name="Five" Opacity="0" Grid.Column="1" Grid.Row="1" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Five}"/>
+                <Button x:Name="Six" Opacity="0" Grid.Column="2" Grid.Row="1" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Six}"/>
+                
                 <Button x:Name="Seven" Opacity="0" Grid.Column="0" Grid.Row="2" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Seven}"/>
+                <Button x:Name="Eight" Opacity="0" Grid.Column="1" Grid.Row="2" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Eight}"/>
+                <Button x:Name="Nine" Opacity="0" Grid.Column="2" Grid.Row="2" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Nine}"/>
             </Grid>
         </Grid>
     </Grid>

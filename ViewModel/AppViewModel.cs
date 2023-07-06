@@ -7,17 +7,21 @@ using CrossesAndNoughts.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Media;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace CrossesAndNoughts.ViewModel
 {
     public class AppViewModel : INotifyPropertyChanged
     {
-        #region
+        #region Windows
+        public static StartWindow? StartWindow { get; set; }
+        public static GameWindow? GameWindow { get; set; }
+        #endregion
+
+        #region Commands
         public DelegateCommand GoNextCommand { get => _goNextCommand; }
         public DelegateCommand GoBackCommand { get => _goBackCommand; }
         public DelegateCommand QuitCommand { get => _quitCommand; }
@@ -26,29 +30,37 @@ namespace CrossesAndNoughts.ViewModel
         public DelegateCommand DrawSymbolCommand { get => _drawSymbolCommand; }
         #endregion
 
-        public static StartWindow? StartWindow { get; set; }
-        public static GameWindow? GameWindow { get; set; }
+        #region Symbols
+        public Symbol Cross { get => Symbol.Cross; private set => NotifyPropertyChanged(nameof(Cross)); }
+        public Symbol Nought { get => Symbol.Nought; private set => NotifyPropertyChanged(nameof(Cross)); }
+        #endregion
 
-        #region
+        #region Private commands
         private readonly DelegateCommand _goNextCommand = new(ClickMethods.Instance.GoNext);
         private readonly DelegateCommand _goBackCommand = new(ClickMethods.Instance.GoBack);
         private readonly DelegateCommand _quitCommand = new(ClickMethods.Instance.Quit);
         private readonly DelegateCommand _startGameCommand = new(StartGame);
         private readonly DelegateCommand _selectSymbolCommand = new(SelectSymbol);
         private readonly DelegateCommand _drawSymbolCommand = new(DrawSymbol);
-
         #endregion
 
-        public Symbol Cross { get => Symbol.Cross; private set => NotifyPropertyChanged(nameof(Cross)); }
-        public Symbol Nought { get => Symbol.Nought; private set => NotifyPropertyChanged(nameof(Cross)); }
-
+        #region Sound players
         private static readonly SoundPlayer _gameSound = new(Directory.GetCurrentDirectory() + @"\music-for-puzzle-game-146738.wav");
         private static readonly SoundPlayer _startSound = new(Directory.GetCurrentDirectory() + @"\Poofy Reel.wav");
+        #endregion
 
-        private static ISymbolStrategy? _symbolStrategy;
+        #region Players
         private static User? _user;
+        private static Opponent? _opponent;
+        #endregion
 
-
+        #region Symbols strategies
+        private static readonly Dictionary<Symbol, Func<ISymbolStrategy>> _strategyMap = new()
+        {
+            { Symbol.Cross, () => new CrossesStrategy() },
+            { Symbol.Nought, () => new NoughtsStrategy() }
+        };
+        #endregion
 
         public AppViewModel()
         {
@@ -90,13 +102,7 @@ namespace CrossesAndNoughts.ViewModel
 
             _gameSound.PlayLooping();
 
-            _symbolStrategy = new CrossesStrategy();
-            _symbolStrategy.DrawSymbol(GameWindow?.Field, 1, 1);
-            _symbolStrategy = new NoughtsStrategy();
-            _symbolStrategy.DrawSymbol(GameWindow?.Field, 0, 1);
-
             Player.Field = GameWindow?.Field;
-            _user ??= new User(new CrossesStrategy());
         }
 
         private static void SelectSymbol(object? parameter)
@@ -106,18 +112,22 @@ namespace CrossesAndNoughts.ViewModel
                 throw new ArgumentException(null, nameof(parameter));
             }
 
-            Dictionary<Symbol, Func<User>> user = new()
-            {
-                { Symbol.Cross, () => new User(new CrossesStrategy()) },
-                { Symbol.Nought, () => new User(new NoughtsStrategy()) }
-            };
+            Symbol[] symbols = new Symbol[2] { Symbol.Cross, Symbol.Nought };
 
-            _user = user[symbol].Invoke();
+            _user = new User(_strategyMap[symbol].Invoke());
+            _opponent = new Opponent(_strategyMap[symbols.Single(x => x != symbol)].Invoke());
+
+            ClickMethods.Instance.GoNext(GameWindow?.Field);
+
+            _user.UserDrawedSymbol += () =>
+            {
+                _opponent.Draw(0, 0);
+            };
         }
 
         private static void DrawSymbol(object? parameter)
         {
-            if (parameter is not UIElement control)
+            if (parameter is not Button control)
             {
                 throw new ArgumentException(null, nameof(parameter));
             }
@@ -126,6 +136,8 @@ namespace CrossesAndNoughts.ViewModel
             int column = (int)control.GetValue(Grid.ColumnProperty);
 
             _user?.Draw(row, column);
+
+            control.IsEnabled = false;
         }
     }
 }
