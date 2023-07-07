@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Media;
+using System.Threading;
 using System.Windows.Controls;
 
 namespace CrossesAndNoughts.ViewModel
@@ -136,8 +137,6 @@ namespace CrossesAndNoughts.ViewModel
             int column = (int)control.GetValue(Grid.ColumnProperty);
 
             _user?.Draw(row, column);
-
-            control.IsEnabled = false;
         }
     }
 }
