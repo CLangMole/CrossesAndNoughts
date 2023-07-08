@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CrossesAndNoughts.Models.Extensions;
+using System;
 using System.Windows;
 using System.Windows.Media;
-using CrossesAndNoughts.Models.Extensions;
-using CrossesAndNoughts.Models.Strategies;
 
 namespace CrossesAndNoughts.Models;
 

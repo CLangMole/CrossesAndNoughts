@@ -19,7 +19,7 @@ public class DelegateCommand : ICommand
 
     public bool CanExecute(object? parameter)
     {
-        if(_canExecute == null)
+        if (_canExecute == null)
         {
             return true;
         }
@@ -34,7 +34,7 @@ public class DelegateCommand : ICommand
 
     public void RaiseCanExecuteChanged()
     {
-        if(CanExecuteChanged != null)
+        if (CanExecuteChanged != null)
         {
             CanExecuteChanged(this, EventArgs.Empty);
         }

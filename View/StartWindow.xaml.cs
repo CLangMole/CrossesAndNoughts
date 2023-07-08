@@ -1,5 +1,5 @@
-﻿using System.Windows;
-using CrossesAndNoughts.ViewModel;
+﻿using CrossesAndNoughts.ViewModel;
+using System.Windows;
 
 namespace CrossesAndNoughts.View;
 
@@ -10,4 +10,4 @@ public partial class StartWindow : Window
         InitializeComponent();
         DataContext = viewModel;
     }
-}    
+}

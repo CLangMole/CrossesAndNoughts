@@ -1,20 +1,16 @@
 ﻿using CrossesAndNoughts.Models.Strategies;
-using CrossesAndNoughts.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace CrossesAndNoughts.Models.Players;
 
 public abstract class Player
 {
-    protected readonly IEnumerable<Button>? buttons = Field?.Children.OfType<Button>();
+    protected readonly IEnumerable<Button>? Buttons = Field?.Children.OfType<Button>();
     public ISymbolStrategy? SymbolStrategy { get => _symbolStrategy; }
 
     public static Grid? Field { get; set; }
@@ -24,6 +20,7 @@ public abstract class Player
     public Player(ISymbolStrategy symbolStrategy)
     {
         _symbolStrategy = symbolStrategy;
+
     }
 
     public virtual void Draw(int row, int column)
@@ -50,12 +47,17 @@ public class User : Player
             throw new NullReferenceException(nameof(Field));
         }
 
-        if (buttons is null || !buttons.Any())
+        if (Buttons is null || !Buttons.Any())
         {
             throw new Exception("There's no button on the field");
         }
 
         SymbolStrategy.DrawSymbol(Field, row, column);
+
+        foreach (Button? button in Buttons)
+        {
+            button.IsEnabled = false;
+        }
 
         await Task.Delay(1000);
 
@@ -71,59 +73,113 @@ public class Opponent : Player
 
     public Opponent(ISymbolStrategy symbolStrategy) : base(symbolStrategy) { }
 
-    public override async void Draw(int row, int column)
+    public override void Draw(int row, int column)
     {
+        //IEnumerable<UIElement>? symbols = (Field?.Children.OfType<Image>()) ?? throw new NullReferenceException();
+
+        //if (!symbols.Any())
+        //{
+        //    return;
+        //}
+
         if (SymbolStrategy is null)
         {
             throw new NullReferenceException(nameof(SymbolStrategy));
         }
 
-        if (buttons is null || !buttons.Any())
+        if (Buttons is null || !Buttons.Any())
         {
-            throw new Exception("There's no button on the field");
+            throw new("There're no buttons on the field");
         }
 
-        foreach (Button? button in buttons)
+        SetButtonActive(false);
+
+        //for (int i = 0; i < 3; i++)
+        //{
+        //    for (int j = 0; j < 3; j++)
+        //    {
+        //        foreach (UIElement? symbol in symbols)
+        //        {
+        //            if ((int)symbol.GetValue(Grid.RowProperty) == i || (int)symbol.GetValue(Grid.ColumnProperty) == j)
+        //            {
+        //                continue;
+        //            }
+
+        //            row = _random.Next(0, i);
+        //            column = _random.Next(0, j);
+        //        }
+        //    }
+        //}
+
+        row = BestWay().Item1;
+        column = BestWay().Item2;
+
+        SymbolStrategy.DrawSymbol(Field, row, column);
+
+        SetButtonActive(true);
+
+        OpponentDrawedSymbol?.Invoke();
+    }
+
+    private Tuple<int, int> BestWay()
+    {
+        IEnumerable<UIElement>? symbols = (Field?.Children.OfType<Image>()) ?? throw new NullReferenceException();
+
+        if (!symbols.Any())
         {
-            button.IsEnabled = false;
+            throw new Exception("there're no symbols on the field");
         }
+
+        int row = 0;
+        int column = 0;
 
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
             {
-                IEnumerable<UIElement>? symbols = Field?.Children.OfType<Image>();
-
-                if (symbols is not null && symbols.Any())
+                foreach (UIElement? symbol in symbols)
                 {
-                    foreach (UIElement? symbol in symbols)
+                    if ((int)symbol.GetValue(Grid.RowProperty) == i || (int)symbol.GetValue(Grid.ColumnProperty) == j)
                     {
-                        if ((int)symbol.GetValue(Grid.RowProperty) == i || (int)symbol.GetValue(Grid.ColumnProperty) == j)
-                        {
-                            continue;
-                        }
-
-                        row = _random.Next(0, i);
-                        column = _random.Next(0, j);
+                        continue;
                     }
-                }
-                else
-                {
+
                     row = _random.Next(0, i);
                     column = _random.Next(0, j);
                 }
             }
         }
 
-        SymbolStrategy.DrawSymbol(Field, row, column);
+        return Tuple.Create(row, column);
+    }
 
-        OpponentDrawedSymbol?.Invoke();
-
-        await Task.Delay(1000);
-
-        foreach (Button? button in buttons)
+    private void SetButtonActive(bool isEnabled)
+    {
+        if (Buttons is null || !Buttons.Any())
         {
-            button.IsEnabled = true;
+            throw new Exception("Buttons array is null or empty");
         }
+
+        foreach (Button button in Buttons)
+        {
+            button.IsEnabled = isEnabled;
+        }
+    }
+
+    private IEnumerable<UIElement> GetSymbols()
+    {
+        List<UIElement> symbols = new List<UIElement>();
+
+        foreach (Cell cell in Matrix.Instance)
+        {
+            if (cell.Child is null)
+            {
+                continue;
+            }
+
+            symbols.Add(cell.Child);
+        }
+
+        return symbols;
     }
 }

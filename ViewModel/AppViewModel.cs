@@ -10,7 +10,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Media;
-using System.Threading;
 using System.Windows.Controls;
 
 namespace CrossesAndNoughts.ViewModel
@@ -78,7 +77,7 @@ namespace CrossesAndNoughts.ViewModel
                 {
                     throw new IndexOutOfRangeException();
                 }
-                
+
                 return records.GetRecords();
             }
             private set

@@ -4,7 +4,7 @@ using System.Windows.Controls;
 namespace CrossesAndNoughts.Models.Strategies;
 
 public interface ISymbolStrategy
-{
+{ 
     void DrawSymbol(Grid? field, int row, int column);
 }
 
@@ -20,6 +20,8 @@ public class CrossesStrategy : ISymbolStrategy
 
         symbol.SetValue(Grid.RowProperty, row);
         symbol.SetValue(Grid.ColumnProperty, column);
+
+        Matrix.Instance.AddItem(symbol, row, column);
     }
 }
 
@@ -35,6 +37,8 @@ public class NoughtsStrategy : ISymbolStrategy
 
         symbol.SetValue(Grid.RowProperty, row);
         symbol.SetValue(Grid.ColumnProperty, column);
+
+        Matrix.Instance.AddItem(symbol, row, column);
     }
 }
 
