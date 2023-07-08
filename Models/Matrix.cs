@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Controls;
 
 namespace CrossesAndNoughts.Models;
@@ -11,7 +12,7 @@ public class Matrix : IEnumerable<Cell>
 
     private static readonly Lazy<Matrix> _instance = new(() => new  Matrix());
 
-    private Cell[,] _cells => new Cell[3, 3]
+    private static Cell[,] _cells => new Cell[3, 3]
             {
                 { new Cell(0, 0), new Cell(0, 1),
                 new Cell(0, 2) },
@@ -53,7 +54,7 @@ public class Matrix : IEnumerable<Cell>
         _cells[row, column].Child = item;
     }
 
-    public void RemoveItem(Image image, int row, int column)
+    public void RemoveItem(int row, int column)
     {
         _cells[row, column].Child = null;
     }

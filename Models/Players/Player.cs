@@ -1,6 +1,7 @@
 ﻿using CrossesAndNoughts.Models.Strategies;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -75,13 +76,6 @@ public class Opponent : Player
 
     public override void Draw(int row, int column)
     {
-        //IEnumerable<UIElement>? symbols = (Field?.Children.OfType<Image>()) ?? throw new NullReferenceException();
-
-        //if (!symbols.Any())
-        //{
-        //    return;
-        //}
-
         if (SymbolStrategy is null)
         {
             throw new NullReferenceException(nameof(SymbolStrategy));
@@ -93,23 +87,6 @@ public class Opponent : Player
         }
 
         SetButtonActive(false);
-
-        //for (int i = 0; i < 3; i++)
-        //{
-        //    for (int j = 0; j < 3; j++)
-        //    {
-        //        foreach (UIElement? symbol in symbols)
-        //        {
-        //            if ((int)symbol.GetValue(Grid.RowProperty) == i || (int)symbol.GetValue(Grid.ColumnProperty) == j)
-        //            {
-        //                continue;
-        //            }
-
-        //            row = _random.Next(0, i);
-        //            column = _random.Next(0, j);
-        //        }
-        //    }
-        //}
 
         row = BestWay().Item1;
         column = BestWay().Item2;
@@ -123,29 +100,50 @@ public class Opponent : Player
 
     private Tuple<int, int> BestWay()
     {
-        IEnumerable<UIElement>? symbols = (Field?.Children.OfType<Image>()) ?? throw new NullReferenceException();
-
-        if (!symbols.Any())
-        {
-            throw new Exception("there're no symbols on the field");
-        }
-
         int row = 0;
         int column = 0;
+
+        IEnumerable<Cell> cellsWithSymbol = Matrix.Instance.Where(x => x.Child != null);
+
+        //if (!cellsWithSymbol.Any())
+        //{
+        //    throw new Exception($"There're no symbols on the field. Count : {cellsWithSymbol.Count()}");
+        //}
 
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
             {
-                foreach (UIElement? symbol in symbols)
+                //foreach (Cell cell in cellsWithSymbol)
+                //{
+                //    if (cell.Row == i || cell.Column == j)
+                //    {
+                //        continue;
+                //    }
+
+                //    row = _random.Next(0, i);
+                //    column = _random.Next(0, j);
+                //}
+
+                IEnumerable<UIElement>? symbols = (Field?.Children.OfType<Image>()) ?? throw new NullReferenceException();
+
+                foreach (UIElement symbol in symbols)
                 {
-                    if ((int)symbol.GetValue(Grid.RowProperty) == i || (int)symbol.GetValue(Grid.ColumnProperty) == j)
+                    if (i == (int)symbol.GetValue(Grid.RowProperty) && j == (int)symbol.GetValue(Grid.ColumnProperty))
                     {
                         continue;
                     }
 
-                    row = _random.Next(0, i);
-                    column = _random.Next(0, j);
+                    int randomRow = _random.Next(0, i);
+                    int randomColumn = _random.Next(0, j);
+
+                    if (randomRow == (int)symbol.GetValue(Grid.RowProperty) && randomColumn == (int)symbol.GetValue(Grid.ColumnProperty))
+                    {
+                        continue;
+                    }
+
+                    row = randomRow;
+                    column = randomColumn;
                 }
             }
         }
@@ -164,22 +162,5 @@ public class Opponent : Player
         {
             button.IsEnabled = isEnabled;
         }
-    }
-
-    private IEnumerable<UIElement> GetSymbols()
-    {
-        List<UIElement> symbols = new List<UIElement>();
-
-        foreach (Cell cell in Matrix.Instance)
-        {
-            if (cell.Child is null)
-            {
-                continue;
-            }
-
-            symbols.Add(cell.Child);
-        }
-
-        return symbols;
     }
 }

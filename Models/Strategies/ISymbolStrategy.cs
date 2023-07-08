@@ -1,4 +1,5 @@
 ﻿using CrossesAndNoughts.Models.SymbolsFactories;
+using System.Diagnostics;
 using System.Windows.Controls;
 
 namespace CrossesAndNoughts.Models.Strategies;
@@ -22,6 +23,7 @@ public class CrossesStrategy : ISymbolStrategy
         symbol.SetValue(Grid.ColumnProperty, column);
 
         Matrix.Instance.AddItem(symbol, row, column);
+        Debug.WriteLine("executed");
     }
 }
 
@@ -39,6 +41,7 @@ public class NoughtsStrategy : ISymbolStrategy
         symbol.SetValue(Grid.ColumnProperty, column);
 
         Matrix.Instance.AddItem(symbol, row, column);
+        Debug.WriteLine("executed");
     }
 }
 
