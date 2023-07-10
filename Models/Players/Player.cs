@@ -1,4 +1,5 @@
 ﻿using CrossesAndNoughts.Models.Strategies;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +35,7 @@ public class User : Player
 
     public User(ISymbolStrategy symbolStrategy) : base(symbolStrategy) { }
 
-    public override async void Draw(int row, int column)
+    public override void Draw(int row, int column)
     {
         if (SymbolStrategy is null)
         {
@@ -58,7 +59,6 @@ public class User : Player
             button.IsEnabled = false;
         }
 
-        await Task.Delay(1000);
 
         UserDrawedSymbol?.Invoke();
     }
@@ -72,7 +72,7 @@ public class Opponent : Player
 
     public Opponent(ISymbolStrategy symbolStrategy) : base(symbolStrategy) { }
 
-    public override void Draw(int row, int column)
+    public override async void Draw(int row, int column)
     {
         if (SymbolStrategy is null)
         {
@@ -86,17 +86,27 @@ public class Opponent : Player
 
         SetButtonActive(false);
 
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                if (Matrix.Instance[i, j] == Symbol.Empty)
-                {
-                    row = _random.Next(0, i);
-                    column = _random.Next(0, j);
-                }
-            }
-        }
+        await Task.Delay(1000);
+
+        //for (int i = 0; i < 3; i++)
+        //{
+        //    for (int j = 0; j < 3; j++)
+        //    {
+        //        if (Matrix.Instance[1, 1] == Symbol.Empty)
+        //        {
+        //            row = 1;
+        //            column = 1;
+        //        }
+        //        else if (Matrix.Instance[i, j] == Symbol.Empty)
+        //        {
+        //            row = _random.Next(0, i);
+        //            column = _random.Next(0, j);
+        //        }
+        //    }
+        //}
+
+        row = BestCell().Item1;
+        column = BestCell().Item2;
 
         SymbolStrategy.DrawSymbol(Field, row, column);
 
@@ -118,8 +128,39 @@ public class Opponent : Player
         }
     }
 
-    private void VisitCell()
+    private Tuple<int, int> BestCell()
     {
-        
+        int row = 0;
+        int column = 0;
+
+        Queue<Tuple<int, int>> queue = new();
+        queue.Enqueue(Tuple.Create(1, 1));
+
+        while (queue.Count != 0)
+        {
+            var cell = queue.Dequeue();
+
+            if (Matrix.Instance[cell.Item1, cell.Item2] != Symbol.Empty)
+            {
+                continue;
+            }
+
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    if (i != 0 && j != 0)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        queue.Enqueue(Tuple.Create(row = cell.Item1 + i, column = cell.Item2 + j));
+                    }
+                }
+            }
+        }
+
+        return Tuple.Create(row, column);
     }
 }
