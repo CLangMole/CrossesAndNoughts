@@ -1,7 +1,6 @@
 ﻿using CrossesAndNoughts.Models.Strategies;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,7 +11,7 @@ namespace CrossesAndNoughts.Models.Players;
 public abstract class Player
 {
     protected readonly IEnumerable<Button>? Buttons = Field?.Children.OfType<Button>();
-    public ISymbolStrategy? SymbolStrategy { get => _symbolStrategy; }
+    protected ISymbolStrategy? SymbolStrategy { get => _symbolStrategy; }
 
     public static Grid? Field { get; set; }
 
@@ -21,7 +20,6 @@ public abstract class Player
     public Player(ISymbolStrategy symbolStrategy)
     {
         _symbolStrategy = symbolStrategy;
-
     }
 
     public virtual void Draw(int row, int column)
@@ -88,67 +86,23 @@ public class Opponent : Player
 
         SetButtonActive(false);
 
-        row = BestWay().Item1;
-        column = BestWay().Item2;
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if (Matrix.Instance[i, j] == Symbol.Empty)
+                {
+                    row = _random.Next(0, i);
+                    column = _random.Next(0, j);
+                }
+            }
+        }
 
         SymbolStrategy.DrawSymbol(Field, row, column);
 
         SetButtonActive(true);
 
         OpponentDrawedSymbol?.Invoke();
-    }
-
-    private Tuple<int, int> BestWay()
-    {
-        int row = 0;
-        int column = 0;
-
-        IEnumerable<Cell> cellsWithSymbol = Matrix.Instance.Where(x => x.Child != null);
-
-        //if (!cellsWithSymbol.Any())
-        //{
-        //    throw new Exception($"There're no symbols on the field. Count : {cellsWithSymbol.Count()}");
-        //}
-
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                //foreach (Cell cell in cellsWithSymbol)
-                //{
-                //    if (cell.Row == i || cell.Column == j)
-                //    {
-                //        continue;
-                //    }
-
-                //    row = _random.Next(0, i);
-                //    column = _random.Next(0, j);
-                //}
-
-                IEnumerable<UIElement>? symbols = (Field?.Children.OfType<Image>()) ?? throw new NullReferenceException();
-
-                foreach (UIElement symbol in symbols)
-                {
-                    if (i == (int)symbol.GetValue(Grid.RowProperty) && j == (int)symbol.GetValue(Grid.ColumnProperty))
-                    {
-                        continue;
-                    }
-
-                    int randomRow = _random.Next(0, i);
-                    int randomColumn = _random.Next(0, j);
-
-                    if (randomRow == (int)symbol.GetValue(Grid.RowProperty) && randomColumn == (int)symbol.GetValue(Grid.ColumnProperty))
-                    {
-                        continue;
-                    }
-
-                    row = randomRow;
-                    column = randomColumn;
-                }
-            }
-        }
-
-        return Tuple.Create(row, column);
     }
 
     private void SetButtonActive(bool isEnabled)
@@ -162,5 +116,10 @@ public class Opponent : Player
         {
             button.IsEnabled = isEnabled;
         }
+    }
+
+    private void VisitCell()
+    {
+        
     }
 }

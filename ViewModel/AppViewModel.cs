@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Media;
 using System.Windows.Controls;
+using static System.Net.WebRequestMethods;
 
 namespace CrossesAndNoughts.ViewModel
 {
@@ -103,6 +104,7 @@ namespace CrossesAndNoughts.ViewModel
             _gameSound.PlayLooping();
 
             Player.Field = GameWindow?.Field;
+            Matrix.Field = GameWindow?.Field;
         }
 
         private static void SelectSymbol(object? parameter)

@@ -1,40 +1,53 @@
-﻿using System;
+﻿using CrossesAndNoughts.Models.Strategies;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace CrossesAndNoughts.Models;
 
-public class Matrix : IEnumerable<Cell>
+public class Matrix : IEnumerable<Symbol>
 {
+    public static Grid? Field { get; set; }
     public static Matrix Instance => _instance.Value;
 
-    private static readonly Lazy<Matrix> _instance = new(() => new  Matrix());
+    private static readonly Lazy<Matrix> _instance = new(() => new Matrix());
+    private readonly Symbol[,] _state = new Symbol[3, 3];
 
-    private static Cell[,] _cells => new Cell[3, 3]
-            {
-                { new Cell(0, 0), new Cell(0, 1),
-                new Cell(0, 2) },
-
-                { new Cell(1, 0),
-                new Cell(1, 1),
-                new Cell(1, 2) },
-
-                { new Cell(2, 0),
-                new Cell(2, 1),
-                new Cell(2, 2) }
-            };
-
-    public Matrix() { }
-
-    public IEnumerator<Cell> GetEnumerator()
+    public Matrix()
     {
-        for (int i = 0; i < _cells.GetLength(0); i++)
+        IEnumerable<Image>? cellsWithSymbol = (Field?.Children?.OfType<Image>());
+        IEnumerable<UIElement>? emptyCells = cellsWithSymbol is null ? Field?.Children.OfType<UIElement>() : Field?.Children.OfType<UIElement>().Except(cellsWithSymbol);
+
+        if (emptyCells is null)
         {
-            for (int j = 0; j < _cells.GetLength(1); j++)
+            throw new NullReferenceException(nameof(emptyCells));
+        }
+
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
             {
-                yield return _cells[i, j];
+                foreach (var cell in emptyCells)
+                {
+                    if ((int)cell.GetValue(Grid.RowProperty) == i && (int)cell.GetValue(Grid.ColumnProperty) == j)
+                    {
+                        _state[i, j] = Symbol.Empty;
+                    }
+                }
+            }
+        }
+    }
+
+    public IEnumerator<Symbol> GetEnumerator()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                yield return _state[i, j];
             }
         }
     }
@@ -44,18 +57,9 @@ public class Matrix : IEnumerable<Cell>
         return GetEnumerator();
     }
 
-    public Cell this[int row, int column]
+    public Symbol this[int row, int column]
     {
-        get => _cells[row, column];
-    }
-
-    public void AddItem(Image item, int row, int column)
-    {
-        _cells[row, column].Child = item;
-    }
-
-    public void RemoveItem(int row, int column)
-    {
-        _cells[row, column].Child = null;
+        get => _state[row, column];
+        set => _state[row, column] = value;
     }
 }

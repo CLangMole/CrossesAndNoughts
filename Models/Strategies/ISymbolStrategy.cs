@@ -22,8 +22,7 @@ public class CrossesStrategy : ISymbolStrategy
         symbol.SetValue(Grid.RowProperty, row);
         symbol.SetValue(Grid.ColumnProperty, column);
 
-        Matrix.Instance.AddItem(symbol, row, column);
-        Debug.WriteLine("executed");
+        Matrix.Instance[row, column] = Symbol.Cross;
     }
 }
 
@@ -40,13 +39,13 @@ public class NoughtsStrategy : ISymbolStrategy
         symbol.SetValue(Grid.RowProperty, row);
         symbol.SetValue(Grid.ColumnProperty, column);
 
-        Matrix.Instance.AddItem(symbol, row, column);
-        Debug.WriteLine("executed");
+        Matrix.Instance[row, column] = Symbol.Nought;
     }
 }
 
 public enum Symbol
 {
     Cross,
-    Nought
+    Nought,
+    Empty
 }
