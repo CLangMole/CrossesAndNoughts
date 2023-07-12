@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -115,5 +114,14 @@ public class Matrix : IEnumerable<Symbol>
     public bool IsGameOver()
     {
         return IsFieldFull() || Winner() != Symbol.Empty;
+    }
+
+    public void ClearSymbol(int row, int column)
+    {
+        IEnumerable<Image>? symbols = (Field?.Children.OfType<Image>()) ?? throw new NullReferenceException(nameof(Field));
+
+        Field?.Children.Remove(symbols.Single(x => (int)x.GetValue(Grid.RowProperty) == row && (int)x.GetValue(Grid.ColumnProperty) == column));
+
+        this[row, column] = Symbol.Empty;
     }
 }

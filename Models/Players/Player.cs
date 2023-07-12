@@ -148,9 +148,9 @@ public class Opponent : Player
                 {
                     SymbolStrategy.DrawSymbol(Field, i, j);
 
-                    int score = MiniMax(0, false);
+                    int score = MiniMax(0);
 
-                    Matrix.Instance[i, j] = Symbol.Empty;
+                    Matrix.Instance.ClearSymbol(i, j);
 
                     if (score < bestScore)
                     {
@@ -158,6 +158,7 @@ public class Opponent : Player
                         bestRow = i;
                         bestColumn = j;
                     }
+                    Debug.WriteLine(bestRow + " " + bestColumn);
                 }
             }
         }
@@ -218,7 +219,7 @@ public class Opponent : Player
     //    return Tuple.Create(row, column);
     //}
 
-    protected int MiniMax(int startDepth, bool isMaximizingPlayer)
+    private int MiniMax(int startDepth)
     {
         if (Matrix.Instance.IsGameOver())
         {
@@ -243,71 +244,25 @@ public class Opponent : Player
             }
         }
 
-        if (isMaximizingPlayer)
+        int bestScore = int.MinValue;
+
+        for (int i = 0; i < 3; i++)
         {
-            int bestScore = int.MinValue;
-
-            for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
             {
-                for (int j = 0; j < 3; j++)
+                if (Matrix.Instance[i, j] == Symbol.Empty)
                 {
-                    if (Matrix.Instance[i, j] == Symbol.Empty)
-                    {
-                        //switch (SymbolStrategy)
-                        //{
-                        //    case CrossesStrategy:
-                        //        Matrix.Instance[i, j] = Symbol.Cross;
-                        //        break;
-                        //    case NoughtsStrategy:
-                        //        Matrix.Instance[i, j] = Symbol.Nought;
-                        //        break;
-                        //}
+                    SymbolStrategy?.DrawSymbol(Field, i, j);
 
-                        SymbolStrategy?.DrawSymbol(Field, i, j);
+                    int score = MiniMax(startDepth + 1);
 
-                        int score = MiniMax(startDepth + 1, false);
+                    Matrix.Instance.ClearSymbol(i, j);
 
-                        Matrix.Instance[i, j] = Symbol.Empty;
-
-                        bestScore = Math.Max(score, bestScore);
-                    }
+                    bestScore = Math.Max(score, bestScore);
                 }
             }
-
-            return bestScore;
         }
-        else
-        {
-            int bestScore = int.MaxValue;
 
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    if (Matrix.Instance[i, j] == Symbol.Empty)
-                    {
-                        //switch (Matrix.Instance.User?.Symbol)
-                        //{
-                        //    case Symbol.Cross:
-                        //        Matrix.Instance[i, j] = Symbol.Cross;
-                        //        break;
-                        //    case Symbol.Nought:
-                        //        Matrix.Instance[i, j] = Symbol.Nought;
-                        //        break;
-                        //}
-
-                        SymbolStrategy?.DrawSymbol(Field, i, j);
-
-                        int score = MiniMax(startDepth + 1, true);
-
-                        Matrix.Instance[i, j] = Symbol.Empty;
-
-                        bestScore = Math.Min(score, bestScore);
-                    }
-                }
-            }
-
-            return bestScore;
-        }
+        return bestScore;
     }
 }
