@@ -1,8 +1,10 @@
-﻿using CrossesAndNoughts.Models.Strategies;
+﻿using CrossesAndNoughts.Models.Players;
+using CrossesAndNoughts.Models.Strategies;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -11,6 +13,9 @@ namespace CrossesAndNoughts.Models;
 public class Matrix : IEnumerable<Symbol>
 {
     public static Grid? Field { get; set; }
+    public User? User { get; set; }
+    public Opponent? Opponent { get; set; }
+
     public static Matrix Instance => _instance.Value;
 
     private static readonly Lazy<Matrix> _instance = new(() => new Matrix());
@@ -61,5 +66,54 @@ public class Matrix : IEnumerable<Symbol>
     {
         get => _state[row, column];
         set => _state[row, column] = value;
+    }
+
+    public Symbol Winner()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            if (this[i, 0] != Symbol.Empty && this[i, 0] == this[i, 1] && this[i, 1] == this[i, 2])
+            {
+                return this[i, 0];
+            }
+
+            if (this[0, i] != Symbol.Empty && this[0, i] == this[1, i] && this[1, i] == this[2, i])
+            {
+                return this[0, i];
+            }
+
+            if (this[0, 0] != Symbol.Empty && this[0, 0] == this[1, 1] && this[1, 1] == this[2, 2])
+            {
+                return this[0, 0];
+            }
+
+            if (this[0, 2] != Symbol.Empty && this[0, 2] == this[1, 1] && this[1, 1] == this[2, 0])
+            {
+                return this[0, 2];
+            }
+        }
+
+        return Symbol.Empty;
+    }
+
+    public bool IsFieldFull()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if (this[i, j] == Symbol.Empty)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public bool IsGameOver()
+    {
+        return IsFieldFull() || Winner() != Symbol.Empty;
     }
 }
