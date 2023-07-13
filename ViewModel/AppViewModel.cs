@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Media;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace CrossesAndNoughts.ViewModel
@@ -104,8 +105,6 @@ namespace CrossesAndNoughts.ViewModel
 
             Player.Field = GameWindow?.Field;
             Matrix.Field = GameWindow?.Field;
-            Matrix.Instance.User = _user;
-            Matrix.Instance.Opponent = _opponent;
         }
 
         private static void SelectSymbol(object? parameter)
@@ -121,6 +120,9 @@ namespace CrossesAndNoughts.ViewModel
             _opponent = new Opponent(_strategyMap[symbols.Single(x => x != symbol)].Invoke());
 
             ClickMethods.Instance.GoNext(GameWindow?.Field);
+
+            Matrix.Instance.CurrentUser = _user;
+            Matrix.Instance.CurrentOpponent = _opponent;
 
             _user.UserDrawedSymbol += () =>
             {
