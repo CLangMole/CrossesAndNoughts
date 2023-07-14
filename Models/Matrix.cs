@@ -3,6 +3,7 @@ using CrossesAndNoughts.Models.Strategies;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -81,34 +82,6 @@ public class Matrix : IEnumerable<Symbol>
         set => _state[row, column] = value;
     }
 
-    //public Symbol Winner()
-    //{
-    //    for (int i = 0; i < 3; i++)
-    //    {
-    //        if (this[i, 0] != Symbol.Empty && this[i, 0] == this[i, 1] && this[i, 1] == this[i, 2])
-    //        {
-    //            return this[i, 0];
-    //        }
-
-    //        if (this[0, i] != Symbol.Empty && this[0, i] == this[1, i] && this[1, i] == this[2, i])
-    //        {
-    //            return this[0, i];
-    //        }
-
-    //        if (this[0, 0] != Symbol.Empty && this[0, 0] == this[1, 1] && this[1, 1] == this[2, 2])
-    //        {
-    //            return this[0, 0];
-    //        }
-
-    //        if (this[0, 2] != Symbol.Empty && this[0, 2] == this[1, 1] && this[1, 1] == this[2, 0])
-    //        {
-    //            return this[0, 2];
-    //        }
-    //    }
-
-    //    return Symbol.Empty;
-    //}
-
     public Tuple<bool, Symbol> GetGameStatus()
     {
         int[] rowScores = new int[3];
@@ -172,8 +145,6 @@ public class Matrix : IEnumerable<Symbol>
 
     public void ClearSymbol(int row, int column)
     {
-        IEnumerable<Image>? symbols = (Field?.Children.OfType<Image>()) ?? throw new NullReferenceException(nameof(Field));
-
         this[row, column] = Symbol.Empty;
     }
 
@@ -188,6 +159,9 @@ public class Matrix : IEnumerable<Symbol>
                 matrix[i, j] = this[i, j];
             }
         }
+
+        matrix.CurrentUser = CurrentUser;
+        matrix.CurrentOpponent = CurrentOpponent;
 
         return matrix;
     }
@@ -208,65 +182,67 @@ public class Matrix : IEnumerable<Symbol>
         return true;
     }
 
-    public int Evaluate()
+    public static int Evaluate(Matrix matrix)
     {
         int score = 0;
 
-        foreach (var line in _lines)
+        for (int i = 0; i < _lines.Length; i++)
         {
-            score += EvaluateLine(line);
+            score += EvaluateLine(_lines[i], matrix);
         }
 
         return score;
     }
 
-    private int EvaluateLine(Line line)
+    private static int EvaluateLine(Line line, Matrix matrix)
     {
         int score = 0;
 
-        Symbol cell1 = this[line.GetCell(0).Item1, line.GetCell(0).Item2];
-        Symbol cell2 = this[line.GetCell(1).Item1, line.GetCell(1).Item2];
-        Symbol cell3 = this[line.GetCell(2).Item1, line.GetCell(2).Item2];
+        Symbol cell1 = matrix[line.GetCell(0).Item1, line.GetCell(0).Item2];
+        Symbol cell2 = matrix[line.GetCell(1).Item1, line.GetCell(1).Item2];
+        Symbol cell3 = matrix[line.GetCell(2).Item1, line.GetCell(2).Item2];
 
-        if (cell1 == CurrentUser?.CurrentSymbol)
+        if (cell1 == matrix.CurrentUser?.CurrentSymbol)
         {
             score = 1;
         }
-        else if (cell1 == CurrentOpponent?.CurrentSymbol)
+        else if (cell1 == matrix.CurrentOpponent?.CurrentSymbol)
         {
             score = -1;
         }
 
-        if (cell2 == CurrentUser?.CurrentSymbol)
+        if (cell2 == matrix.CurrentUser?.CurrentSymbol)
         {
-            switch (score)
+            if (score == 1)
             {
-                case 1:
-                    score = 10;
-                    break;
-                case -1:
-                    return 0;
-                default:
-                    score = -1;
-                    break;
+                score = 10;
+            }
+            else if (score == -1)
+            {
+                return 0;
+            }
+            else
+            {
+                score = 1;
             }
         }
-        else if (cell2 == CurrentOpponent?.CurrentSymbol)
+        else if (cell2 == matrix.CurrentOpponent?.CurrentSymbol)
         {
-            switch (score)
+            if (score == -1)
             {
-                case -1:
-                    score = -10;
-                    break;
-                case 1:
-                    return 0;
-                default:
-                    score = -1;
-                    break;
+                score = -10;
+            }
+            else if (score == 1)
+            {
+                return 0;
+            }
+            else
+            {
+                score = -1;
             }
         }
 
-        if (cell3 == CurrentUser?.CurrentSymbol)
+        if (cell3 == matrix.CurrentUser?.CurrentSymbol)
         {
             if (score > 0)
             {
@@ -281,7 +257,7 @@ public class Matrix : IEnumerable<Symbol>
                 score = 1;
             }
         }
-        else if (cell3 == CurrentOpponent?.CurrentSymbol)
+        else if (cell3 == matrix.CurrentOpponent?.CurrentSymbol)
         {
             if (score < 0)
             {

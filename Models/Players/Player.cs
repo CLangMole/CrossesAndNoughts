@@ -1,8 +1,6 @@
 ﻿using CrossesAndNoughts.Models.Strategies;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -39,15 +37,12 @@ public class User : Player
 
     public User(ISymbolStrategy symbolStrategy) : base(symbolStrategy)
     {
-        switch (symbolStrategy)
+        _symbol = symbolStrategy switch
         {
-            case CrossesStrategy:
-                _symbol = Symbol.Cross;
-                break;
-            case NoughtsStrategy:
-                _symbol = Symbol.Nought;
-                break;
-        }
+            CrossesStrategy => Symbol.Cross,
+            NoughtsStrategy => Symbol.Nought,
+            _ => throw new NotImplementedException()
+        };
     }
 
     public override void Draw(int row, int column)
@@ -85,19 +80,15 @@ public class Opponent : Player
     public Symbol CurrentSymbol => _symbol;
 
     private readonly Symbol _symbol;
-    private readonly Random _random = new();
 
     public Opponent(ISymbolStrategy symbolStrategy) : base(symbolStrategy)
     {
-        switch (symbolStrategy)
+        _symbol = symbolStrategy switch
         {
-            case CrossesStrategy:
-                _symbol = Symbol.Cross;
-                break;
-            case NoughtsStrategy:
-                _symbol = Symbol.Nought;
-                break;
-        }
+            CrossesStrategy => Symbol.Cross,
+            NoughtsStrategy => Symbol.Nought,
+            _ => throw new NotImplementedException()
+        };
     }
 
     public override async void Draw(int row, int column)
@@ -112,6 +103,23 @@ public class Opponent : Player
             throw new("There're no buttons on the field");
         }
 
+        bool isGameOver = Matrix.Instance.GetGameStatus().Item1;
+        Symbol winner = Matrix.Instance.GetGameStatus().Item2;
+
+        if (isGameOver)
+        {
+            if (winner == Symbol.Empty)
+            {
+                MessageBox.Show("Game over! It's a draw!");
+            }
+            else
+            {
+                MessageBox.Show($"Game over! {winner} wins!");
+            }
+
+            return;
+        }
+
         SetButtonActive(false);
 
         await Task.Delay(1000);
@@ -121,8 +129,12 @@ public class Opponent : Player
             throw new NullReferenceException("You didn't choose your symbol");
         }
 
-        row = MiniMax(Matrix.Instance, 4, Matrix.Instance.CurrentUser.CurrentSymbol).Item2;
-        column = MiniMax(Matrix.Instance, 4, Matrix.Instance.CurrentUser.CurrentSymbol).Item3;
+        if (row == -1 && column == -1)
+        {
+            var miniMax = MiniMax(Matrix.Instance, 4, true);
+            row = miniMax.Item2;
+            column = miniMax.Item3;
+        }
 
         SymbolStrategy?.DrawSymbol(Field, row, column);
 
@@ -144,35 +156,38 @@ public class Opponent : Player
         }
     }
 
-    private Tuple<int, int, int> MiniMax(Matrix matrix, int depth, Symbol symbol)
+    private Tuple<int, int, int> MiniMax(Matrix matrix, int depth, bool isMaximizing)
     {
-        if (symbol == Symbol.Empty)
-        {
-            throw new ArgumentException("Symbol cannot be empty", nameof(symbol));
-        }
-
-        int bestScore = symbol == Matrix.Instance.CurrentUser?.CurrentSymbol ? int.MinValue : int.MaxValue;
+        int bestScore = isMaximizing ? int.MinValue : int.MaxValue;
         int bestRow = -1;
         int bestColumn = -1;
 
         if (depth == 0 || matrix.GetGameStatus().Item1)
         {
-            bestScore = Matrix.Instance.Evaluate();
+            if (matrix.CurrentUser is null || matrix.CurrentOpponent is null)
+            {
+                throw new NullReferenceException();
+            }
+
+            bestScore = Matrix.Evaluate(matrix);
+            return Tuple.Create(bestScore, bestRow, bestColumn);
         }
 
         Matrix matrixClone = matrix.Copy();
 
-        for (int i = 0; i < 3; i++)
+        if (isMaximizing)
         {
-            for (int j = 0; j < 3; j++)
+            for (int i = 0; i < 3; i++)
             {
-                if (matrix[i, j] == Symbol.Empty)
+                for (int j = 0; j < 3; j++)
                 {
-                    matrixClone[i, j] = symbol;
-
-                    if (symbol == Matrix.Instance.CurrentUser?.CurrentSymbol)
+                    if (matrix[i, j] == Symbol.Empty)
                     {
-                        int currentScore = MiniMax(matrixClone, depth - 1, CurrentSymbol).Item1;
+                        matrixClone[i, j] = CurrentSymbol;
+
+                        int currentScore = MiniMax(matrixClone, depth - 1, false).Item1;
+
+                        matrixClone.ClearSymbol(i, j);
 
                         if (currentScore > bestScore)
                         {
@@ -181,9 +196,29 @@ public class Opponent : Player
                             bestColumn = j;
                         }
                     }
-                    else
+                }
+            }
+
+            return Tuple.Create(bestScore, bestRow, bestColumn);
+        }
+        else
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    if (matrix[i, j] == Symbol.Empty)
                     {
-                        int currentScore = MiniMax(matrixClone, depth - 1, Matrix.Instance.CurrentUser.CurrentSymbol).Item1;
+                        if (Matrix.Instance.CurrentUser is null)
+                        {
+                            throw new NullReferenceException();
+                        }
+
+                        matrixClone[i, j] = Matrix.Instance.CurrentUser.CurrentSymbol;
+
+                        int currentScore = MiniMax(matrixClone, depth - 1, true).Item1;
+
+                        matrixClone.ClearSymbol(i, j);
 
                         if (currentScore < bestScore)
                         {
@@ -192,12 +227,10 @@ public class Opponent : Player
                             bestColumn = j;
                         }
                     }
-
-                    matrixClone.ClearSymbol(i, j);
                 }
             }
-        }
 
-        return Tuple.Create(bestScore, bestRow, bestColumn);
+            return Tuple.Create(bestScore, bestRow, bestColumn);
+        }
     }
 }

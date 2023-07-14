@@ -7,6 +7,7 @@ using CrossesAndNoughts.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Media;
@@ -126,7 +127,7 @@ namespace CrossesAndNoughts.ViewModel
 
             _user.UserDrawedSymbol += () =>
             {
-                _opponent.Draw(0, 0);
+                _opponent.Draw(-1, -1);
             };
         }
 
