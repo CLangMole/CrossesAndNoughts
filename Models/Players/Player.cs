@@ -136,7 +136,14 @@ public class Opponent : Player
 
         if (row == -1 && column == -1)
         {
-            var miniMax = MiniMax(Matrix.Instance, 4, Matrix.Instance.CurrentUser.CurrentSymbol, int.MinValue, int.MaxValue);
+            Tuple<int, int, int> miniMax = CurrentSymbol switch
+            {
+                Symbol.Cross => MiniMax(Matrix.Instance, 4, CurrentSymbol, int.MinValue, int.MaxValue),
+                Symbol.Nought => MiniMax(Matrix.Instance, 4, Matrix.Instance.CurrentUser.CurrentSymbol, int.MinValue, int.MaxValue),
+                Symbol.Empty => throw new NotImplementedException(),
+                _ => throw new NotImplementedException()
+            };
+            
             row = miniMax.Item2;
             column = miniMax.Item3;
         }

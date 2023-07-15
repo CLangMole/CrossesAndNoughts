@@ -126,6 +126,11 @@ namespace CrossesAndNoughts.ViewModel
             Matrix.Instance.CurrentUser = _user;
             Matrix.Instance.CurrentOpponent = _opponent;
 
+            if (_opponent.CurrentSymbol == Symbol.Cross)
+            {
+                Task draw = _opponent.Draw(-1, -1);
+            }
+
             _user.UserDrawedSymbol += () =>
             {
                 Task draw = _opponent.Draw(-1, -1);
