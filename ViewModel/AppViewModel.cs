@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Media;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -127,7 +128,8 @@ namespace CrossesAndNoughts.ViewModel
 
             _user.UserDrawedSymbol += () =>
             {
-                _opponent.Draw(-1, -1);
+                Task draw = _opponent.Draw(-1, -1);
+                draw.Start();
             };
         }
 

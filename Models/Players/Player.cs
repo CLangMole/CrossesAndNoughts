@@ -22,8 +22,9 @@ public abstract class Player
         _symbolStrategy = symbolStrategy;
     }
 
-    public virtual void Draw(int row, int column)
+    public virtual async Task Draw(int row, int column)
     {
+        await Task.Yield();
         _symbolStrategy.DrawSymbol(null, row, column);
     }
 }
@@ -45,7 +46,7 @@ public class User : Player
         };
     }
 
-    public override void Draw(int row, int column)
+    public override async Task Draw(int row, int column)
     {
         if (SymbolStrategy is null)
         {
@@ -61,6 +62,8 @@ public class User : Player
         {
             throw new Exception("There's no button on the field");
         }
+
+        await Task.Yield();
 
         SymbolStrategy.DrawSymbol(Field, row, column);
 
@@ -91,7 +94,7 @@ public class Opponent : Player
         };
     }
 
-    public override async void Draw(int row, int column)
+    public override async Task Draw(int row, int column)
     {
         if (SymbolStrategy is null)
         {
@@ -102,6 +105,8 @@ public class Opponent : Player
         {
             throw new("There're no buttons on the field");
         }
+
+        await Task.Yield();
 
         bool isGameOver = Matrix.Instance.GetGameStatus().Item1;
         Symbol winner = Matrix.Instance.GetGameStatus().Item2;
@@ -131,7 +136,7 @@ public class Opponent : Player
 
         if (row == -1 && column == -1)
         {
-            var miniMax = MiniMax(Matrix.Instance, 4, true);
+            var miniMax = MiniMax(Matrix.Instance, 4, Matrix.Instance.CurrentUser.CurrentSymbol, int.MinValue, int.MaxValue);
             row = miniMax.Item2;
             column = miniMax.Item3;
         }
@@ -156,81 +161,76 @@ public class Opponent : Player
         }
     }
 
-    private Tuple<int, int, int> MiniMax(Matrix matrix, int depth, bool isMaximizing)
+    private Tuple<int, int, int> MiniMax(Matrix matrix, int depth, Symbol symbol, int alpha, int beta)
     {
-        int bestScore = isMaximizing ? int.MinValue : int.MaxValue;
+        if (matrix.CurrentUser is null || matrix.CurrentOpponent is null)
+        {
+            throw new NullReferenceException();
+        }
+
+        int bestScore = (symbol == matrix.CurrentUser.CurrentSymbol) ? int.MinValue : int.MaxValue;
         int bestRow = -1;
         int bestColumn = -1;
 
         if (depth == 0 || matrix.GetGameStatus().Item1)
         {
-            if (matrix.CurrentUser is null || matrix.CurrentOpponent is null)
-            {
-                throw new NullReferenceException();
-            }
-
             bestScore = Matrix.Evaluate(matrix);
-            return Tuple.Create(bestScore, bestRow, bestColumn);
-        }
-
-        Matrix matrixClone = matrix.Copy();
-
-        if (isMaximizing)
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    if (matrix[i, j] == Symbol.Empty)
-                    {
-                        matrixClone[i, j] = CurrentSymbol;
-
-                        int currentScore = MiniMax(matrixClone, depth - 1, false).Item1;
-
-                        matrixClone.ClearSymbol(i, j);
-
-                        if (currentScore > bestScore)
-                        {
-                            bestScore = currentScore;
-                            bestRow = i;
-                            bestColumn = j;
-                        }
-                    }
-                }
-            }
-
-            return Tuple.Create(bestScore, bestRow, bestColumn);
         }
         else
         {
+            Matrix matrixClone = matrix.Copy();
+
             for (int i = 0; i < 3; i++)
             {
                 for (int j = 0; j < 3; j++)
                 {
                     if (matrix[i, j] == Symbol.Empty)
                     {
-                        if (Matrix.Instance.CurrentUser is null)
+                        matrixClone[i, j] = symbol;
+
+                        if (symbol == matrix.CurrentUser.CurrentSymbol)
                         {
-                            throw new NullReferenceException();
+                            int currentScore = MiniMax(matrixClone, depth - 1, matrix.CurrentOpponent.CurrentSymbol, alpha, beta).Item1;
+
+                            if (currentScore > bestScore)
+                            {
+                                bestScore = currentScore;
+                                bestRow = i;
+                                bestColumn = j;
+                            }
+
+                            alpha = Math.Max(alpha, bestScore);
+
+                            if (beta <= alpha)
+                            {
+                                break;
+                            }
                         }
+                        else
+                        {
+                            int currentScore = MiniMax(matrixClone, depth - 1, matrix.CurrentUser.CurrentSymbol, alpha, beta).Item1;
 
-                        matrixClone[i, j] = Matrix.Instance.CurrentUser.CurrentSymbol;
+                            if (currentScore < bestScore)
+                            {
+                                bestScore = currentScore;
+                                bestRow = i;
+                                bestColumn = j;
+                            }
 
-                        int currentScore = MiniMax(matrixClone, depth - 1, true).Item1;
+                            beta = Math.Min(beta, bestScore);
+
+                            if (beta <= alpha)
+                            {
+                                break;
+                            }
+                        }
 
                         matrixClone.ClearSymbol(i, j);
-
-                        if (currentScore < bestScore)
-                        {
-                            bestScore = currentScore;
-                            bestRow = i;
-                            bestColumn = j;
-                        }
                     }
                 }
             }
-
-            return Tuple.Create(bestScore, bestRow, bestColumn);
         }
+
+        return Tuple.Create(bestScore, bestRow, bestColumn);
     }
 }
