@@ -108,8 +108,8 @@ public class Opponent : Player
 
         await Task.Yield();
 
-        bool isGameOver = Matrix.Instance.GetGameStatus().Item1;
-        Symbol winner = Matrix.Instance.GetGameStatus().Item2;
+        bool isGameOver = Matrix.Instance.GetGameStatus().IsGameOver;
+        Symbol winner = Matrix.Instance.GetGameStatus().WinnerSymbol;
 
         if (isGameOver)
         {
@@ -136,7 +136,7 @@ public class Opponent : Player
 
         if (row == -1 && column == -1)
         {
-            Tuple<int, int, int> miniMax = CurrentSymbol switch
+            Score miniMax = CurrentSymbol switch
             {
                 Symbol.Cross => MiniMax(Matrix.Instance, 4, CurrentSymbol, int.MinValue, int.MaxValue),
                 Symbol.Nought => MiniMax(Matrix.Instance, 4, Matrix.Instance.CurrentUser.CurrentSymbol, int.MinValue, int.MaxValue),
@@ -144,8 +144,8 @@ public class Opponent : Player
                 _ => throw new NotImplementedException()
             };
             
-            row = miniMax.Item2;
-            column = miniMax.Item3;
+            row = miniMax.BestRow;
+            column = miniMax.BestColumn;
         }
 
         SymbolStrategy?.DrawSymbol(Field, row, column);
@@ -168,7 +168,7 @@ public class Opponent : Player
         }
     }
 
-    private Tuple<int, int, int> MiniMax(Matrix matrix, int depth, Symbol symbol, int alpha, int beta)
+    private Score MiniMax(Matrix matrix, int depth, Symbol symbol, int alpha, int beta)
     {
         if (matrix.CurrentUser is null || matrix.CurrentOpponent is null)
         {
@@ -179,7 +179,7 @@ public class Opponent : Player
         int bestRow = -1;
         int bestColumn = -1;
 
-        if (depth == 0 || matrix.GetGameStatus().Item1)
+        if (depth == 0 || matrix.GetGameStatus().IsGameOver)
         {
             bestScore = Matrix.Evaluate(matrix);
         }
@@ -197,7 +197,7 @@ public class Opponent : Player
 
                         if (symbol == matrix.CurrentUser.CurrentSymbol)
                         {
-                            int currentScore = MiniMax(matrixClone, depth - 1, matrix.CurrentOpponent.CurrentSymbol, alpha, beta).Item1;
+                            int currentScore = MiniMax(matrixClone, depth - 1, matrix.CurrentOpponent.CurrentSymbol, alpha, beta).BestScore;
 
                             if (currentScore > bestScore)
                             {
@@ -215,7 +215,7 @@ public class Opponent : Player
                         }
                         else
                         {
-                            int currentScore = MiniMax(matrixClone, depth - 1, matrix.CurrentUser.CurrentSymbol, alpha, beta).Item1;
+                            int currentScore = MiniMax(matrixClone, depth - 1, matrix.CurrentUser.CurrentSymbol, alpha, beta).BestScore;
 
                             if (currentScore < bestScore)
                             {
@@ -238,6 +238,6 @@ public class Opponent : Player
             }
         }
 
-        return Tuple.Create(bestScore, bestRow, bestColumn);
+        return new Score(bestScore, bestRow, bestColumn);
     }
 }

@@ -3,7 +3,6 @@ using CrossesAndNoughts.Models.Strategies;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,16 +22,16 @@ public class Matrix : IEnumerable<Symbol>
 
     private static readonly Line[] _lines = new Line[]
     {
-        new Line(Tuple.Create(0, 0), Tuple.Create(0, 1), Tuple.Create(0, 2)),
-        new Line(Tuple.Create(1, 0), Tuple.Create(1, 1), Tuple.Create(1, 2)),
-        new Line(Tuple.Create(2, 0), Tuple.Create(2, 1), Tuple.Create(2, 2)),
+        new Line(new Position(0, 0), new Position(0, 1), new Position(0, 2)),
+        new Line(new Position(1, 0), new Position(1, 1), new Position(1, 2)),
+        new Line(new Position(2, 0), new Position(2, 1), new Position(2, 2)),
 
-        new Line(Tuple.Create(0, 0), Tuple.Create(1, 0), Tuple.Create(2, 0)),
-        new Line(Tuple.Create(0, 1), Tuple.Create(1, 1), Tuple.Create(2, 1)),
-        new Line(Tuple.Create(0, 2), Tuple.Create(1, 2), Tuple.Create(2, 2)),
+        new Line(new Position(0, 0), new Position(1, 0), new Position(2, 0)),
+        new Line(new Position(0, 1), new Position(1, 1), new Position(2, 1)),
+        new Line(new Position(0, 2), new Position(1, 2), new Position(2, 2)),
 
-        new Line(Tuple.Create(0, 0), Tuple.Create(1, 1), Tuple.Create(2, 2)),
-        new Line(Tuple.Create(0, 2), Tuple.Create(1, 1), Tuple.Create(2, 0))
+        new Line(new Position(0, 0), new Position(1, 1), new Position(2, 2)),
+        new Line(new Position(0, 2), new Position(1, 1), new Position(2, 0))
     };
 
     public Matrix()
@@ -82,7 +81,7 @@ public class Matrix : IEnumerable<Symbol>
         set => _state[row, column] = value;
     }
 
-    public Tuple<bool, Symbol> GetGameStatus()
+    public GameStatus GetGameStatus()
     {
         int[] rowScores = new int[3];
         int[] columnScores = new int[3];
@@ -119,17 +118,17 @@ public class Matrix : IEnumerable<Symbol>
             {
                 if (rowScores[i] == winPoints || columnScores[i] == winPoints)
                 {
-                    return Tuple.Create(true, symbol);
+                    return new GameStatus(true, symbol);
                 }
             }
 
             if (diag1Score[0] == winPoints || diag2Score[0] == winPoints)
             {
-                return Tuple.Create(true, symbol);
+                return new GameStatus(true, symbol);
             }
         }
 
-        return Tuple.Create(IsFieldFull(), Symbol.Empty);
+        return new GameStatus(IsFieldFull(), Symbol.Empty);
     }
 
     private static int GetDelta(Symbol symbol)
@@ -198,9 +197,9 @@ public class Matrix : IEnumerable<Symbol>
     {
         int score = 0;
 
-        Symbol cell1 = matrix[line.GetCell(0).Item1, line.GetCell(0).Item2];
-        Symbol cell2 = matrix[line.GetCell(1).Item1, line.GetCell(1).Item2];
-        Symbol cell3 = matrix[line.GetCell(2).Item1, line.GetCell(2).Item2];
+        Symbol cell1 = matrix[line.GetCell(0).Row, line.GetCell(0).Column];
+        Symbol cell2 = matrix[line.GetCell(1).Row, line.GetCell(1).Column];
+        Symbol cell3 = matrix[line.GetCell(2).Row, line.GetCell(2).Column];
 
         if (cell1 == matrix.CurrentUser?.CurrentSymbol)
         {
@@ -278,18 +277,50 @@ public class Matrix : IEnumerable<Symbol>
 
     private class Line
     {
-        private static readonly Tuple<int, int>[] _line = new Tuple<int, int>[3];
+        private static readonly Position[] _line = new Position[3];
 
-        public Line(Tuple<int, int> cell1, Tuple<int, int> cell2, Tuple<int, int> cell3)
+        public Line(Position cell1, Position cell2, Position cell3)
         {
             _line[0] = cell1;
             _line[1] = cell2;
             _line[2] = cell3;
         }
 
-        public Tuple<int, int> GetCell(int index)
+        public Position GetCell(int index)
         {
             return _line[index];
         }
+    }
+}
+
+public class GameStatus
+{
+    public bool IsGameOver => _isGameOver;
+
+    public Symbol WinnerSymbol => _winnerSymbol;
+
+
+    private readonly Symbol _winnerSymbol;
+    private readonly bool _isGameOver;
+
+    public GameStatus(bool isGameOver, Symbol winnerSymbol)
+    {
+        _isGameOver = isGameOver;
+        _winnerSymbol = winnerSymbol;
+    }
+}
+
+public class Position
+{
+    public int Row => _row;
+    public int Column => _column;
+
+    private readonly int _row;
+    private readonly int _column;
+
+    public Position(int row, int column)
+    {
+        _row = row;
+        _column = column;
     }
 }
