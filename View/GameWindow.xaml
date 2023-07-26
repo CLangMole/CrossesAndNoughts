@@ -16,7 +16,7 @@
                 <RowDefinition Height="2*"/>
             </Grid.RowDefinitions>
 
-            <Label Visibility="Visible" x:Name="SelectSymbolLabel" Background="LightBlue" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Height="450" Width="800">
+            <Label Visibility="Visible" x:Name="SelectSymbolLabel" Background="LightBlue" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Height="auto" Width="auto">
                 <Label.Content>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -31,10 +31,10 @@
                         <TextBlock Text="Select your symbol" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50" FontFamily="Impact" Foreground="DarkSlateBlue" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3"/>
 
                         <Button Command="{Binding SelectSymbolCommand}" CommandParameter="{Binding Cross}" Grid.Row="1" Margin="70" Background="White">
-                            <Image Source="C:\Users\probn\Fiverr\FiverrAssets\Images\Cross2.jpg" Margin="10"/>
+                            <Image Source="C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Debug\net6.0-windows\Cross3.png" Margin="10"/>
                         </Button>
                         <Button Command="{Binding SelectSymbolCommand}" CommandParameter="{Binding Nought}" Grid.Row="1" Grid.Column="1" Margin="70" Background="White">
-                            <Image Source="C:\Users\probn\Fiverr\FiverrAssets\Images\Nought3.png" Margin="10"/>
+                            <Image Source="C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Debug\net6.0-windows\Nought3.png" Margin="10"/>
                         </Button>
                      </Grid>
                 </Label.Content>

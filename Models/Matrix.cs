@@ -15,10 +15,8 @@ public class Matrix : IEnumerable<Symbol>
     public User? CurrentUser { get; set; }
     public Opponent? CurrentOpponent { get; set; }
 
-    public static Matrix Instance => _instance.Value;
-
-    private static readonly Lazy<Matrix> _instance = new(() => new Matrix());
     private readonly Symbol[,] _state = new Symbol[3, 3];
+    private readonly IEnumerable<Image>? _cellsWithSymbol;
 
     private static readonly Line[] _lines = new Line[]
     {
@@ -36,8 +34,8 @@ public class Matrix : IEnumerable<Symbol>
 
     public Matrix()
     {
-        IEnumerable<Image>? cellsWithSymbol = (Field?.Children?.OfType<Image>());
-        IEnumerable<UIElement>? emptyCells = cellsWithSymbol is null ? Field?.Children.OfType<UIElement>() : Field?.Children.OfType<UIElement>().Except(cellsWithSymbol);
+        _cellsWithSymbol = (Field?.Children?.OfType<Image>());
+        IEnumerable<UIElement>? emptyCells = _cellsWithSymbol is null ? Field?.Children.OfType<UIElement>() : Field?.Children.OfType<UIElement>().Except(_cellsWithSymbol);
 
         if (emptyCells is null)
         {
@@ -163,6 +161,27 @@ public class Matrix : IEnumerable<Symbol>
         matrix.CurrentOpponent = CurrentOpponent;
 
         return matrix;
+    }
+
+    public void Reset()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                _state[i, j] = Symbol.Empty;
+
+                if (_cellsWithSymbol is null)
+                {
+                    return;
+                }
+
+                foreach (var symbol in _cellsWithSymbol)
+                {
+                    Field?.Children.Remove(symbol);
+                }
+            }
+        }
     }
 
     private bool IsFieldFull()

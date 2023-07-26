@@ -10,6 +10,9 @@ public abstract class SymbolsFactory
 {
     public abstract Image CreateSymbol();
 
+    protected static readonly string CrossPath = Directory.GetCurrentDirectory() + @"\Cross3.png";
+    protected static readonly string NoughtPath = Directory.GetCurrentDirectory() + @"\Nought3.png";
+
     protected static Image CustomizedSymbol(string path)
     {
         return new Image()
@@ -25,7 +28,7 @@ public class CrossesFactory : SymbolsFactory
 {
     public override Image CreateSymbol()
     {
-        return CustomizedSymbol(Directory.GetCurrentDirectory() + @"\Cross2.jpg");
+        return CustomizedSymbol(CrossPath);
     }
 }
 
@@ -33,6 +36,6 @@ public class NoughtsFactory : SymbolsFactory
 {
     public override Image CreateSymbol()
     {
-        return CustomizedSymbol(Directory.GetCurrentDirectory() + @"\Nought3.png");
+        return CustomizedSymbol(NoughtPath);
     }
 }
