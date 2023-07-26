@@ -15,6 +15,9 @@ public class Matrix : IEnumerable<Symbol>
     public User? CurrentUser { get; set; }
     public Opponent? CurrentOpponent { get; set; }
 
+    public static Matrix Instance => _instance.Value;
+
+    private static readonly Lazy<Matrix> _instance = new(() => new Matrix());
     private readonly Symbol[,] _state = new Symbol[3, 3];
     private readonly IEnumerable<Image>? _cellsWithSymbol;
 
@@ -341,5 +344,24 @@ public class Position
     {
         _row = row;
         _column = column;
+    }
+}
+
+public class Score
+{
+    public int BestScore { get => _bestScore; set => _bestScore = value; }
+    public int BestRow { get => _bestRow; set => _bestRow = value; }
+    public int BestColumn { get => _bestColumn; set => _bestColumn = value; }
+
+    private int _bestScore;
+    private int _bestRow;
+    private int _bestColumn;
+
+
+    public Score(int bestScore, int bestRow, int bestColumn)
+    {
+        _bestScore = bestScore;
+        _bestRow = bestRow;
+        _bestColumn = bestColumn;
     }
 }

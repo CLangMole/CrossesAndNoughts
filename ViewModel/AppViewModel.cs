@@ -63,12 +63,9 @@ namespace CrossesAndNoughts.ViewModel
         };
         #endregion
 
-        private static readonly Matrix _fieldMatrix = new();
-
         public AppViewModel()
         {
             _startSound.PlayLooping();
-            Player.FieldMatrix = _fieldMatrix;
         }
 
         public List<UserRecord> Records
@@ -123,6 +120,9 @@ namespace CrossesAndNoughts.ViewModel
             _opponent = new Opponent(_strategyMap[symbols.Single(x => x != symbol)].Invoke());
 
             ClickMethods.Instance.GoNext(GameWindow?.Field);
+
+            Matrix.Instance.CurrentUser = _user;
+            Matrix.Instance.CurrentOpponent = _opponent;
 
             if (_opponent.CurrentSymbol == Symbol.Cross)
             {

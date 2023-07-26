@@ -15,7 +15,6 @@ public abstract class Player
     protected ISymbolStrategy? SymbolStrategy { get => _symbolStrategy; }
 
     public static Grid? Field { get; set; }
-    public static Matrix? FieldMatrix { get; set; }
 
     private readonly ISymbolStrategy _symbolStrategy;
 
@@ -67,14 +66,13 @@ public class User : Player
 
         await Task.Yield();
 
-        SymbolStrategy.FieldMatrix = FieldMatrix;
-
         SymbolStrategy.DrawSymbol(Field, row, column);
 
         foreach (Button? button in Buttons)
         {
             button.IsEnabled = false;
         }
+
 
         UserDrawedSymbol?.Invoke();
     }
@@ -111,15 +109,10 @@ public class Opponent : Player
             throw new("There're no buttons on the field");
         }
 
-        if (FieldMatrix is null)
-        {
-            throw new NullReferenceException(nameof(FieldMatrix));
-        }
-
         await Task.Yield();
 
-        bool isGameOver = FieldMatrix.GetGameStatus().IsGameOver;
-        Symbol winner = FieldMatrix.GetGameStatus().WinnerSymbol;
+        bool isGameOver = Matrix.Instance.GetGameStatus().IsGameOver;
+        Symbol winner = Matrix.Instance.GetGameStatus().WinnerSymbol;
 
         if (isGameOver)
         {
@@ -150,7 +143,7 @@ public class Opponent : Player
 
         await Task.Delay(1000);
 
-        if (FieldMatrix.CurrentUser?.CurrentSymbol is null || FieldMatrix.CurrentOpponent?.CurrentSymbol is null)
+        if (Matrix.Instance.CurrentUser?.CurrentSymbol is null || Matrix.Instance.CurrentOpponent?.CurrentSymbol is null)
         {
             throw new NullReferenceException("You didn't choose your symbol");
         }
@@ -159,8 +152,8 @@ public class Opponent : Player
         {
             Score miniMax = CurrentSymbol switch
             {
-                Symbol.Cross => MiniMax(FieldMatrix, 4, CurrentSymbol, int.MinValue, int.MaxValue),
-                Symbol.Nought => MiniMax(FieldMatrix, 4, FieldMatrix.CurrentUser.CurrentSymbol, int.MinValue, int.MaxValue),
+                Symbol.Cross => MiniMax(Matrix.Instance, 4, CurrentSymbol, int.MinValue, int.MaxValue),
+                Symbol.Nought => MiniMax(Matrix.Instance, 4, Matrix.Instance.CurrentUser.CurrentSymbol, int.MinValue, int.MaxValue),
                 Symbol.Empty => throw new NotImplementedException(),
                 _ => throw new NotImplementedException()
             };
@@ -168,8 +161,6 @@ public class Opponent : Player
             row = miniMax.BestRow;
             column = miniMax.BestColumn;
         }
-
-        SymbolStrategy.FieldMatrix = FieldMatrix;
 
         SymbolStrategy?.DrawSymbol(Field, row, column);
 
