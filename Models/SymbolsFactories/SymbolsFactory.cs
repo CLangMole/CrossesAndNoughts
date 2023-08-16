@@ -23,19 +23,3 @@ public abstract class SymbolsFactory
         };
     }
 }
-
-public class CrossesFactory : SymbolsFactory
-{
-    public override Image CreateSymbol()
-    {
-        return CustomizedSymbol(CrossPath);
-    }
-}
-
-public class NoughtsFactory : SymbolsFactory
-{
-    public override Image CreateSymbol()
-    {
-        return CustomizedSymbol(NoughtPath);
-    }
-}

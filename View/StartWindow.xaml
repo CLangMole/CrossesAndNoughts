@@ -38,7 +38,7 @@
 
         <TextBlock x:Name="Title" Grid.Row="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="5" Text="Crosses and Noughts" FontFamily="Impact" FontSize="50" Foreground="DarkSlateBlue" TextAlignment="Center"/>
 
-        <Image x:Name="TitleImage" Source="D:\Downloads\R5.png" Grid.Column="1" Grid.Row="1"/>
+        <Image x:Name="TitleImage" Source="C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Debug\net6.0-windows\TicTacToe.png" Grid.Column="1" Grid.Row="1"/>
 
         <Label Visibility="Collapsed" x:Name="RecordsLabel" Background="LightBlue" Grid.Column="0" Grid.Row="0" Width="800" Height="450" Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" x:Uid="CollapsedAtStart">
             <Label.Content>

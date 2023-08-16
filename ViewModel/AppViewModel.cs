@@ -7,6 +7,7 @@ using CrossesAndNoughts.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Media;
@@ -37,9 +38,9 @@ namespace CrossesAndNoughts.ViewModel
         #endregion
 
         #region Private commands
-        private readonly DelegateCommand _goNextCommand = new(ClickMethods.Instance.GoNext);
-        private readonly DelegateCommand _goBackCommand = new(ClickMethods.Instance.GoBack);
-        private readonly DelegateCommand _quitCommand = new(ClickMethods.Instance.Quit);
+        private readonly DelegateCommand _goNextCommand = new(ClickMethods.GoNext);
+        private readonly DelegateCommand _goBackCommand = new(ClickMethods.GoBack);
+        private readonly DelegateCommand _quitCommand = new(ClickMethods.Quit);
         private readonly DelegateCommand _startGameCommand = new(StartGame);
         private readonly DelegateCommand _selectSymbolCommand = new(SelectSymbol);
         private readonly DelegateCommand _drawSymbolCommand = new(DrawSymbol);
@@ -119,7 +120,7 @@ namespace CrossesAndNoughts.ViewModel
             _user = new User(_strategyMap[symbol].Invoke());
             _opponent = new Opponent(_strategyMap[symbols.Single(x => x != symbol)].Invoke());
 
-            ClickMethods.Instance.GoNext(GameWindow?.Field);
+            ClickMethods.GoNext(GameWindow?.Field);
 
             Matrix.Instance.CurrentUser = _user;
             Matrix.Instance.CurrentOpponent = _opponent;
@@ -133,6 +134,14 @@ namespace CrossesAndNoughts.ViewModel
             {
                 Task draw = _opponent.Draw(-1, -1);
                 draw.Start();
+            };
+
+            _opponent.OpponentDrawedSymbol += () =>
+            {
+                if (Matrix.Instance.GetGameStatus().IsGameOver)
+                {
+                    Matrix.Reset();
+                }
             };
         }
 

@@ -5,13 +5,9 @@ using System.Windows.Media;
 
 namespace CrossesAndNoughts.Models;
 
-public sealed class ClickMethods
+public static class ClickMethods
 {
-    public static ClickMethods Instance { get => _instance.Value; }
-
-    private static readonly Lazy<ClickMethods> _instance = new(() => new ClickMethods());
-
-    public void GoNext(object? parameter)
+    public static void GoNext(object? parameter)
     {
         if (parameter is not UIElement nextControl)
         {
@@ -39,7 +35,7 @@ public sealed class ClickMethods
         }
     }
 
-    public void GoBack(object? parameter)
+    public static void GoBack(object? parameter)
     {
         if (parameter is not UIElement currentControl)
         {
@@ -67,5 +63,5 @@ public sealed class ClickMethods
         }
     }
 
-    public void Quit(object? parameter) => Application.Current.Shutdown();
+    public static void Quit(object? parameter) => Application.Current.Shutdown();
 }

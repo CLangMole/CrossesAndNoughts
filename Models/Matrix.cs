@@ -17,7 +17,7 @@ public class Matrix : IEnumerable<Symbol>
 
     public static Matrix Instance => _instance.Value;
 
-    private static readonly Lazy<Matrix> _instance = new(() => new Matrix());
+    private static Lazy<Matrix> _instance = new(() => new Matrix());
     private readonly Symbol[,] _state = new Symbol[3, 3];
     private readonly IEnumerable<Image>? _cellsWithSymbol;
 
@@ -37,7 +37,7 @@ public class Matrix : IEnumerable<Symbol>
 
     public Matrix()
     {
-        _cellsWithSymbol = (Field?.Children?.OfType<Image>());
+        _cellsWithSymbol = Field?.Children?.OfType<Image>();
         IEnumerable<UIElement>? emptyCells = _cellsWithSymbol is null ? Field?.Children.OfType<UIElement>() : Field?.Children.OfType<UIElement>().Except(_cellsWithSymbol);
 
         if (emptyCells is null)
@@ -86,8 +86,8 @@ public class Matrix : IEnumerable<Symbol>
     {
         int[] rowScores = new int[3];
         int[] columnScores = new int[3];
-        int[] diag1Score = new int[1];
-        int[] diag2Score = new int[1];
+        int[] diagonal1Score = new int[1];
+        int[] diagonal2Score = new int[1];
 
         for (int i = 0; i < 3; i++)
         {
@@ -101,12 +101,12 @@ public class Matrix : IEnumerable<Symbol>
 
                 if (i == j)
                 {
-                    diag1Score[0] += delta;
+                    diagonal1Score[0] += delta;
                 }
 
                 if (i == 3 - j - 1)
                 {
-                    diag2Score[0] += delta;
+                    diagonal2Score[0] += delta;
                 }
             }
         }
@@ -123,7 +123,7 @@ public class Matrix : IEnumerable<Symbol>
                 }
             }
 
-            if (diag1Score[0] == winPoints || diag2Score[0] == winPoints)
+            if (diagonal1Score[0] == winPoints || diagonal2Score[0] == winPoints)
             {
                 return new GameStatus(true, symbol);
             }
@@ -166,26 +166,24 @@ public class Matrix : IEnumerable<Symbol>
         return matrix;
     }
 
-    public void Reset()
+    public static void Reset()
     {
-        for (int i = 0; i < 3; i++)
+        Field?.Children.RemoveRange(18, 9);
+
+        var currentUser = _instance.Value.CurrentUser;
+        var currentOpponent = _instance.Value.CurrentOpponent;
+
+        _instance = new(() => new Matrix()
         {
-            for (int j = 0; j < 3; j++)
-            {
-                _state[i, j] = Symbol.Empty;
-
-                if (_cellsWithSymbol is null)
-                {
-                    return;
-                }
-
-                foreach (var symbol in _cellsWithSymbol)
-                {
-                    Field?.Children.Remove(symbol);
-                }
-            }
-        }
+            CurrentUser = currentUser,
+            CurrentOpponent = currentOpponent
+        });
     }
+
+    //public void VisualizeWinnerLine()
+    //{
+    //    Evaluate(this, _cellsWithSymbol);
+    //}
 
     private bool IsFieldFull()
     {
@@ -210,6 +208,11 @@ public class Matrix : IEnumerable<Symbol>
         for (int i = 0; i < _lines.Length; i++)
         {
             score += EvaluateLine(_lines[i], matrix);
+
+            //if (matrix.GetGameStatus().IsGameOver && matrix.GetGameStatus().WinnerSymbol != Symbol.Empty && cellsWithSymbol != null)
+            //{
+            //    Line.Visualize(_lines[i], cellsWithSymbol.ToArray());
+            //}
         }
 
         return score;
@@ -312,15 +315,34 @@ public class Matrix : IEnumerable<Symbol>
         {
             return _line[index];
         }
+
+        //public static void Visualize(Line line, Image[] cellsWithSymbol)
+        //{
+        //    System.Windows.Shapes.Line visualLine = new();
+        //    Grid.SetColumnSpan(visualLine, 3);
+        //    Grid.SetRowSpan(visualLine, 3);
+
+        //    if ((int)cellsWithSymbol[0].GetValue(Grid.RowProperty) == line.GetCell(0).Row 
+        //        && (int)cellsWithSymbol[0].GetValue(Grid.ColumnProperty) == line.GetCell(0).Column)
+        //    {
+        //        visualLine.X1 = cellsWithSymbol[0].Margin.Left + cellsWithSymbol[0].Margin.Right;
+        //        visualLine.Y1 = cellsWithSymbol[0].Margin.Top + cellsWithSymbol[0].Margin.Bottom;
+        //    }
+
+        //    if ((int)cellsWithSymbol[8].GetValue(Grid.RowProperty) == line.GetCell(2).Row
+        //        && (int)cellsWithSymbol[8].GetValue(Grid.ColumnProperty) == line.GetCell(2).Column)
+        //    {
+        //        visualLine.X1 = cellsWithSymbol[0].Margin.Left + cellsWithSymbol[0].Margin.Right;
+        //        visualLine.Y1 = cellsWithSymbol[0].Margin.Top + cellsWithSymbol[0].Margin.Bottom;
+        //    }
+        //}
     }
 }
 
 public class GameStatus
 {
-    public bool IsGameOver => _isGameOver;
-
     public Symbol WinnerSymbol => _winnerSymbol;
-
+    public bool IsGameOver => _isGameOver;
 
     private readonly Symbol _winnerSymbol;
     private readonly bool _isGameOver;
