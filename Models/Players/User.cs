@@ -50,10 +50,12 @@ public class User : Player
             if (gameStatus.WinnerSymbol == _symbol)
             {
                 _winsCount += 2;
+                SoundsControl.WinSound.Play();
             }
             else if (gameStatus.WinnerSymbol == Symbol.Empty)
             {
                 _winsCount++;
+                SoundsControl.WinSound.Play();
             }
 
             Won?.Invoke(_winsCount);
@@ -65,7 +67,7 @@ public class User : Player
 
         SymbolStrategy.DrawSymbol(Field, row, column);
 
-        SetButtonActive(false);
+        SetButtonsActive(false);
 
         UserDrawedSymbol?.Invoke();
     }

@@ -4,17 +4,14 @@ using CrossesAndNoughts.Models.Players;
 using CrossesAndNoughts.Models.Strategies;
 using CrossesAndNoughts.View;
 using CrossesAndNoughts.ViewModel.Commands;
-using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Media;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace CrossesAndNoughts.ViewModel
 {
@@ -48,11 +45,6 @@ namespace CrossesAndNoughts.ViewModel
         private readonly DelegateCommand _drawSymbolCommand = new(DrawSymbol);
         #endregion
 
-        #region Sound players
-        private static readonly SoundPlayer _gameSound = new(Directory.GetCurrentDirectory() + @"\music-for-puzzle-game-146738.wav");
-        private static readonly SoundPlayer _startSound = new(Directory.GetCurrentDirectory() + @"\Poofy Reel.wav");
-        #endregion
-
         #region Players
         private static User? _user;
         private static Opponent? _opponent;
@@ -80,7 +72,7 @@ namespace CrossesAndNoughts.ViewModel
 
         public AppViewModel()
         {
-            _startSound.PlayLooping();
+            SoundsControl.StartSound.Play();
         }
 
         public List<UserRecord> Records
@@ -131,11 +123,11 @@ namespace CrossesAndNoughts.ViewModel
             }
 
             StartWindow?.Hide();
-            _startSound.Stop();
+            SoundsControl.StartSound.Stop();
 
             GameWindow?.Show();
 
-            _gameSound.PlayLooping();
+            SoundsControl.GameSound.Play();
 
             Player.Field = GameWindow?.Field;
             Matrix.Field = GameWindow?.Field;
@@ -171,13 +163,11 @@ namespace CrossesAndNoughts.ViewModel
 
             Player.Won += (int winsCount) =>
             {
-                if (_gameResult != 0 && winsCount == _gameResult || _gameResult == 0 && winsCount < 0)
+                if (_gameResult != 0 && winsCount == _gameResult || _gameResult == 0 && winsCount == _gameResult)
                 {
                     int record = _gameResult;
-                    _gameResult = 0;
-                    Matrix.Reset();
-                    GameWindow?.Hide();
-                    StartWindow?.Show();
+
+                    SetGameOver();
 
                     using IRecord? records = new UserRecordsProxy();
                     records.AddRecord(new UserRecord(_userName, new Random().Next(0, 10), record));
@@ -202,6 +192,22 @@ namespace CrossesAndNoughts.ViewModel
             int column = (int)control.GetValue(Grid.ColumnProperty);
 
             _user?.Draw(row, column);
+        }
+
+        private static void SetGameOver()
+        {
+            SoundsControl.GameSound.Stop();
+            SoundsControl.GameOverSound.Play();
+
+            SoundsControl.GameOverSound.MediaEnded += (sender, e) =>
+            {
+                Matrix.Reset();
+                _gameResult = 0;
+                GameWindow?.Hide();
+                StartWindow?.Show();
+
+                SoundsControl.StartSound.Play();
+            };
         }
     }
 }

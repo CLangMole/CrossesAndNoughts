@@ -28,7 +28,7 @@ public abstract class Player
         await Task.Yield();
     }
 
-    public virtual void SetButtonActive(bool isEnabled)
+    public virtual void SetButtonsActive(bool isEnabled)
     {
         if (Buttons is null || !Buttons.Any())
         {

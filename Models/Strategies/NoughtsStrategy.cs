@@ -17,5 +17,7 @@ public class NoughtsStrategy : ISymbolStrategy
         symbol.SetValue(Grid.ColumnProperty, column);
 
         Matrix.Instance[row, column] = Symbol.Nought;
+
+        SoundsControl.ClickSound.Play();
     }
 }

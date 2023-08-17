@@ -38,7 +38,7 @@ public class Opponent : Player
 
         await Task.Yield();
 
-        SetButtonActive(false);
+        SetButtonsActive(false);
 
         await Task.Delay(1000);
 
@@ -49,16 +49,18 @@ public class Opponent : Player
             if (gameStatus.WinnerSymbol != _symbol && gameStatus.WinnerSymbol != Symbol.Empty)
             {
                 _winsCount += 2;
+                SoundsControl.WinSound.Play();
             }
             else if (gameStatus.WinnerSymbol == Symbol.Empty)
             {
                 _winsCount++;
+                SoundsControl.WinSound.Play();
             }
 
             Won?.Invoke(_winsCount);
 
             Matrix.Reset();
-            SetButtonActive(true);
+            SetButtonsActive(true);
             OpponentDrawedSymbol?.Invoke();
 
             return;
@@ -85,7 +87,7 @@ public class Opponent : Player
 
         SymbolStrategy?.DrawSymbol(Field, row, column);
 
-        SetButtonActive(true);
+        SetButtonsActive(true);
 
         OpponentDrawedSymbol?.Invoke();
 
