@@ -4,6 +4,7 @@ using CrossesAndNoughts.Models.Players;
 using CrossesAndNoughts.Models.Strategies;
 using CrossesAndNoughts.View;
 using CrossesAndNoughts.ViewModel.Commands;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +14,7 @@ using System.Linq;
 using System.Media;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace CrossesAndNoughts.ViewModel
 {
@@ -64,6 +66,18 @@ namespace CrossesAndNoughts.ViewModel
         };
         #endregion
 
+        #region Game result
+
+        private static int _gameResult;
+
+        #endregion
+
+        #region User name
+
+        private static string _userName = " ";
+
+        #endregion
+
         public AppViewModel()
         {
             _startSound.PlayLooping();
@@ -97,6 +111,25 @@ namespace CrossesAndNoughts.ViewModel
 
         private static void StartGame(object? parameter)
         {
+            if (StartWindow?.LoginLabel.Content is not Grid loginGrid)
+            {
+                throw new Exception($"Cannot find element {nameof(loginGrid)}");
+            }
+
+            if (loginGrid.Children[1] is not TextBox loginField)
+            {
+                throw new Exception($"Cannot find element {nameof(loginField)}");
+            }
+
+            if (string.IsNullOrEmpty(loginField.Text))
+            {
+                _userName = "Player" + new Random().Next(1, 1000000).ToString();
+            }
+            else
+            {
+                _userName = loginField.Text;
+            }
+
             StartWindow?.Hide();
             _startSound.Stop();
 
@@ -120,7 +153,7 @@ namespace CrossesAndNoughts.ViewModel
             _user = new User(_strategyMap[symbol].Invoke());
             _opponent = new Opponent(_strategyMap[symbols.Single(x => x != symbol)].Invoke());
 
-            ClickMethods.GoNext(GameWindow?.Field);
+            ClickMethods.GoNext(GameWindow?.GameCanvas); // GameWindow?.Field
 
             Matrix.Instance.CurrentUser = _user;
             Matrix.Instance.CurrentOpponent = _opponent;
@@ -136,12 +169,25 @@ namespace CrossesAndNoughts.ViewModel
                 draw.Start();
             };
 
-            _opponent.OpponentDrawedSymbol += () =>
+            Player.Won += (int winsCount) =>
             {
-                if (Matrix.Instance.GetGameStatus().IsGameOver)
+                if (_gameResult != 0 && winsCount == _gameResult || _gameResult == 0 && winsCount < 0)
                 {
+                    int record = _gameResult;
+                    _gameResult = 0;
                     Matrix.Reset();
+                    GameWindow?.Hide();
+                    StartWindow?.Show();
+
+                    using IRecord? records = new UserRecordsProxy();
+                    records.AddRecord(new UserRecord(_userName, new Random().Next(0, 10), record));
+                    
                 }
+
+                _gameResult = winsCount;
+
+                var textBlock = (TextBlock)GameWindow.GameCanvas.Children[1];
+                textBlock.Text = _gameResult.ToString();
             };
         }
 

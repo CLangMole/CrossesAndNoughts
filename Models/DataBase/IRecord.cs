@@ -7,6 +7,7 @@ namespace CrossesAndNoughts.Models.DataBase;
 interface IRecord : IDisposable
 {
     UserRecord GetRecord(int number);
+    void AddRecord(UserRecord record);
     List<UserRecord> GetRecords();
 }
 
@@ -33,6 +34,17 @@ class UserRecordsCollection : IRecord
     public void Dispose()
     {
         _dataBase.Dispose();
+    }
+
+    public void AddRecord(UserRecord record)
+    {
+        if (record is null)
+        {
+            throw new ArgumentNullException(nameof(record));
+        }
+
+        _dataBase.Records.Add(record);
+        _dataBase.SaveChanges();
     }
 }
 
@@ -77,5 +89,15 @@ public class UserRecordsProxy : IRecord
     {
         _recordsCollection?.Dispose();
         GC.SuppressFinalize(this);
+    }
+
+    public void AddRecord(UserRecord record)
+    {
+        if (_records.Count == 0)
+        {
+            _recordsCollection ??= new UserRecordsCollection();
+        }
+
+        _recordsCollection.AddRecord(record);
     }
 }

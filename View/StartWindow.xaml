@@ -76,7 +76,7 @@
                         <RowDefinition Height="80"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Text="Enter your username:" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" FontFamily="Impact" Foreground="DarkSlateBlue" Grid.Column="1" Grid.Row="0"/>
+                    <TextBlock x:Name="LoginField" Text="Enter your username:" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="30" FontFamily="Impact" Foreground="DarkSlateBlue" Grid.Column="1" Grid.Row="0"/>
 
                     <TextBox x:Name="LoginTextBox" Grid.Row="1" FontSize="30" BorderBrush="DarkSlateBlue" BorderThickness="2" VerticalAlignment="Center" TextAlignment="Center" Height="60" Width="400" Grid.ColumnSpan="3" Margin="10" Cursor="IBeam"/>
 

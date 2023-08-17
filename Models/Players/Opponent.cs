@@ -12,6 +12,7 @@ public class Opponent : Player
     public Symbol CurrentSymbol => _symbol;
 
     private readonly Symbol _symbol;
+    private int _winsCount = 0;
 
     public Opponent(ISymbolStrategy symbolStrategy) : base(symbolStrategy)
     {
@@ -41,11 +42,25 @@ public class Opponent : Player
 
         await Task.Delay(1000);
 
-        if (Matrix.Instance.GetGameStatus().IsGameOver)
+        var gameStatus = Matrix.Instance.GetGameStatus();
+
+        if (gameStatus.IsGameOver)
         {
+            if (gameStatus.WinnerSymbol != _symbol && gameStatus.WinnerSymbol != Symbol.Empty)
+            {
+                _winsCount += 2;
+            }
+            else if (gameStatus.WinnerSymbol == Symbol.Empty)
+            {
+                _winsCount++;
+            }
+
+            Won?.Invoke(_winsCount);
+
             Matrix.Reset();
             SetButtonActive(true);
             OpponentDrawedSymbol?.Invoke();
+
             return;
         }
 
@@ -73,6 +88,15 @@ public class Opponent : Player
         SetButtonActive(true);
 
         OpponentDrawedSymbol?.Invoke();
+
+        gameStatus = Matrix.Instance.GetGameStatus();
+
+        if (gameStatus.IsGameOver)
+        {
+            Won?.Invoke(_winsCount);
+
+            Matrix.Reset();
+        }
     }
 
     private Score MiniMax(Matrix matrix, int depth, Symbol symbol, int alpha, int beta)

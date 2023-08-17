@@ -1,10 +1,7 @@
 ﻿using CrossesAndNoughts.Models.Strategies;
 using System;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace CrossesAndNoughts.Models.Players;
 
@@ -14,6 +11,8 @@ public class User : Player
     public Symbol CurrentSymbol => _symbol;
 
     private readonly Symbol _symbol;
+
+    private int _winsCount = 0;
 
     public User(ISymbolStrategy symbolStrategy) : base(symbolStrategy)
     {
@@ -44,10 +43,23 @@ public class User : Player
 
         await Task.Yield();
 
-        if (Matrix.Instance.GetGameStatus().IsGameOver)
+        var gameStatus = Matrix.Instance.GetGameStatus();
+
+        if (gameStatus.IsGameOver)
         {
+            if (gameStatus.WinnerSymbol == _symbol)
+            {
+                _winsCount += 2;
+            }
+            else if (gameStatus.WinnerSymbol == Symbol.Empty)
+            {
+                _winsCount++;
+            }
+
+            Won?.Invoke(_winsCount);
+
             Matrix.Reset();
-            Debug.WriteLine(Matrix.Instance.GetGameStatus().WinnerSymbol);
+
             return;
         }
 
