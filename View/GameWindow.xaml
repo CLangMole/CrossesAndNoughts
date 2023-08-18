@@ -36,7 +36,7 @@
                             <Image Source="C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Debug\net6.0-windows\Cross3.png" Margin="10"/>
                         </Button>
                         <Button Command="{Binding SelectSymbolCommand}" CommandParameter="{Binding Nought}" Grid.Row="1" Grid.Column="1" Margin="70" Background="White">
-                            <Image Source="C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Debug\net6.0-windows\Nought3.png" Margin="10"/>
+                            <Image Source="C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Debug\net6.0-windows\Nought5.png" Margin="10"/>
                         </Button>
                      </Grid>
                 </Label.Content>
@@ -84,7 +84,7 @@
                     <Button x:Name="Nine" Opacity="0" Grid.Column="2" Grid.Row="2" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Nine}"/>
                 </Grid>
 
-                <TextBlock Text="0" Grid.Column="1" FontSize="50" Canvas.Right="50"/>
+                <TextBlock Text="{Binding Points}" Grid.Column="1" FontSize="50" Canvas.Right="50"/>
 
             </Canvas>
             
