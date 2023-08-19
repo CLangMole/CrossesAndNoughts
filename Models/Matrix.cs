@@ -3,6 +3,7 @@ using CrossesAndNoughts.Models.Strategies;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -38,7 +39,10 @@ public class Matrix : IEnumerable<Symbol>
     public Matrix()
     {
         _cellsWithSymbol = Field?.Children?.OfType<Image>();
-        IEnumerable<UIElement>? emptyCells = _cellsWithSymbol is null ? Field?.Children.OfType<UIElement>() : Field?.Children.OfType<UIElement>().Except(_cellsWithSymbol);
+
+        IEnumerable<UIElement>? emptyCells = _cellsWithSymbol is null 
+            ? Field?.Children.OfType<UIElement>() 
+            : Field?.Children.OfType<UIElement>().Except(_cellsWithSymbol);
 
         if (emptyCells is null)
         {
@@ -180,11 +184,6 @@ public class Matrix : IEnumerable<Symbol>
         });
     }
 
-    //public void VisualizeWinnerLine()
-    //{
-    //    Evaluate(this, _cellsWithSymbol);
-    //}
-
     private bool IsFieldFull()
     {
         for (int i = 0; i < 3; i++)
@@ -201,6 +200,28 @@ public class Matrix : IEnumerable<Symbol>
         return true;
     }
 
+    public static void DrawWinningLine()
+    {
+        if (Field is null)
+        {
+            throw new NullReferenceException(nameof(Field));
+        }
+
+        foreach (var line in _lines)
+        {
+            Symbol cell1 = _instance.Value[line.GetCell(0).Row, line.GetCell(0).Column];
+            Symbol cell2 = _instance.Value[line.GetCell(1).Row, line.GetCell(1).Column];
+            Symbol cell3 = _instance.Value[line.GetCell(2).Row, line.GetCell(2).Column];
+
+            if (cell1 == Symbol.Empty || cell2 == Symbol.Empty || cell3 == Symbol.Empty || cell1 != cell2 || cell2 != cell3 || cell1 != cell3)
+            {
+                continue;
+            }
+
+            Line.Visualize(Line.GetLinePosition(line, Field).from, Line.GetLinePosition(line, Field).to, Field);
+        }
+    }
+
     public static int Evaluate(Matrix matrix)
     {
         int score = 0;
@@ -208,11 +229,6 @@ public class Matrix : IEnumerable<Symbol>
         for (int i = 0; i < _lines.Length; i++)
         {
             score += EvaluateLine(_lines[i], matrix);
-
-            //if (matrix.GetGameStatus().IsGameOver && matrix.GetGameStatus().WinnerSymbol != Symbol.Empty && cellsWithSymbol != null)
-            //{
-            //    Line.Visualize(_lines[i], cellsWithSymbol.ToArray());
-            //}
         }
 
         return score;
@@ -302,40 +318,61 @@ public class Matrix : IEnumerable<Symbol>
 
     private class Line
     {
-        private static readonly Position[] _line = new Position[3];
+        private readonly Position[] _line = new Position[3];
 
-        public Line(Position cell1, Position cell2, Position cell3)
+        internal Line(Position cell1, Position cell2, Position cell3)
         {
             _line[0] = cell1;
             _line[1] = cell2;
             _line[2] = cell3;
         }
 
-        public Position GetCell(int index)
+        internal Position GetCell(int index)
         {
             return _line[index];
         }
 
-        //public static void Visualize(Line line, Image[] cellsWithSymbol)
-        //{
-        //    System.Windows.Shapes.Line visualLine = new();
-        //    Grid.SetColumnSpan(visualLine, 3);
-        //    Grid.SetRowSpan(visualLine, 3);
+        internal static void Visualize(Point from, Point to, Grid grid)
+        {
+            System.Windows.Shapes.Line visualLine = new();
 
-        //    if ((int)cellsWithSymbol[0].GetValue(Grid.RowProperty) == line.GetCell(0).Row 
-        //        && (int)cellsWithSymbol[0].GetValue(Grid.ColumnProperty) == line.GetCell(0).Column)
-        //    {
-        //        visualLine.X1 = cellsWithSymbol[0].Margin.Left + cellsWithSymbol[0].Margin.Right;
-        //        visualLine.Y1 = cellsWithSymbol[0].Margin.Top + cellsWithSymbol[0].Margin.Bottom;
-        //    }
+            grid.Children.Add(visualLine);
+            Grid.SetColumnSpan(visualLine, 3);
+            Grid.SetRowSpan(visualLine, 3);
 
-        //    if ((int)cellsWithSymbol[8].GetValue(Grid.RowProperty) == line.GetCell(2).Row
-        //        && (int)cellsWithSymbol[8].GetValue(Grid.ColumnProperty) == line.GetCell(2).Column)
-        //    {
-        //        visualLine.X1 = cellsWithSymbol[0].Margin.Left + cellsWithSymbol[0].Margin.Right;
-        //        visualLine.Y1 = cellsWithSymbol[0].Margin.Top + cellsWithSymbol[0].Margin.Bottom;
-        //    }
-        //}
+            visualLine.X1 = from.X;
+            visualLine.Y1 = from.Y;
+
+            visualLine.X2 = to.X;
+            visualLine.Y2 = to.Y;
+        }
+
+        internal static (Point from, Point to) GetLinePosition(Line line, Grid grid)
+        {
+            IEnumerable<Image> cellsWithSymbol = grid.Children.OfType<Image>();
+
+            Point from, to;
+
+            foreach (Image cell in cellsWithSymbol)
+            {
+                int row = (int)cell.GetValue(Grid.RowProperty);
+                int column = (int)cell.GetValue(Grid.ColumnProperty);
+
+                if (row == line.GetCell(0).Row
+                    && column == line.GetCell(0).Column)
+                {
+                    from = new Point(row * cell.ActualWidth + (cell.ActualWidth / 2), column * cell.ActualWidth + (cell.ActualWidth / 2));
+                }
+
+                if (row == line.GetCell(2).Row
+                    && column == line.GetCell(2).Column)
+                {
+                    to = new Point(row * cell.ActualWidth + (cell.ActualWidth / 2), column * cell.ActualWidth + (cell.ActualWidth / 2));
+                }
+            }
+
+            return (from, to);
+        }
     }
 }
 
@@ -367,6 +404,11 @@ public class Position
         _row = row;
         _column = column;
     }
+
+    public override string ToString()
+    {
+        return $"({_row}, {_column})";
+    }
 }
 
 public class Score
@@ -378,7 +420,6 @@ public class Score
     private int _bestScore;
     private int _bestRow;
     private int _bestColumn;
-
 
     public Score(int bestScore, int bestRow, int bestColumn)
     {

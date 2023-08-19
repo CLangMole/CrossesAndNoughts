@@ -51,11 +51,13 @@ public class User : Player
             {
                 _winsCount += 2;
                 SoundsControl.WinSound.Play();
+                Matrix.DrawWinningLine();
             }
             else if (gameStatus.WinnerSymbol == Symbol.Empty)
             {
                 _winsCount++;
                 SoundsControl.WinSound.Play();
+                Matrix.DrawWinningLine();
             }
 
             Won?.Invoke(_winsCount);

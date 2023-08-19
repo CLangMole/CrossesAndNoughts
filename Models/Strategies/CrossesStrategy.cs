@@ -17,7 +17,6 @@ public class CrossesStrategy : ISymbolStrategy
         symbol.SetValue(Grid.ColumnProperty, column);
 
         Matrix.Instance[row, column] = Symbol.Cross;
-
         SoundsControl.ClickSound.Play();
     }
 }

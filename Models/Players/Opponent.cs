@@ -1,6 +1,5 @@
 ﻿using CrossesAndNoughts.Models.Strategies;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -50,11 +49,13 @@ public class Opponent : Player
             {
                 _winsCount += 2;
                 SoundsControl.WinSound.Play();
+                Matrix.DrawWinningLine();
             }
             else if (gameStatus.WinnerSymbol == Symbol.Empty)
             {
                 _winsCount++;
                 SoundsControl.WinSound.Play();
+                Matrix.DrawWinningLine();
             }
 
             Won?.Invoke(_winsCount);
@@ -75,8 +76,8 @@ public class Opponent : Player
         {
             Score miniMax = CurrentSymbol switch
             {
-                Symbol.Cross => MiniMax(Matrix.Instance, 4, CurrentSymbol, int.MinValue, int.MaxValue),
-                Symbol.Nought => MiniMax(Matrix.Instance, 4, Matrix.Instance.CurrentUser.CurrentSymbol, int.MinValue, int.MaxValue),
+                Symbol.Cross => MiniMax(Matrix.Instance, 1, CurrentSymbol, int.MinValue, int.MaxValue),
+                Symbol.Nought => MiniMax(Matrix.Instance, 1, CurrentSymbol, int.MinValue, int.MaxValue),
                 Symbol.Empty => throw new NotImplementedException(),
                 _ => throw new NotImplementedException()
             };
