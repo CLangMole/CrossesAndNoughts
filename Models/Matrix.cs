@@ -316,6 +316,23 @@ public class Matrix : IEnumerable<Symbol>
         return score;
     }
 
+    private static int EvaluateSimple(Matrix matrix)
+    {
+        var gameStatus = matrix.GetGameStatus();
+
+        if (gameStatus.IsGameOver)
+        {
+            return gameStatus.WinnerSymbol switch
+            {
+                Symbol.Empty => 0,
+                Symbol.Cross or Symbol.Nought => matrix.CurrentUser.CurrentSymbol == gameStatus.WinnerSymbol ? 1 : -1,
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        return 0;
+    }
+
     private class Line
     {
         private readonly Position[] _line = new Position[3];
@@ -336,15 +353,15 @@ public class Matrix : IEnumerable<Symbol>
         {
             System.Windows.Shapes.Line visualLine = new();
 
-            grid.Children.Add(visualLine);
-            Grid.SetColumnSpan(visualLine, 3);
-            Grid.SetRowSpan(visualLine, 3);
-
             visualLine.X1 = from.X;
             visualLine.Y1 = from.Y;
 
             visualLine.X2 = to.X;
             visualLine.Y2 = to.Y;
+
+            grid.Children.Add(visualLine);
+            Grid.SetColumnSpan(visualLine, 3);
+            Grid.SetRowSpan(visualLine, 3);
         }
 
         internal static (Point from, Point to) GetLinePosition(Line line, Grid grid)
@@ -362,12 +379,14 @@ public class Matrix : IEnumerable<Symbol>
                     && column == line.GetCell(0).Column)
                 {
                     from = new Point(row * cell.ActualWidth + (cell.ActualWidth / 2), column * cell.ActualWidth + (cell.ActualWidth / 2));
+                    continue;
                 }
 
                 if (row == line.GetCell(2).Row
                     && column == line.GetCell(2).Column)
                 {
                     to = new Point(row * cell.ActualWidth + (cell.ActualWidth / 2), column * cell.ActualWidth + (cell.ActualWidth / 2));
+                    continue;
                 }
             }
 

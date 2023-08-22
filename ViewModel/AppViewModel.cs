@@ -7,6 +7,7 @@ using CrossesAndNoughts.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -27,6 +28,7 @@ public class AppViewModel : INotifyPropertyChanged
     public DelegateCommand StartGameCommand { get => _startGameCommand; }
     public DelegateCommand SelectSymbolCommand { get => _selectSymbolCommand; }
     public DelegateCommand DrawSymbolCommand { get => _drawSymbolCommand; }
+    public DelegateCommand GoBackToMenuCommand { get => _goBackToMenuCommand; }
     #endregion
 
     #region Symbols
@@ -48,6 +50,55 @@ public class AppViewModel : INotifyPropertyChanged
     }
     #endregion
 
+    #region Difficulty properties
+
+    public System.Windows.Media.Brush DifficultyColor
+    {
+        get
+        {
+            return _difficultyColor;
+        }
+        set
+        {
+            NotifyPropertyChanged(nameof(DifficultyColor));
+        }
+    }
+
+    public string DifficultyName
+    {
+        get
+        {
+            return _difficultyName;
+        }
+        set
+        {
+            NotifyPropertyChanged(nameof(DifficultyName));
+        }
+    }
+
+    #endregion
+
+    #region Records
+    public List<UserRecord> Records
+    {
+        get
+        {
+            using IRecord? records = new UserRecordsProxy();
+
+            if (records.GetRecords().Count < 0)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            return records.GetRecords();
+        }
+        private set
+        {
+            NotifyPropertyChanged(nameof(Records));
+        }
+    }
+    #endregion
+
     #region Private commands
     private readonly DelegateCommand _goNextCommand = new(ClickMethods.GoNext);
     private readonly DelegateCommand _goBackCommand = new(ClickMethods.GoBack);
@@ -55,6 +106,7 @@ public class AppViewModel : INotifyPropertyChanged
     private readonly DelegateCommand _startGameCommand = new(StartGame);
     private readonly DelegateCommand _selectSymbolCommand = new(SelectSymbol);
     private readonly DelegateCommand _drawSymbolCommand = new(DrawSymbol);
+    private readonly DelegateCommand _goBackToMenuCommand = new(GoBackToMenu);
     #endregion
 
     #region Players
@@ -76,38 +128,26 @@ public class AppViewModel : INotifyPropertyChanged
 
     #endregion
 
+    #region Difficulty fields
+
+    private static System.Windows.Media.Brush _difficultyColor = System.Windows.Media.Brushes.GreenYellow;
+    private static string _difficultyName = "Easy";
+
+    #endregion
+
     #region User name
 
     private static string _userName = " ";
 
     #endregion
 
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public AppViewModel()
     {
         SoundsControl.StartSound.Play();
         UIRefresher viewModelHelper = new(this);
     }
-
-    public List<UserRecord> Records
-    {
-        get
-        {
-            using IRecord? records = new UserRecordsProxy();
-
-            if (records.GetRecords().Count < 0)
-            {
-                throw new IndexOutOfRangeException();
-            }
-
-            return records.GetRecords();
-        }
-        private set
-        {
-            NotifyPropertyChanged(nameof(Records));
-        }
-    }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
 
     public void NotifyPropertyChanged(string propertyName)
     {
@@ -159,7 +199,7 @@ public class AppViewModel : INotifyPropertyChanged
         _user = new User(_strategyMap[symbol].Invoke());
         _opponent = new Opponent(_strategyMap[symbols.Single(x => x != symbol)].Invoke());
 
-        ClickMethods.GoNext(GameWindow?.GameCanvas); // GameWindow?.Field
+        ClickMethods.GoNext(GameWindow?.GameUIContainer); //GameWindow?.Field
 
         Matrix.Instance.CurrentUser = _user;
         Matrix.Instance.CurrentOpponent = _opponent;
@@ -194,8 +234,11 @@ public class AppViewModel : INotifyPropertyChanged
             }
 
             _gameResult = winsCount;
+            _difficultyColor = _opponent.CurrentDifficulty.Item1;
+            _difficultyName = _opponent.CurrentDifficulty.Item2;
 
             UIRefresher.RefreshPoints(_gameResult);
+            UIRefresher.RefreshDifficultyProperties(_difficultyColor, _difficultyName);
         };
     }
 
@@ -219,14 +262,21 @@ public class AppViewModel : INotifyPropertyChanged
 
         SoundsControl.GameOverSound.MediaEnded += (sender, e) =>
         {
-            Matrix.Reset();
-            _gameResult = 0;
-            GameWindow?.Hide();
-            ClickMethods.GoBack(GameWindow?.GameCanvas);
-            StartWindow?.Show();
-
-            SoundsControl.StartSound.Play();
+            GoBackToMenu(null);
         };
+    }
+
+    private static void GoBackToMenu(object? parameter)
+    {
+        SoundsControl.GameSound.Stop();
+        Matrix.Reset();
+        _gameResult = 0;
+        UIRefresher.RefreshPoints(_gameResult);
+        GameWindow?.Hide();
+        ClickMethods.GoBack(GameWindow?.GameGrid);
+        StartWindow?.Show();
+
+        SoundsControl.StartSound.Play();
     }
 
     private class UIRefresher
@@ -258,6 +308,17 @@ public class AppViewModel : INotifyPropertyChanged
             }
 
             _viewModel.Points = points.ToString();
+        }
+
+        internal static void RefreshDifficultyProperties(System.Windows.Media.Brush brush, string name)
+        {
+            if (_viewModel is null)
+            {
+                throw new NullReferenceException(nameof(_viewModel));
+            }
+
+            _viewModel.DifficultyColor = brush;
+            _viewModel.DifficultyName = name;
         }
     }
 }

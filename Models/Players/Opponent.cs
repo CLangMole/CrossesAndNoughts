@@ -1,17 +1,21 @@
 ﻿using CrossesAndNoughts.Models.Strategies;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace CrossesAndNoughts.Models.Players;
 
 public class Opponent : Player
 {
     public event Action? OpponentDrawedSymbol;
+    public (Brush, string) CurrentDifficulty { get; private set; } = (Brushes.YellowGreen, "Easy");
     public Symbol CurrentSymbol => _symbol;
 
     private readonly Symbol _symbol;
     private int _winsCount = 0;
+    private int _difficulty = 1;
 
     public Opponent(ISymbolStrategy symbolStrategy) : base(symbolStrategy)
     {
@@ -58,6 +62,20 @@ public class Opponent : Player
                 Matrix.DrawWinningLine();
             }
 
+            if (_difficulty < 4)
+            {
+                _difficulty++;
+            }
+
+            CurrentDifficulty = _difficulty switch
+            {
+                1 => (Brushes.GreenYellow, "Easy"),
+                2 => (Brushes.Yellow, "Middle"),
+                3 => (Brushes.DarkOrange, "Hard"),
+                4 => (Brushes.Red, "Insane"),
+                _ => throw new NotImplementedException()
+            };
+
             Won?.Invoke(_winsCount);
 
             Matrix.Reset();
@@ -74,14 +92,8 @@ public class Opponent : Player
 
         if (row == -1 && column == -1)
         {
-            Score miniMax = CurrentSymbol switch
-            {
-                Symbol.Cross => MiniMax(Matrix.Instance, 1, CurrentSymbol, int.MinValue, int.MaxValue),
-                Symbol.Nought => MiniMax(Matrix.Instance, 1, CurrentSymbol, int.MinValue, int.MaxValue),
-                Symbol.Empty => throw new NotImplementedException(),
-                _ => throw new NotImplementedException()
-            };
-            
+            var miniMax = MiniMax(Matrix.Instance, _difficulty, _symbol, int.MinValue, int.MaxValue);
+
             row = miniMax.BestRow;
             column = miniMax.BestColumn;
         }
