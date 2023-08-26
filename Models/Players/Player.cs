@@ -14,7 +14,7 @@ public abstract class Player
 
     public static Grid? Field { get; set; }
 
-    public static Action<int>? Won;
+    public static Action<int>? GameOver;
 
     private readonly ISymbolStrategy _symbolStrategy;
 

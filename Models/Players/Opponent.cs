@@ -1,6 +1,6 @@
 ﻿using CrossesAndNoughts.Models.Strategies;
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -9,7 +9,6 @@ namespace CrossesAndNoughts.Models.Players;
 
 public class Opponent : Player
 {
-    public event Action? OpponentDrawedSymbol;
     public (Brush, string) CurrentDifficulty { get; private set; } = (Brushes.YellowGreen, "Easy");
     public Symbol CurrentSymbol => _symbol;
 
@@ -54,12 +53,17 @@ public class Opponent : Player
                 _winsCount += 2;
                 SoundsControl.WinSound.Play();
                 Matrix.DrawWinningLine();
+                await Task.Delay(1000);
             }
             else if (gameStatus.WinnerSymbol == Symbol.Empty)
             {
                 _winsCount++;
                 SoundsControl.WinSound.Play();
+            }
+            else
+            {
                 Matrix.DrawWinningLine();
+                await Task.Delay(1000);
             }
 
             if (_difficulty < 4)
@@ -69,6 +73,7 @@ public class Opponent : Player
 
             CurrentDifficulty = _difficulty switch
             {
+                0 => (Brushes.AliceBlue, "TooEasy"),
                 1 => (Brushes.GreenYellow, "Easy"),
                 2 => (Brushes.Yellow, "Middle"),
                 3 => (Brushes.DarkOrange, "Hard"),
@@ -76,11 +81,10 @@ public class Opponent : Player
                 _ => throw new NotImplementedException()
             };
 
-            Won?.Invoke(_winsCount);
+            GameOver?.Invoke(_winsCount);
 
             Matrix.Reset();
             SetButtonsActive(true);
-            OpponentDrawedSymbol?.Invoke();
 
             return;
         }
@@ -102,13 +106,11 @@ public class Opponent : Player
 
         SetButtonsActive(true);
 
-        OpponentDrawedSymbol?.Invoke();
-
         gameStatus = Matrix.Instance.GetGameStatus();
 
         if (gameStatus.IsGameOver)
         {
-            Won?.Invoke(_winsCount);
+            GameOver?.Invoke(_winsCount);
 
             Matrix.Reset();
         }
@@ -185,5 +187,27 @@ public class Opponent : Player
         }
 
         return new Score(bestScore, bestRow, bestColumn);
+    }
+
+    private static Score RandomScore()
+    {
+        Stack<Position> avaliable = new();
+        Random rnd = new();
+
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if (Matrix.Instance[i, j] == Symbol.Empty)
+                {
+                    avaliable.Push(new Position(i, j));
+                }
+            }
+        }
+
+        int bestRow = rnd.Next(avaliable.Pop().Row);
+        int bestColumn = rnd.Next(avaliable.Pop().Column);
+
+        return new Score(0, bestRow, bestColumn);
     }
 }

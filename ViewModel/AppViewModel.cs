@@ -199,7 +199,7 @@ public class AppViewModel : INotifyPropertyChanged
         _user = new User(_strategyMap[symbol].Invoke());
         _opponent = new Opponent(_strategyMap[symbols.Single(x => x != symbol)].Invoke());
 
-        ClickMethods.GoNext(GameWindow?.GameUIContainer); //GameWindow?.Field
+        ClickMethods.GoNext(GameWindow?.GameUIContainer);
 
         Matrix.Instance.CurrentUser = _user;
         Matrix.Instance.CurrentOpponent = _opponent;
@@ -220,7 +220,7 @@ public class AppViewModel : INotifyPropertyChanged
             draw.Start();
         };
 
-        Player.Won += (int winsCount) =>
+        Player.GameOver += (int winsCount) =>
         {
             if (_gameResult != 0 && winsCount == _gameResult || _gameResult == 0 && winsCount == _gameResult)
             {
@@ -262,7 +262,7 @@ public class AppViewModel : INotifyPropertyChanged
 
         SoundsControl.GameOverSound.MediaEnded += (sender, e) =>
         {
-            GoBackToMenu(null);
+            ClickMethods.GoNext(GameWindow?.GameOverLabel);
         };
     }
 

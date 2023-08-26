@@ -52,15 +52,20 @@ public class User : Player
                 _winsCount += 2;
                 SoundsControl.WinSound.Play();
                 Matrix.DrawWinningLine();
+                await Task.Delay(1000);
             }
             else if (gameStatus.WinnerSymbol == Symbol.Empty)
             {
                 _winsCount++;
                 SoundsControl.WinSound.Play();
+            }
+            else
+            {
                 Matrix.DrawWinningLine();
+                await Task.Delay(1000);
             }
 
-            Won?.Invoke(_winsCount);
+            GameOver?.Invoke(_winsCount);
 
             Matrix.Reset();
 

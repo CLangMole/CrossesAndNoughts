@@ -7,17 +7,16 @@
         mc:Ignorable="d"
         Title="GameWindow" Height="450" Width="800" Background="Azure" MinWidth="800" MinHeight="450"  xmlns:viewmodel="clr-namespace:CrossesAndNoughts.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:AppViewModel}">
 
-    <Window.Resources>
-        <Style x:Key="ButtonStyle">
-            <Setter Property="ItemsControl.FontFamily" Value="Impact" />
-            <Setter Property="ItemsControl.Background" Value="CornflowerBlue" />
-            <Setter Property="ItemsControl.Foreground" Value="DarkSlateBlue" />
-            <Setter Property="ItemsControl.FontSize" Value="30" />
-        </Style>
-    </Window.Resources>
-
     <Grid>
-        <Grid x:Name="GameGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="GameGrid" Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
@@ -52,56 +51,6 @@
                     </Grid>
                 </Label.Content>
             </Label>
-
-            <!--Should be collapsed at start-->
-
-            <!--<Canvas x:Name="GameCanvas" Visibility="Collapsed" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="3">
-                <Grid Margin="70" x:Name="Field" x:Uid="CollapsedAtStart" Height="300" Width="400">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-
-                    <Border Grid.Column="0" Grid.Row="0" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 2, 2"/>
-                    <Border Grid.Column="0" Grid.Row="1" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 2, 2"/>
-                    <Border Grid.Column="0" Grid.Row="2" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 2, 0"/>
-
-                    <Border Grid.Column="1" Grid.Row="0" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 2, 2"/>
-                    <Border Grid.Column="1" Grid.Row="1" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 2, 2"/>
-                    <Border Grid.Column="1" Grid.Row="2" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 2, 0"/>
-
-                    <Border Grid.Column="2" Grid.Row="0" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 0, 2"/>
-                    <Border Grid.Column="2" Grid.Row="1" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 0, 2"/>
-                    <Border Grid.Column="2" Grid.Row="2" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 0, 0"/>
-
-                    -->
-            <!--Buttons for drawing symbols-->
-            <!--
-
-                    <Button x:Name="One" Opacity="0" Grid.Column="0" Grid.Row="0" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=One}"/>
-                    <Button x:Name="Two" Opacity="0" Grid.Column="1" Grid.Row="0" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Two}"/>
-                    <Button x:Name="Three" Opacity="0" Grid.Column="2" Grid.Row="0" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Three}"/>
-
-                    <Button x:Name="Four" Opacity="0" Grid.Column="0" Grid.Row="1" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Four}"/>
-                    <Button x:Name="Five" Opacity="0" Grid.Column="1" Grid.Row="1" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Five}"/>
-                    <Button x:Name="Six" Opacity="0" Grid.Column="2" Grid.Row="1" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Six}"/>
-
-                    <Button x:Name="Seven" Opacity="0" Grid.Column="0" Grid.Row="2" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Seven}"/>
-                    <Button x:Name="Eight" Opacity="0" Grid.Column="1" Grid.Row="2" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Eight}"/>
-                    <Button x:Name="Nine" Opacity="0" Grid.Column="2" Grid.Row="2" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Nine}"/>
-                </Grid>
-
-                <TextBlock Text="You win" TextAlignment="Center" HorizontalAlignment="Center" FontSize="40" FontFamily="Impact" Foreground="DarkSlateBlue" Canvas.Right="65"/>
-                <TextBlock Text="{Binding Points}" FontSize="50" Canvas.Right="65" FontFamily="Impact" Foreground="Violet" Canvas.Top="50" HorizontalAlignment="Left" VerticalAlignment="Center" Width="124" TextAlignment="Center"/>
-
-                <Button x:Name="BackButton" Content="Back" Style="{StaticResource ButtonStyle}" Cursor="Hand" Command="{Binding GoBackToMenuCommand}" Canvas.Right="75" HorizontalAlignment="Center" VerticalAlignment="Center" Canvas.Top="180" Height="50" Width="100"/>
-            </Canvas>-->
 
             <Grid Visibility="Collapsed" Grid.ColumnSpan="2" x:Name="GameUIContainer">
                 <Grid.ColumnDefinitions>
@@ -151,14 +100,24 @@
                     <Button x:Name="Nine" Opacity="0" Grid.Column="2" Grid.Row="2" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Nine}"/>
                 </Grid>
 
-                <TextBlock Text="You win" TextAlignment="Center" FontSize="40" FontFamily="Impact" Foreground="DarkSlateBlue" Grid.Column="1" Margin="10,43,10,0" VerticalAlignment="Top"/>
+                <TextBlock Text="Score:" TextAlignment="Center" FontSize="40" FontFamily="Impact" Foreground="DarkSlateBlue" Grid.Column="1" Margin="10,43,10,0" VerticalAlignment="Top"/>
                 <TextBlock Text="{Binding Points}" FontSize="40" FontFamily="Impact" Foreground="Violet" TextAlignment="Center" VerticalAlignment="Top" Grid.Column="1" Margin="10,92,10,0"/>
 
-                <TextBlock Text="Difficulty" TextAlignment="Center" FontSize="35" FontFamily="Impact" Foreground="DarkSlateBlue" Grid.Column="1" Margin="10" VerticalAlignment="Center"/>
+                <TextBlock Text="Difficulty" TextAlignment="Center" FontSize="40" FontFamily="Impact" Foreground="DarkSlateBlue" Grid.Column="1" Margin="10,189,10,0" VerticalAlignment="Top"/>
                 <TextBlock Text="{Binding DifficultyName}" TextAlignment="Center" FontSize="35" FontFamily="Impact" Foreground="{Binding DifficultyColor}" Grid.Column="1" Margin="10,238,15,0" VerticalAlignment="Top"/>
 
-                <Button x:Name="BackButton" Content="Back" Style="{StaticResource ButtonStyle}" Cursor="Hand" Command="{Binding GoBackToMenuCommand}" VerticalAlignment="Top" Grid.Column="1" Margin="50,343,50,0"/>
+                <Button Content="Back" Background="LightSkyBlue" Foreground="DarkSlateBlue" FontFamily="Impact" FontSize="40" Cursor="Hand" Command="{Binding GoBackToMenuCommand}" VerticalAlignment="Top" Grid.Column="1" Margin="48,331,52,0"/>
             </Grid>
+
+            <Label Visibility="Collapsed" x:Name="GameOverLabel" Grid.ColumnSpan="3" Background="LightBlue" BorderBrush="DarkSlateBlue" BorderThickness="1" x:Uid="CollapsedAtStart">
+                <Label.Content>
+                    <Grid Height="424" Width="790">
+                        <Button x:Name="MainMenuButton" Content="Main Menu" FontFamily="Impact" FontSize="50" Foreground="DarkSlateBlue" Background="CornflowerBlue" Cursor="Hand" Command="{Binding GoBackToMenuCommand}" Width="600" Height="75" Margin="95,319,95,30"/>
+                        <TextBlock Text="You lose with score:" TextAlignment="Center" FontSize="60" FontFamily="Impact" Foreground="DarkSlateBlue" Margin="0,10,0,225"/>
+                        <TextBlock Text="{Binding Points}" FontSize="100" FontFamily="Impact" Foreground="Violet" TextAlignment="Center" Margin="171,139,171,165"/>
+                    </Grid>
+                </Label.Content>
+            </Label>
         </Grid>
     </Grid>
 </Window>

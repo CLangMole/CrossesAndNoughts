@@ -3,10 +3,10 @@ using CrossesAndNoughts.Models.Strategies;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Animation;
 
 namespace CrossesAndNoughts.Models;
 
@@ -136,16 +136,6 @@ public class Matrix : IEnumerable<Symbol>
         return new GameStatus(IsFieldFull(), Symbol.Empty);
     }
 
-    private static int GetDelta(Symbol symbol)
-    {
-        return symbol switch
-        {
-            Symbol.Cross => 1,
-            Symbol.Nought => -1,
-            Symbol.Empty => 0,
-            _ => throw new NotImplementedException()
-        }; 
-    }
 
     public void ClearSymbol(int row, int column)
     {
@@ -182,22 +172,6 @@ public class Matrix : IEnumerable<Symbol>
             CurrentUser = currentUser,
             CurrentOpponent = currentOpponent
         });
-    }
-
-    private bool IsFieldFull()
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                if (this[i, j] == Symbol.Empty)
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 
     public static void DrawWinningLine()
@@ -316,21 +290,31 @@ public class Matrix : IEnumerable<Symbol>
         return score;
     }
 
-    private static int EvaluateSimple(Matrix matrix)
+    private bool IsFieldFull()
     {
-        var gameStatus = matrix.GetGameStatus();
-
-        if (gameStatus.IsGameOver)
+        for (int i = 0; i < 3; i++)
         {
-            return gameStatus.WinnerSymbol switch
+            for (int j = 0; j < 3; j++)
             {
-                Symbol.Empty => 0,
-                Symbol.Cross or Symbol.Nought => matrix.CurrentUser.CurrentSymbol == gameStatus.WinnerSymbol ? 1 : -1,
-                _ => throw new NotImplementedException()
-            };
+                if (this[i, j] == Symbol.Empty)
+                {
+                    return false;
+                }
+            }
         }
 
-        return 0;
+        return true;
+    }
+
+    private static int GetDelta(Symbol symbol)
+    {
+        return symbol switch
+        {
+            Symbol.Cross => 1,
+            Symbol.Nought => -1,
+            Symbol.Empty => 0,
+            _ => throw new NotImplementedException()
+        }; 
     }
 
     private class Line
@@ -351,17 +335,38 @@ public class Matrix : IEnumerable<Symbol>
 
         internal static void Visualize(Point from, Point to, Grid grid)
         {
-            System.Windows.Shapes.Line visualLine = new();
+            DoubleAnimation lineXAnimation = new()
+            {
+                From = from.X,
+                To = to.X,
+                Duration = TimeSpan.FromMilliseconds(500)
+            };
 
-            visualLine.X1 = from.X;
-            visualLine.Y1 = from.Y;
+            DoubleAnimation lineYAnimation = new()
+            {
+                From = from.Y,
+                To = to.Y,
+                Duration = TimeSpan.FromMilliseconds(500)
+            };
 
-            visualLine.X2 = to.X;
-            visualLine.Y2 = to.Y;
+            System.Windows.Shapes.Line visualLine = new()
+            {
+                X1 = from.X,
+                Y1 = from.Y,
+
+                Fill = System.Windows.Media.Brushes.Violet,
+                Visibility = Visibility.Visible,
+                Stroke = System.Windows.Media.Brushes.Violet,
+                StrokeThickness = 10,
+            };
 
             grid.Children.Add(visualLine);
-            Grid.SetColumnSpan(visualLine, 3);
-            Grid.SetRowSpan(visualLine, 3);
+
+            Grid.SetRowSpan(visualLine, grid.RowDefinitions.Count);
+            Grid.SetColumnSpan(visualLine, grid.ColumnDefinitions.Count);
+
+            visualLine.BeginAnimation(System.Windows.Shapes.Line.X2Property, lineXAnimation);
+            visualLine.BeginAnimation(System.Windows.Shapes.Line.Y2Property, lineYAnimation);
         }
 
         internal static (Point from, Point to) GetLinePosition(Line line, Grid grid)
@@ -378,14 +383,14 @@ public class Matrix : IEnumerable<Symbol>
                 if (row == line.GetCell(0).Row
                     && column == line.GetCell(0).Column)
                 {
-                    from = new Point(row * cell.ActualWidth + (cell.ActualWidth / 2), column * cell.ActualWidth + (cell.ActualWidth / 2));
+                    from = cell.TransformToVisual(grid).Transform(new Point(Math.Round(cell.ActualWidth / 10), Math.Round(cell.ActualHeight / 2)));
                     continue;
                 }
 
                 if (row == line.GetCell(2).Row
                     && column == line.GetCell(2).Column)
                 {
-                    to = new Point(row * cell.ActualWidth + (cell.ActualWidth / 2), column * cell.ActualWidth + (cell.ActualWidth / 2));
+                    to = cell.TransformToVisual(grid).Transform(new Point(Math.Round(cell.ActualWidth), Math.Round(cell.ActualHeight / 2)));
                     continue;
                 }
             }
