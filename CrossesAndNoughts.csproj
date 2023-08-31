@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Images\Cross3.png" />
+    <None Remove="Resources\Images\Nought5.png" />
+    <None Remove="Resources\Images\TicTacToe.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.7">
@@ -19,6 +25,14 @@
 
   <ItemGroup>
     <Folder Include="ViewModel\Commands\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Images\Cross3.png" />
+    <Resource Include="Resources\Images\Nought5.png" />
+    <Resource Include="Resources\Images\TicTacToe.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

@@ -7,7 +7,6 @@ using CrossesAndNoughts.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -161,7 +160,7 @@ public class AppViewModel : INotifyPropertyChanged
             throw new Exception($"Cannot find element {nameof(loginGrid)}");
         }
 
-        if (loginGrid.Children[1] is not TextBox loginField)
+        if (((Viewbox)loginGrid.Children[1]).Child is not TextBox loginField)
         {
             throw new Exception($"Cannot find element {nameof(loginField)}");
         }
@@ -225,11 +224,10 @@ public class AppViewModel : INotifyPropertyChanged
             if (_gameResult != 0 && winsCount == _gameResult || _gameResult == 0 && winsCount == _gameResult)
             {
                 int record = _gameResult;
-
                 SetGameOver();
 
                 using IRecord? records = new UserRecordsProxy();
-                records.AddRecord(new UserRecord(_userName, new Random().Next(0, 10), record));
+                records.AddRecord(new UserRecord(_userName, records.GetRecords().Count + 1, record));
                 UIRefresher.RefreshRecordsList();
             }
 

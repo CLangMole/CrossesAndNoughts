@@ -10,14 +10,14 @@ public abstract class SymbolsFactory
 {
     public abstract Image CreateSymbol();
 
-    protected static readonly string CrossPath = Directory.GetCurrentDirectory() + @"\Cross3.png";
-    protected static readonly string NoughtPath = Directory.GetCurrentDirectory() + @"\Nought5.png";
+    protected static readonly string CrossPath = @"pack://application:,,,/Resources/Images/Cross3.png";
+    protected static readonly string NoughtPath = @"pack://application:,,,/Resources/Images/Nought5.png";
 
     protected static Image CustomizedSymbol(string path)
     {
         return new Image()
         {
-            Source = BitmapFrame.Create(new Uri(path)),
+            Source = BitmapFrame.Create(new Uri(path, UriKind.Absolute)),
             Visibility = Visibility.Visible,
             Margin = new Thickness(10)
         };
