@@ -1,7 +1,5 @@
 ﻿using CrossesAndNoughts.Models.SymbolsFactories;
-using System;
 using System.Windows.Controls;
-using System.Windows.Media.Animation;
 
 namespace CrossesAndNoughts.Models.Strategies;
 

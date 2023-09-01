@@ -40,8 +40,8 @@ public class Matrix : IEnumerable<Symbol>
     {
         _cellsWithSymbol = Field?.Children?.OfType<Image>();
 
-        IEnumerable<UIElement>? emptyCells = _cellsWithSymbol is null 
-            ? Field?.Children.OfType<UIElement>() 
+        IEnumerable<UIElement>? emptyCells = _cellsWithSymbol is null
+            ? Field?.Children.OfType<UIElement>()
             : Field?.Children.OfType<UIElement>().Except(_cellsWithSymbol);
 
         if (emptyCells is null)
@@ -314,7 +314,7 @@ public class Matrix : IEnumerable<Symbol>
             Symbol.Nought => -1,
             Symbol.Empty => 0,
             _ => throw new NotImplementedException()
-        }; 
+        };
     }
 
     private class Line
