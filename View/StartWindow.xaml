@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CrossesAndNoughts.ViewModel.Converters" xmlns:viewmodel="clr-namespace:CrossesAndNoughts.ViewModel" xmlns:s="clr-namespace:System;assembly=mscorlib" d:DataContext="{d:DesignInstance Type=viewmodel:AppViewModel}"
+        xmlns:local="clr-namespace:CrossesAndNoughts.View" xmlns:viewmodel="clr-namespace:CrossesAndNoughts.ViewModel" xmlns:s="clr-namespace:System;assembly=mscorlib" d:DataContext="{d:DesignInstance Type=viewmodel:AppViewModel}"
         mc:Ignorable="d"
         Title="Crosses and Noughts" Height="450" Width="800" Background="LightBlue" MinHeight="470" MinWidth ="690">
     <Window.Resources>
@@ -13,9 +13,6 @@
             <Setter Property="ItemsControl.Foreground" Value="DarkSlateBlue" />
             <Setter Property="ItemsControl.FontSize" Value="30" />
         </Style>
-
-        <local:AdaptiveFontSizeConverter x:Key="TextSizeConverter"/>
-        
     </Window.Resources>
 
     <Grid x:Name="LayoutGrid">
