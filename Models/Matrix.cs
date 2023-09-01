@@ -357,7 +357,8 @@ public class Matrix : IEnumerable<Symbol>
                 Fill = System.Windows.Media.Brushes.Violet,
                 Visibility = Visibility.Visible,
                 Stroke = System.Windows.Media.Brushes.Violet,
-                StrokeThickness = 10,
+                StrokeThickness = grid.ActualWidth == grid.MaxWidth
+                || grid.ActualHeight == grid.MaxHeight ? 20 : 10
             };
 
             grid.Children.Add(visualLine);
@@ -384,6 +385,7 @@ public class Matrix : IEnumerable<Symbol>
                     && column == line.GetCell(0).Column)
                 {
                     from = cell.TransformToVisual(grid).Transform(new Point(Math.Round(cell.ActualWidth / 10), Math.Round(cell.ActualHeight / 2)));
+
                     continue;
                 }
 
@@ -391,6 +393,7 @@ public class Matrix : IEnumerable<Symbol>
                     && column == line.GetCell(2).Column)
                 {
                     to = cell.TransformToVisual(grid).Transform(new Point(Math.Round(cell.ActualWidth), Math.Round(cell.ActualHeight / 2)));
+
                     continue;
                 }
             }

@@ -63,7 +63,7 @@
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
 
-                <Grid Margin="50" x:Name="Field" Grid.Column="0">
+                <Grid Margin="50" x:Name="Field" Grid.Column="0" MaxHeight="800" MaxWidth="1000">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
@@ -100,6 +100,8 @@
                     <Button x:Name="Seven" Opacity="0" Grid.Column="0" Grid.Row="2" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Seven}"/>
                     <Button x:Name="Eight" Opacity="0" Grid.Column="1" Grid.Row="2" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Eight}"/>
                     <Button x:Name="Nine" Opacity="0" Grid.Column="2" Grid.Row="2" Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Nine}"/>
+
+                    <Viewbox Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Grid.ColumnSpan="3"/>
                 </Grid>
 
                 <Viewbox Grid.Column="1" Margin="40">
