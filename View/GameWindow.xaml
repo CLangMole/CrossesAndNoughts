@@ -117,10 +117,21 @@
 
             <Label Visibility="Collapsed" x:Name="GameOverLabel" Grid.ColumnSpan="3" Background="LightBlue" BorderBrush="DarkSlateBlue" BorderThickness="1" x:Uid="CollapsedAtStart">
                 <Label.Content>
-                    <Grid Height="424" Width="790">
-                        <Button x:Name="MainMenuButton" Content="Main Menu" FontFamily="Impact" FontSize="50" Foreground="DarkSlateBlue" Background="CornflowerBlue" Cursor="Hand" Command="{Binding GoBackToMenuCommand}" Width="600" Height="75" Margin="95,319,95,30"/>
-                        <TextBlock Text="You lose with score:" TextAlignment="Center" FontSize="60" FontFamily="Impact" Foreground="DarkSlateBlue" Margin="0,10,0,225"/>
-                        <TextBlock Text="{Binding Points}" FontSize="100" FontFamily="Impact" Foreground="Violet" TextAlignment="Center" Margin="171,139,171,165"/>
+                    <Grid Height="{Binding ElementName=GameOverLabel, Path=ActualHeight}" Width="{Binding ElementName=GameOverLabel, Path=ActualWidth}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="2*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Button x:Name="MainMenuButton" Content="Main Menu" FontFamily="Impact" FontSize="50" Foreground="DarkSlateBlue" Background="CornflowerBlue" Cursor="Hand" Command="{Binding GoBackToMenuCommand}" Margin="100, 10, 100, 10" Grid.Row="2"/>
+
+                        <Viewbox Margin="10">
+                            <TextBlock Text="You lose with score:" TextAlignment="Center" FontFamily="Impact" Foreground="DarkSlateBlue"/>
+                        </Viewbox>
+
+                        <Viewbox Grid.Row="1" Margin="30">
+                            <TextBlock Text="50" FontFamily="Impact" Foreground="Violet" TextAlignment="Center"/>
+                        </Viewbox>
                     </Grid>
                 </Label.Content>
             </Label>
