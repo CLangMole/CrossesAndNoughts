@@ -17,13 +17,13 @@
 
     <Grid x:Name="LayoutGrid">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="75"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="75"/>
         </Grid.RowDefinitions>
 
@@ -36,9 +36,11 @@
         <Button x:Name="RecordsButton" Grid.Column="2" Grid.Row="2" Margin="10" Content="Records" Style="{StaticResource ButtonStyle}" 
                      Cursor="Hand" Command="{Binding GoNextCommand}" CommandParameter="{Binding ElementName=RecordsLabel}"/>
 
-        <TextBlock x:Name="Title" Grid.ColumnSpan="3" HorizontalAlignment="Center" Margin="5" Text="Crosses and Noughts" FontFamily="Impact" FontSize="50" Foreground="DarkSlateBlue" TextAlignment="Center"/>
+        <Viewbox Grid.ColumnSpan="3" Margin="5" Grid.Column="0">
+            <TextBlock x:Name="Title" Text="Crosses and Noughts" FontFamily="Impact" Foreground="DarkSlateBlue" TextAlignment="Center"/>
+        </Viewbox>
 
-        <Image x:Name="TitleImage" Source="/Resources/Images/TicTacToe.png" Grid.Column="1" Grid.Row="1"/>
+        <Image x:Name="TitleImage" Source="/Resources/Images/TicTacToe.png" Grid.Column="1" Grid.Row="1" MaxHeight="800" MaxWidth="800"/>
 
         <Label Visibility="Collapsed" x:Name="RecordsLabel" Background="LightBlue" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="3" x:Uid="CollapsedAtStart">
             <Label.Content>
