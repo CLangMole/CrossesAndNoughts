@@ -27,20 +27,20 @@
             <RowDefinition Height="75"/>
         </Grid.RowDefinitions>
 
-        <Button x:Name="StartButton" Grid.Column="1" Grid.Row="2" Margin="10" Content="Start Game" Style="{StaticResource ButtonStyle}" 
+        <Button Grid.Column="1" Grid.Row="2" Margin="10" Content="Start Game" Style="{StaticResource ButtonStyle}" 
                      Cursor="Hand" Command="{Binding GoNextCommand}" CommandParameter="{Binding ElementName=LoginLabel}"/>
 
-        <Button x:Name="QuitButton" Grid.Column="0" Grid.Row="2" Margin="10" Content="Quit" Style="{StaticResource ButtonStyle}" 
+        <Button Grid.Column="0" Grid.Row="2" Margin="10" Content="Quit" Style="{StaticResource ButtonStyle}" 
                      Cursor="Hand" Command="{Binding QuitCommand}"/>
 
-        <Button x:Name="RecordsButton" Grid.Column="2" Grid.Row="2" Margin="10" Content="Records" Style="{StaticResource ButtonStyle}" 
+        <Button Grid.Column="2" Grid.Row="2" Margin="10" Content="Records" Style="{StaticResource ButtonStyle}" 
                      Cursor="Hand" Command="{Binding GoNextCommand}" CommandParameter="{Binding ElementName=RecordsLabel}"/>
 
         <Viewbox Grid.ColumnSpan="3" Margin="5" Grid.Column="0">
-            <TextBlock x:Name="Title" Text="Crosses and Noughts" FontFamily="Impact" Foreground="DarkSlateBlue" TextAlignment="Center"/>
+            <TextBlock Text="Crosses and Noughts" FontFamily="Impact" Foreground="DarkSlateBlue" TextAlignment="Center"/>
         </Viewbox>
 
-        <Image x:Name="TitleImage" Source="/Resources/Images/TicTacToe.png" Grid.Column="1" Grid.Row="1" MaxHeight="800" MaxWidth="800"/>
+        <Image Source="/Resources/Images/TicTacToe.png" Grid.Column="1" Grid.Row="1" MaxHeight="800" MaxWidth="800"/>
 
         <Label Visibility="Collapsed" x:Name="RecordsLabel" Background="LightBlue" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="3" x:Uid="CollapsedAtStart">
             <Label.Content>
@@ -57,9 +57,9 @@
                         <RowDefinition Height="112.5"/>
                     </Grid.RowDefinitions>
 
-                    <DataGrid x:Name="RecordsTable" Grid.Column="1" Grid.Row="1" IsReadOnly="True" Background="SkyBlue" Foreground="DarkSlateBlue" RowBackground="Azure" ItemsSource="{Binding Records}"/>
+                    <DataGrid Grid.Column="1" Grid.Row="1" IsReadOnly="True" Background="SkyBlue" Foreground="DarkSlateBlue" RowBackground="Azure" ItemsSource="{Binding Records}"/>
 
-                    <Button x:Name="RecordsBackButton" Grid.Column="1" Grid.Row="2" Margin="100, 20, 100, 40" Content="Back" Style="{StaticResource ButtonStyle}"  Cursor="Hand" Command="{Binding GoBackCommand}" CommandParameter="{Binding ElementName=RecordsLabel}"/>
+                    <Button Grid.Column="1" Grid.Row="2" Margin="100, 20, 100, 40" Content="Back" Style="{StaticResource ButtonStyle}"  Cursor="Hand" Command="{Binding GoBackCommand}" CommandParameter="{Binding ElementName=RecordsLabel}"/>
                 </Grid>
             </Label.Content>
         </Label>
@@ -77,15 +77,15 @@
                         <RowDefinition Height="80"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock x:Name="LoginField" Text="Enter your username:" FontFamily="Impact" Foreground="DarkSlateBlue" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" MinHeight="40" FontSize="40" TextAlignment="Center"/>
+                    <TextBlock Text="Enter your username:" FontFamily="Impact" Foreground="DarkSlateBlue" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" MinHeight="40" FontSize="40" TextAlignment="Center"/>
 
                     <Viewbox Grid.Row="1" Margin="100, 30, 100, 30" Grid.ColumnSpan="3" MaxHeight="150" MinHeight="44" MaxWidth="1000">
-                        <TextBox x:Name="LoginTextBox1" Grid.Row="1" FontSize="30" BorderBrush="DarkSlateBlue" BorderThickness="2" TextAlignment="Center" VerticalContentAlignment="Center" Cursor="IBeam" MaxLines="1" MaxLength="20" MinWidth="300" MinHeight="50" Margin="5"/>
+                        <TextBox Grid.Row="1" FontSize="30" BorderBrush="DarkSlateBlue" BorderThickness="2" TextAlignment="Center" VerticalContentAlignment="Center" Cursor="IBeam" MaxLines="1" MaxLength="20" MinWidth="300" MinHeight="50" Margin="5"/>
                     </Viewbox>
 
-                    <Button x:Name="LoginBackButton" Grid.Row="2" Margin="10" Content="Back" Style="{StaticResource ButtonStyle}" Cursor="Hand" Command="{Binding GoBackCommand}" CommandParameter="{Binding ElementName=LoginLabel}"/>
+                    <Button Grid.Row="2" Margin="10" Content="Back" Style="{StaticResource ButtonStyle}" Cursor="Hand" Command="{Binding GoBackCommand}" CommandParameter="{Binding ElementName=LoginLabel}"/>
 
-                    <Button x:Name="StartGameButton" Grid.Row="2" Grid.Column="1" Margin="10" Content="Start Game" Style="{StaticResource ButtonStyle}" Cursor="Hand"  Command="{Binding StartGameCommand}"/>
+                    <Button Grid.Row="2" Grid.Column="1" Margin="10" Content="Start Game" Style="{StaticResource ButtonStyle}" Cursor="Hand"  Command="{Binding StartGameCommand}"/>
                 </Grid>
             </Label.Content>
         </Label>

@@ -62,6 +62,7 @@ public class User : Player
             else
             {
                 Matrix.DrawWinningLine();
+                SetButtonsActive(false);
                 await Task.Delay(1000);
             }
 

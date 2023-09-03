@@ -7,8 +7,10 @@ using CrossesAndNoughts.ViewModel.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace CrossesAndNoughts.ViewModel;
@@ -266,15 +268,13 @@ public class AppViewModel : INotifyPropertyChanged
 
     private static void GoBackToMenu(object? parameter)
     {
-        SoundsControl.GameSound.Stop();
-        Matrix.Reset();
-        _gameResult = 0;
-        UIRefresher.RefreshPoints(_gameResult);
-        GameWindow?.Hide();
-        ClickMethods.GoBack(GameWindow?.GameGrid);
-        StartWindow?.Show();
+        if (Environment.ProcessPath is null)
+        {
+            return;
+        }
 
-        SoundsControl.StartSound.Play();
+        Process.Start(Environment.ProcessPath);
+        Application.Current.Shutdown();
     }
 
     private class UIRefresher

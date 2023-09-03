@@ -63,6 +63,7 @@ public class Opponent : Player
             else
             {
                 Matrix.DrawWinningLine();
+                SetButtonsActive(false);
                 await Task.Delay(1000);
             }
 
@@ -110,6 +111,12 @@ public class Opponent : Player
 
         if (gameStatus.IsGameOver)
         {
+            if (gameStatus.WinnerSymbol != Symbol.Empty)
+            {
+                Matrix.DrawWinningLine();
+                await Task.Delay(1000);
+            };
+
             GameOver?.Invoke(_winsCount);
 
             Matrix.Reset();
@@ -187,27 +194,5 @@ public class Opponent : Player
         }
 
         return new Score(bestScore, bestRow, bestColumn);
-    }
-
-    private static Score RandomScore()
-    {
-        Stack<Position> avaliable = new();
-        Random rnd = new();
-
-        for (int i = 0; i < 3; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                if (Matrix.Instance[i, j] == Symbol.Empty)
-                {
-                    avaliable.Push(new Position(i, j));
-                }
-            }
-        }
-
-        int bestRow = rnd.Next(avaliable.Pop().Row);
-        int bestColumn = rnd.Next(avaliable.Pop().Column);
-
-        return new Score(0, bestRow, bestColumn);
     }
 }

@@ -3,6 +3,7 @@ using CrossesAndNoughts.Models.Strategies;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,7 +21,6 @@ public class Matrix : IEnumerable<Symbol>
 
     private static Lazy<Matrix> _instance = new(() => new Matrix());
     private readonly Symbol[,] _state = new Symbol[3, 3];
-    private readonly IEnumerable<Image>? _cellsWithSymbol;
 
     private static readonly Line[] _lines = new Line[]
     {
@@ -38,28 +38,11 @@ public class Matrix : IEnumerable<Symbol>
 
     public Matrix()
     {
-        _cellsWithSymbol = Field?.Children?.OfType<Image>();
-
-        IEnumerable<UIElement>? emptyCells = _cellsWithSymbol is null
-            ? Field?.Children.OfType<UIElement>()
-            : Field?.Children.OfType<UIElement>().Except(_cellsWithSymbol);
-
-        if (emptyCells is null)
-        {
-            throw new NullReferenceException(nameof(emptyCells));
-        }
-
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
             {
-                foreach (var cell in emptyCells)
-                {
-                    if ((int)cell.GetValue(Grid.RowProperty) == i && (int)cell.GetValue(Grid.ColumnProperty) == j)
-                    {
-                        _state[i, j] = Symbol.Empty;
-                    }
-                }
+                _state[i, j] = Symbol.Empty;
             }
         }
     }
@@ -162,7 +145,17 @@ public class Matrix : IEnumerable<Symbol>
 
     public static void Reset()
     {
-        Field?.Children.RemoveRange(18, 9);
+        if (Field is null)
+        {
+            throw new NullReferenceException(nameof(Field));
+        }
+
+        Field.Children.RemoveRange(18, 9);
+
+        foreach (var cell in Field.Children.OfType<Image>())
+        {
+            Field.Children.Remove(cell);
+        }
 
         var currentUser = _instance.Value.CurrentUser;
         var currentOpponent = _instance.Value.CurrentOpponent;
@@ -357,6 +350,7 @@ public class Matrix : IEnumerable<Symbol>
                 Fill = System.Windows.Media.Brushes.Violet,
                 Visibility = Visibility.Visible,
                 Stroke = System.Windows.Media.Brushes.Violet,
+
                 StrokeThickness = grid.ActualWidth == grid.MaxWidth
                 || grid.ActualHeight == grid.MaxHeight ? 20 : 10
             };
@@ -368,10 +362,13 @@ public class Matrix : IEnumerable<Symbol>
 
             visualLine.BeginAnimation(System.Windows.Shapes.Line.X2Property, lineXAnimation);
             visualLine.BeginAnimation(System.Windows.Shapes.Line.Y2Property, lineYAnimation);
+
+            Debug.WriteLine(from + "    " + to);
         }
 
         internal static (Point from, Point to) GetLinePosition(Line line, Grid grid)
         {
+
             IEnumerable<Image> cellsWithSymbol = grid.Children.OfType<Image>();
 
             Point from, to;
@@ -384,7 +381,7 @@ public class Matrix : IEnumerable<Symbol>
                 if (row == line.GetCell(0).Row
                     && column == line.GetCell(0).Column)
                 {
-                    from = cell.TransformToVisual(grid).Transform(new Point(Math.Round(cell.ActualWidth / 10), Math.Round(cell.ActualHeight / 2)));
+                    from = cell.TranslatePoint(new Point(cell.ActualHeight, cell.ActualHeight / 2), grid);
 
                     continue;
                 }
@@ -392,7 +389,7 @@ public class Matrix : IEnumerable<Symbol>
                 if (row == line.GetCell(2).Row
                     && column == line.GetCell(2).Column)
                 {
-                    to = cell.TransformToVisual(grid).Transform(new Point(Math.Round(cell.ActualWidth), Math.Round(cell.ActualHeight / 2)));
+                    to = cell.TranslatePoint(new Point(cell.ActualHeight, cell.ActualHeight / 2), grid);
 
                     continue;
                 }
