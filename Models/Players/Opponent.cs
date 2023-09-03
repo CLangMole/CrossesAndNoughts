@@ -65,6 +65,7 @@ public class Opponent : Player
                 Matrix.DrawWinningLine();
                 SetButtonsActive(false);
                 await Task.Delay(1000);
+                SetButtonsActive(true);
             }
 
             if (_difficulty < 4)

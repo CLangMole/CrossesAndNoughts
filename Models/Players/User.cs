@@ -64,6 +64,7 @@ public class User : Player
                 Matrix.DrawWinningLine();
                 SetButtonsActive(false);
                 await Task.Delay(1000);
+                SetButtonsActive(true);
             }
 
             GameOver?.Invoke(_winsCount);

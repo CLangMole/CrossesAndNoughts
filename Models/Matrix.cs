@@ -362,13 +362,10 @@ public class Matrix : IEnumerable<Symbol>
 
             visualLine.BeginAnimation(System.Windows.Shapes.Line.X2Property, lineXAnimation);
             visualLine.BeginAnimation(System.Windows.Shapes.Line.Y2Property, lineYAnimation);
-
-            Debug.WriteLine(from + "    " + to);
         }
 
         internal static (Point from, Point to) GetLinePosition(Line line, Grid grid)
         {
-
             IEnumerable<Image> cellsWithSymbol = grid.Children.OfType<Image>();
 
             Point from, to;
@@ -381,7 +378,18 @@ public class Matrix : IEnumerable<Symbol>
                 if (row == line.GetCell(0).Row
                     && column == line.GetCell(0).Column)
                 {
-                    from = cell.TranslatePoint(new Point(cell.ActualHeight, cell.ActualHeight / 2), grid);
+                    if (row == 0 && column == 0 && line.GetCell(2).Row == 2 && line.GetCell(2).Column == 2)
+                    {
+                        from = new Point(0, 0);
+                    }
+                    else if (row == 0 && column == 2 && line.GetCell(2).Row == 2 && line.GetCell(2).Column == 0)
+                    {
+                        from = new Point(grid.ActualWidth, 0);
+                    }
+                    else
+                    {
+                        from = cell.TranslatePoint(new Point(cell.ActualHeight - 100, cell.ActualHeight / 2), grid);
+                    }
 
                     continue;
                 }
@@ -389,7 +397,18 @@ public class Matrix : IEnumerable<Symbol>
                 if (row == line.GetCell(2).Row
                     && column == line.GetCell(2).Column)
                 {
-                    to = cell.TranslatePoint(new Point(cell.ActualHeight, cell.ActualHeight / 2), grid);
+                    if (row == 2 && column == 2 && line.GetCell(0).Row == 0 && line.GetCell(0).Column == 0)
+                    {
+                        to = new Point(grid.ActualWidth, grid.ActualHeight);
+                    }
+                    else if (row == 2 && column == 0 && line.GetCell(0).Row == 0 && line.GetCell(0).Column == 2)
+                    {
+                        to = new Point(0, grid.ActualHeight);
+                    }
+                    else
+                    {
+                        to = cell.TranslatePoint(new Point(cell.ActualHeight, cell.ActualHeight / 2), grid);
+                    }
 
                     continue;
                 }

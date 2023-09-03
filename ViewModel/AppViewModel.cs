@@ -157,6 +157,11 @@ public class AppViewModel : INotifyPropertyChanged
 
     private static void StartGame(object? parameter)
     {
+        if (GameWindow is null || StartWindow is null)
+        {
+            throw new NullReferenceException();
+        }
+
         if (StartWindow?.LoginLabel.Content is not Grid loginGrid)
         {
             throw new Exception($"Cannot find element {nameof(loginGrid)}");
@@ -176,16 +181,22 @@ public class AppViewModel : INotifyPropertyChanged
             _userName = loginField.Text;
         }
 
-        StartWindow?.Hide();
-        ClickMethods.GoBack(StartWindow?.LoginLabel);
+        StartWindow.Hide();
+        ClickMethods.GoBack(StartWindow.LoginLabel);
         SoundsControl.StartSound.Stop();
 
-        GameWindow?.Show();
+        GameWindow.Height = StartWindow.ActualHeight;
+        GameWindow.Width = StartWindow.ActualWidth;
+        GameWindow.Left = StartWindow.Left;
+        GameWindow.Top = StartWindow.Top;
+        GameWindow.WindowState = StartWindow.WindowState;
+
+        GameWindow.Show();
 
         SoundsControl.GameSound.Play();
 
-        Player.Field = GameWindow?.Field;
-        Matrix.Field = GameWindow?.Field;
+        Player.Field = GameWindow.Field;
+        Matrix.Field = GameWindow.Field;
     }
 
     private static void SelectSymbol(object? parameter)
