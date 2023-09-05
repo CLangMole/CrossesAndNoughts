@@ -393,9 +393,9 @@ public class Matrix : IEnumerable<Symbol>
                     {
                         from = row switch
                         {
-                            0 => new Point(0, margin - 10),
+                            0 => new Point(0, margin - 15),
                             1 => new Point(0, grid.ActualHeight / 2),
-                            2 => new Point(0, grid.ActualHeight - margin - 10),
+                            2 => new Point(0, grid.ActualHeight - margin + 15),
                             _ => throw new NotImplementedException()
                         };
 
@@ -407,9 +407,9 @@ public class Matrix : IEnumerable<Symbol>
                     {
                         to = row switch
                         {
-                            0 => new Point(grid.ActualWidth, margin - 10),
+                            0 => new Point(grid.ActualWidth, margin - 15),
                             1 => new Point(grid.ActualWidth, grid.ActualHeight / 2),
-                            2 => new Point(grid.ActualWidth, grid.ActualHeight - margin - 10),
+                            2 => new Point(grid.ActualWidth, grid.ActualHeight - margin + 15),
                             _ => throw new NotImplementedException()
                         };
 
