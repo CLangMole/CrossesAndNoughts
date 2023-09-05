@@ -24,16 +24,16 @@ public class Matrix : IEnumerable<Symbol>
 
     private static readonly Line[] _lines = new Line[]
     {
-        new Line(new Position(0, 0), new Position(0, 1), new Position(0, 2)),
-        new Line(new Position(1, 0), new Position(1, 1), new Position(1, 2)),
-        new Line(new Position(2, 0), new Position(2, 1), new Position(2, 2)),
+        new Line(new Position(0, 0), new Position(0, 1), new Position(0, 2), Line.LineType.Column),
+        new Line(new Position(1, 0), new Position(1, 1), new Position(1, 2), Line.LineType.Column),
+        new Line(new Position(2, 0), new Position(2, 1), new Position(2, 2), Line.LineType.Column),
 
-        new Line(new Position(0, 0), new Position(1, 0), new Position(2, 0)),
-        new Line(new Position(0, 1), new Position(1, 1), new Position(2, 1)),
-        new Line(new Position(0, 2), new Position(1, 2), new Position(2, 2)),
+        new Line(new Position(0, 0), new Position(1, 0), new Position(2, 0), Line.LineType.Row),
+        new Line(new Position(0, 1), new Position(1, 1), new Position(2, 1), Line.LineType.Row),
+        new Line(new Position(0, 2), new Position(1, 2), new Position(2, 2), Line.LineType.Row),
 
-        new Line(new Position(0, 0), new Position(1, 1), new Position(2, 2)),
-        new Line(new Position(0, 2), new Position(1, 1), new Position(2, 0))
+        new Line(new Position(0, 0), new Position(1, 1), new Position(2, 2), Line.LineType.Diagonal),
+        new Line(new Position(0, 2), new Position(1, 1), new Position(2, 0), Line.LineType.Diagonal)
     };
 
     public Matrix()
@@ -185,7 +185,7 @@ public class Matrix : IEnumerable<Symbol>
                 continue;
             }
 
-            Line.Visualize(Line.GetLinePosition(line, Field).from, Line.GetLinePosition(line, Field).to, Field);
+            Line.Visualize(Line.GetPosition(line, Field).from, Line.GetPosition(line, Field).to, Field);
         }
     }
 
@@ -312,13 +312,18 @@ public class Matrix : IEnumerable<Symbol>
 
     private class Line
     {
-        private readonly Position[] _line = new Position[3];
+        public LineType Type => _type;
 
-        internal Line(Position cell1, Position cell2, Position cell3)
+        private readonly Position[] _line = new Position[3];
+        private readonly LineType _type;
+
+        internal Line(Position cell1, Position cell2, Position cell3, LineType lineType)
         {
             _line[0] = cell1;
             _line[1] = cell2;
             _line[2] = cell3;
+
+            _type = lineType;
         }
 
         internal Position GetCell(int index)
@@ -364,9 +369,15 @@ public class Matrix : IEnumerable<Symbol>
             visualLine.BeginAnimation(System.Windows.Shapes.Line.Y2Property, lineYAnimation);
         }
 
-        internal static (Point from, Point to) GetLinePosition(Line line, Grid grid)
+        internal static (Point from, Point to) GetPosition(Line line, Grid grid)
         {
             IEnumerable<Image> cellsWithSymbol = grid.Children.OfType<Image>();
+
+            var lineFirstCell = line.GetCell(0);
+            var lineThirdCell = line.GetCell(2);
+
+            double cellSize = grid.ActualWidth / 3;
+            double margin = cellSize / 2;
 
             Point from, to;
 
@@ -375,47 +386,108 @@ public class Matrix : IEnumerable<Symbol>
                 int row = (int)cell.GetValue(Grid.RowProperty);
                 int column = (int)cell.GetValue(Grid.ColumnProperty);
 
-                if (row == line.GetCell(0).Row
-                    && column == line.GetCell(0).Column)
+                if (line.Type == LineType.Column)
                 {
-                    if (row == 0 && column == 0 && line.GetCell(2).Row == 2 && line.GetCell(2).Column == 2)
+                    if (row == lineFirstCell.Row
+                        && column == lineFirstCell.Column)
                     {
-                        from = new Point(0, 0);
-                    }
-                    else if (row == 0 && column == 2 && line.GetCell(2).Row == 2 && line.GetCell(2).Column == 0)
-                    {
-                        from = new Point(grid.ActualWidth, 0);
-                    }
-                    else
-                    {
-                        from = cell.TranslatePoint(new Point(cell.ActualHeight - 100, cell.ActualHeight / 2), grid);
+                        from = row switch
+                        {
+                            0 => new Point(0, margin - 10),
+                            1 => new Point(0, grid.ActualHeight / 2),
+                            2 => new Point(0, grid.ActualHeight - margin - 10),
+                            _ => throw new NotImplementedException()
+                        };
+
+                        continue;
                     }
 
-                    continue;
+                    if (row == lineThirdCell.Row
+                        && column == lineThirdCell.Column)
+                    {
+                        to = row switch
+                        {
+                            0 => new Point(grid.ActualWidth, margin - 10),
+                            1 => new Point(grid.ActualWidth, grid.ActualHeight / 2),
+                            2 => new Point(grid.ActualWidth, grid.ActualHeight - margin - 10),
+                            _ => throw new NotImplementedException()
+                        };
+
+                        continue;
+                    }
                 }
 
-                if (row == line.GetCell(2).Row
-                    && column == line.GetCell(2).Column)
+                if (line.Type == LineType.Row)
                 {
-                    if (row == 2 && column == 2 && line.GetCell(0).Row == 0 && line.GetCell(0).Column == 0)
+                    if (row == lineFirstCell.Row
+                        && column == lineFirstCell.Column)
                     {
-                        to = new Point(grid.ActualWidth, grid.ActualHeight);
-                    }
-                    else if (row == 2 && column == 0 && line.GetCell(0).Row == 0 && line.GetCell(0).Column == 2)
-                    {
-                        to = new Point(0, grid.ActualHeight);
-                    }
-                    else
-                    {
-                        to = cell.TranslatePoint(new Point(cell.ActualHeight, cell.ActualHeight / 2), grid);
+                        from = column switch
+                        {
+                            0 => new Point(margin, 0),
+                            1 => new Point(grid.ActualWidth / 2, 0),
+                            2 => new Point(grid.ActualWidth - margin, 0),
+                            _ => throw new NotImplementedException()
+                        };
+
+                        continue;
                     }
 
-                    continue;
+                    if (row == lineThirdCell.Row
+                        && column == lineThirdCell.Column)
+                    {
+                        to = column switch
+                        {
+                            0 => new Point(margin, grid.ActualHeight),
+                            1 => new Point(grid.ActualWidth / 2, grid.ActualHeight),
+                            2 => new Point(grid.ActualWidth - margin, grid.ActualHeight),
+                            _ => throw new NotImplementedException()
+                        };
+
+                        continue;
+                    }
+                }
+
+                if (line.Type == LineType.Diagonal)
+                {
+                    if (row == lineFirstCell.Row
+                        && column == lineFirstCell.Column)
+                    {
+                        from = column switch
+                        {
+                            0 => new Point(0, 0),
+                            2 => new Point(grid.ActualWidth, 0),
+                            _ => throw new NotImplementedException()
+                        };
+
+                        continue;
+                    }
+
+                    if (row == lineThirdCell.Row
+                        && column == lineThirdCell.Column)
+                    {
+
+                        to = column switch
+                        {
+                            0 => new Point(0, grid.ActualHeight),
+                            2 => new Point(grid.ActualWidth, grid.ActualHeight),
+                            _ => throw new NotImplementedException()
+                        };
+
+                        continue;
+                    }
                 }
             }
 
             return (from, to);
         }
+
+        internal enum LineType
+        {
+            Row,
+            Column,
+            Diagonal
+        };
     }
 }
 
