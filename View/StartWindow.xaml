@@ -3,7 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CrossesAndNoughts.View" xmlns:viewmodel="clr-namespace:CrossesAndNoughts.ViewModel" xmlns:s="clr-namespace:System;assembly=mscorlib" d:DataContext="{d:DesignInstance Type=viewmodel:AppViewModel}"
+        xmlns:viewmodel="clr-namespace:CrossesAndNoughts.ViewModel"
+        d:DataContext="{d:DesignInstance Type=viewmodel:AppViewModel}"
         mc:Ignorable="d"
         Title="Crosses and Noughts" Height="450" Width="800" Background="LightBlue" MinHeight="470" MinWidth ="690">
     <Window.Resources>
@@ -15,7 +16,7 @@
         </Style>
     </Window.Resources>
 
-    <Grid x:Name="LayoutGrid">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="2*"/>
@@ -36,7 +37,7 @@
         <Button Grid.Column="2" Grid.Row="2" Margin="10" Content="Records" Style="{StaticResource ButtonStyle}" 
                      Cursor="Hand" Command="{Binding GoNextCommand}" CommandParameter="{Binding ElementName=RecordsLabel}"/>
 
-        <Viewbox Grid.ColumnSpan="3" Margin="5" Grid.Column="0">
+        <Viewbox Grid.Row="0" Grid.ColumnSpan="3" Margin="5" Grid.Column="0">
             <TextBlock Text="Crosses and Noughts" FontFamily="Impact" Foreground="DarkSlateBlue" TextAlignment="Center"/>
         </Viewbox>
 
@@ -79,11 +80,11 @@
 
                     <TextBlock Text="Enter your username:" FontFamily="Impact" Foreground="DarkSlateBlue" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" MinHeight="40" FontSize="40" TextAlignment="Center"/>
 
-                    <Viewbox Grid.Row="1" Margin="100, 30, 100, 30" Grid.ColumnSpan="3" MaxHeight="150" MinHeight="44" MaxWidth="1000">
-                        <TextBox Grid.Row="1" FontSize="30" BorderBrush="DarkSlateBlue" BorderThickness="2" TextAlignment="Center" VerticalContentAlignment="Center" Cursor="IBeam" MaxLines="1" MaxLength="20" MinWidth="300" MinHeight="50" Margin="5"/>
+                    <Viewbox Grid.Row="1" Margin="100, 30, 100, 30" Grid.ColumnSpan="2" Grid.Column="0" MaxHeight="150" MinHeight="44" MaxWidth="1000">
+                        <TextBox FontSize="30" BorderBrush="DarkSlateBlue" BorderThickness="2" TextAlignment="Center" VerticalContentAlignment="Center" Cursor="IBeam" MaxLines="1" MaxLength="20" MinWidth="300" MinHeight="50" Margin="5"/>
                     </Viewbox>
 
-                    <Button Grid.Row="2" Margin="10" Content="Back" Style="{StaticResource ButtonStyle}" Cursor="Hand" Command="{Binding GoBackCommand}" CommandParameter="{Binding ElementName=LoginLabel}"/>
+                    <Button Grid.Row="2" Grid.Column="0" Margin="10" Content="Back" Style="{StaticResource ButtonStyle}" Cursor="Hand" Command="{Binding GoBackCommand}" CommandParameter="{Binding ElementName=LoginLabel}"/>
 
                     <Button Grid.Row="2" Grid.Column="1" Margin="10" Content="Start Game" Style="{StaticResource ButtonStyle}" Cursor="Hand"  Command="{Binding StartGameCommand}"/>
                 </Grid>

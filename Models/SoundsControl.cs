@@ -20,15 +20,15 @@ public static class SoundsControl
         GameOverSound.Open(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "game-over.wav")));
         WinSound.Open(new Uri(Path.Combine(Directory.GetCurrentDirectory(), "Win.mp3")));
 
-        GameSound.MediaEnded += (sender, e) => OnGameSoundEnded(sender, e);
-        StartSound.MediaEnded += (sender, e) => OnStartSoundEnded(sender, e);
+        GameSound.MediaEnded += OnGameSoundEnded;
+        StartSound.MediaEnded += OnStartSoundEnded;
 
-        ClickSound.MediaEnded += (sender, e) =>
+        ClickSound.MediaEnded += (_, _) =>
         {
             ClickSound.Stop();
         };
 
-        WinSound.MediaEnded += (sender, e) =>
+        WinSound.MediaEnded += (_, _) =>
         {
             WinSound.Stop();
         };

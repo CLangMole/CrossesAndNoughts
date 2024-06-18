@@ -324,7 +324,6 @@ C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Release\net6
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Release\net6.0-windows\win-x86\hostfxr.dll
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Release\net6.0-windows\win-x86\hostpolicy.dll
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Release\net6.0-windows\win-x86\mscordaccore.dll
-C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Release\net6.0-windows\win-x86\mscordaccore_x86_x86_6.0.2123.36311.dll
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Release\net6.0-windows\win-x86\mscordbi.dll
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Release\net6.0-windows\win-x86\mscorrc.dll
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Release\net6.0-windows\win-x86\msquic.dll
@@ -573,4 +572,5 @@ C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Release\net6
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Release\net6.0-windows\win-x86\CrossesAndNoughts.pdb
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Release\net6.0-windows\win-x86\CrossesAndNoughts.genruntimeconfig.cache
 C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Release\net6.0-windows\win-x86\ref\CrossesAndNoughts.dll
-C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Release\net6.0-windows\win-x86\GeneratedInternalTypeHelper.g.cs
+C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\bin\Release\net6.0-windows\win-x86\mscordaccore_x86_x86_6.0.2523.51912.dll
+C:\Users\probn\source\repos\CrossesAndNoughts\CrossesAndNoughts\obj\Release\net6.0-windows\win-x86\CrossesAndNoughts.sourcelink.json

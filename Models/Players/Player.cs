@@ -7,35 +7,27 @@ using System.Windows.Controls;
 
 namespace CrossesAndNoughts.Models.Players;
 
-public abstract class Player
+public abstract class Player(ISymbolStrategy symbolStrategy, Grid field)
 {
-    protected readonly IEnumerable<Button>? Buttons = Field?.Children.OfType<Button>();
-    protected ISymbolStrategy? SymbolStrategy { get => _symbolStrategy; }
+    protected readonly IEnumerable<Button>? Buttons = field.Children.OfType<Button>();
+    protected ISymbolStrategy SymbolStrategy { get; } = symbolStrategy;
 
-    public static Grid? Field { get; set; }
-
-    public static Action<int>? GameOver;
-
-    private readonly ISymbolStrategy _symbolStrategy;
-
-    public Player(ISymbolStrategy symbolStrategy)
-    {
-        _symbolStrategy = symbolStrategy;
-    }
+    public static Action<int>? GameOver { get; set; }
+    public Symbol CurrentSymbol => SymbolStrategy.PlayerSymbol;
 
     public virtual async Task Draw(int row, int column)
     {
         await Task.Yield();
     }
 
-    public virtual void SetButtonsActive(bool isEnabled)
+    protected void SetButtonsActive(bool isEnabled)
     {
         if (Buttons is null || !Buttons.Any())
         {
             throw new Exception("Buttons array is null or empty");
         }
 
-        foreach (Button button in Buttons)
+        foreach (var button in Buttons)
         {
             button.IsEnabled = isEnabled;
         }

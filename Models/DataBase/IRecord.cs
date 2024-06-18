@@ -4,26 +4,22 @@ using System.Linq;
 
 namespace CrossesAndNoughts.Models.DataBase;
 
-interface IRecord : IDisposable
+internal interface IRecord : IDisposable
 {
     UserRecord GetRecord(int number);
     void AddRecord(UserRecord record);
     List<UserRecord> GetRecords();
 }
 
-class UserRecordsCollection : IRecord
+internal class UserRecordsCollection : IRecord
 {
-    private readonly ApplicationContext _dataBase;
-    public UserRecordsCollection()
-    {
-        _dataBase = new ApplicationContext();
-    }
+    private readonly ApplicationContext _dataBase = new();
 
     public UserRecord GetRecord(int number)
     {
         var record = _dataBase.Records.FirstOrDefault(x => x.Place == number);
 
-        return record is null ? throw new IndexOutOfRangeException() : record;
+        return record ?? throw new IndexOutOfRangeException();
     }
 
     public List<UserRecord> GetRecords()
@@ -38,10 +34,7 @@ class UserRecordsCollection : IRecord
 
     public void AddRecord(UserRecord record)
     {
-        if (record is null)
-        {
-            throw new ArgumentNullException(nameof(record));
-        }
+        ArgumentNullException.ThrowIfNull(record);
 
         _dataBase.Records.Add(record);
         _dataBase.SaveChanges();
@@ -62,32 +55,34 @@ public class UserRecordsProxy : IRecord
 
     public UserRecord GetRecord(int number)
     {
-        UserRecord? record = _records.FirstOrDefault(x => x.Place == number);
+        var record = _records.FirstOrDefault(x => x.Place == number);
 
-        if (record is null)
+        if (record is not null)
         {
-            _recordsCollection ??= new UserRecordsCollection();
-            record = _recordsCollection.GetRecord(number);
-            _records.Add(record);
+            return record;
         }
+
+        record = _recordsCollection.GetRecord(number);
+        _records.Add(record);
 
         return record;
     }
 
     public List<UserRecord> GetRecords()
     {
-        if (_records.Count == 0)
+        if (_records.Count != 0)
         {
-            _recordsCollection ??= new UserRecordsCollection();
-            _records = _recordsCollection.GetRecords();
+            return _records;
         }
+        
+        _records = _recordsCollection.GetRecords();
 
         return _records;
     }
 
     public void Dispose()
     {
-        _recordsCollection?.Dispose();
+        _recordsCollection.Dispose();
         GC.SuppressFinalize(this);
     }
 
@@ -95,7 +90,7 @@ public class UserRecordsProxy : IRecord
     {
         if (_records.Count == 0)
         {
-            _recordsCollection ??= new UserRecordsCollection();
+            _recordsCollection = new UserRecordsCollection();
         }
 
         _recordsCollection.AddRecord(record);
