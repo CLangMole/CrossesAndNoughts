@@ -2,38 +2,21 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using CrossesAndNoughts.Models.Field;
 
 namespace CrossesAndNoughts.Models.Players;
 
-public class User : Player
+public class User(ISymbolStrategy symbolStrategy, Matrix matrix) : Player(symbolStrategy, matrix.Field)
 {
-    public event Action? UserDrawedSymbol;
-    public Symbol CurrentSymbol => _symbol;
+    public event Action? UserDrewSymbol;
 
-    private readonly Symbol _symbol;
-
-    private int _winsCount = 0;
-
-    public User(ISymbolStrategy symbolStrategy) : base(symbolStrategy)
-    {
-        _symbol = symbolStrategy switch
-        {
-            CrossesStrategy => Symbol.Cross,
-            NoughtsStrategy => Symbol.Nought,
-            _ => throw new NotImplementedException()
-        };
-    }
+    private int _winsCount;
 
     public override async Task Draw(int row, int column)
     {
         if (SymbolStrategy is null)
         {
             throw new NullReferenceException(nameof(SymbolStrategy));
-        }
-
-        if (Field is null)
-        {
-            throw new NullReferenceException(nameof(Field));
         }
 
         if (Buttons is null || !Buttons.Any())
@@ -43,15 +26,15 @@ public class User : Player
 
         await Task.Yield();
 
-        var gameStatus = Matrix.Instance.GetGameStatus();
+        var gameStatus = matrix.GetGameStatus();
 
         if (gameStatus.IsGameOver)
         {
-            if (gameStatus.WinnerSymbol == _symbol)
+            if (gameStatus.WinnerSymbol == CurrentSymbol)
             {
                 _winsCount += 2;
                 SoundsControl.WinSound.Play();
-                Matrix.DrawWinningLine();
+                matrix.DrawWinningLine();
                 await Task.Delay(1000);
             }
             else if (gameStatus.WinnerSymbol == Symbol.Empty)
@@ -61,7 +44,7 @@ public class User : Player
             }
             else
             {
-                Matrix.DrawWinningLine();
+                matrix.DrawWinningLine();
                 SetButtonsActive(false);
                 await Task.Delay(1000);
                 SetButtonsActive(true);
@@ -69,15 +52,15 @@ public class User : Player
 
             GameOver?.Invoke(_winsCount);
 
-            Matrix.Reset();
+            matrix.Reset();
 
             return;
         }
 
-        SymbolStrategy.DrawSymbol(Field, row, column);
+        SymbolStrategy.DrawSymbol(matrix, row, column);
 
         SetButtonsActive(false);
 
-        UserDrawedSymbol?.Invoke();
+        UserDrewSymbol?.Invoke();
     }
 }

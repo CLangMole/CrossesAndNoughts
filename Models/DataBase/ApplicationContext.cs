@@ -2,13 +2,13 @@
 
 namespace CrossesAndNoughts.Models.DataBase;
 
-class ApplicationContext : DbContext
+internal sealed class ApplicationContext : DbContext
 {
     public DbSet<UserRecord> Records { get; set; }
 
     public ApplicationContext()
     {
-        Database.EnsureCreated();
+        Database.EnsureCreatedAsync();
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

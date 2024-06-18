@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace CrossesAndNoughts.View;
 
-public partial class StartWindow : Window
+public partial class StartWindow
 {
     public StartWindow(AppViewModel viewModel)
     {

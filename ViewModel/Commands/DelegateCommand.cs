@@ -9,7 +9,8 @@ public class DelegateCommand : ICommand
     private readonly Action<object?> _execute;
 
     public DelegateCommand(Action<object?> execute) : this(null, execute) { }
-    public DelegateCommand(Predicate<object?>? canExecute, Action<object?> execute)
+
+    private DelegateCommand(Predicate<object?>? canExecute, Action<object?> execute)
     {
         _canExecute = canExecute;
         _execute = execute;
@@ -19,24 +20,11 @@ public class DelegateCommand : ICommand
 
     public bool CanExecute(object? parameter)
     {
-        if (_canExecute == null)
-        {
-            return true;
-        }
-
-        return _canExecute(parameter);
+        return _canExecute == null || _canExecute(parameter);
     }
 
     public void Execute(object? parameter)
     {
         _execute(parameter);
-    }
-
-    public void RaiseCanExecuteChanged()
-    {
-        if (CanExecuteChanged != null)
-        {
-            CanExecuteChanged(this, EventArgs.Empty);
-        }
     }
 }

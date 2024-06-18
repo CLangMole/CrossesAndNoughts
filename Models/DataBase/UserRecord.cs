@@ -2,17 +2,11 @@
 
 namespace CrossesAndNoughts.Models.DataBase;
 
-public class UserRecord
+public class UserRecord(string userName, int place, int record)
 {
     [Key]
-    public string? UserName { get; set; }
-    public int Place { get; set; }
-    public int Record { get; set; }
+    public string? UserName { get; set; } = userName;
 
-    public UserRecord(string userName, int place, int record)
-    {
-        UserName = userName;
-        Place = place;
-        Record = record;
-    }
+    public int Place { get; set; } = place;
+    public int Record { get; set; } = record;
 }

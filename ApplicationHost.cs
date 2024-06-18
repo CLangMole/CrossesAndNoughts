@@ -6,7 +6,7 @@ using System;
 
 namespace CrossesAndNoughts;
 
-public class ApplicationHost
+public static class ApplicationHost
 {
     [STAThread]
     public static void Main()
