@@ -1,14 +1,12 @@
-﻿using CrossesAndNoughts.ViewModel;
-using System.Windows;
+﻿using System.Windows;
 
 namespace CrossesAndNoughts.View;
 
 public partial class GameWindow
 {
-    public GameWindow(AppViewModel viewModel)
+    public GameWindow()
     {
         InitializeComponent();
-        DataContext = viewModel;
         Closed += (_, _) => Application.Current.Shutdown();
     }
 }

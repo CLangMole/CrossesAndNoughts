@@ -21,6 +21,7 @@ public static class ApplicationHost
             })
             .Build();
         var app = host.Services.GetService<App>();
+        var viewModel = host.Services.GetService<AppViewModel>();
         app?.Run();
     }
 }

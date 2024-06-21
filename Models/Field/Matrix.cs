@@ -47,8 +47,8 @@ public partial class Matrix
             {
                 _state[i, j] = Symbol.Empty;
 
-                columnsPositions.Add(new Position(i, j));
-                rowsPositions.Add(new Position(j, i));
+                columnsPositions.Add(new Position(j, i));
+                rowsPositions.Add(new Position(i, j));
                 
                 diagonal1Positions.Add(new Position(j, j));
                 diagonal2Positions.Add(new Position(j, size - j - 1));
@@ -216,14 +216,18 @@ public partial class Matrix
             score = -1;
         }
 
-        foreach (var middleCell in cells.Where(x => x != firstCell && x != lastCell))
+        var iterations = 0;
+
+        var middleCells = cells.GetRange(1, Size - 2);
+        
+        foreach (var middleCell in middleCells)
         {
             if (middleCell == matrix.UserSymbol)
             {
                 switch (score)
                 {
                     case 1:
-                        score = 10;
+                        score = iterations + 10;
                         break;
                     case -1:
                         return 0;
@@ -237,7 +241,7 @@ public partial class Matrix
                 switch (score)
                 {
                     case -1:
-                        score = -10;
+                        score = -(iterations + 10);
                         break;
                     case 1:
                         return 0;
@@ -246,6 +250,8 @@ public partial class Matrix
                         break;
                 }
             }
+            
+            iterations++;
         }
 
         if (lastCell == matrix.UserSymbol)

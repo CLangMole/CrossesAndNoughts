@@ -17,120 +17,146 @@ namespace CrossesAndNoughts.ViewModel;
 
 public partial class AppViewModel : INotifyPropertyChanged
 {
-    #region Windows
-    public static StartWindow StartWindow { get; set; }
-    public static GameWindow GameWindow { get; set; }
-    #endregion
-
     #region Commands
+
     public DelegateCommand GoNextCommand { get; } = new(ClickMethods.GoNext);
     public DelegateCommand GoBackCommand { get; } = new(ClickMethods.GoBack);
     public DelegateCommand QuitCommand { get; } = new(ClickMethods.Quit);
-    public DelegateCommand StartGameCommand { get; } = new(StartGame);
-    public DelegateCommand SelectSymbolCommand { get; } = new(SelectSymbol);
-    public DelegateCommand DrawSymbolCommand { get; } = new(DrawSymbol);
     public DelegateCommand GoBackToMenuCommand { get; } = new(GoBackToMenu);
+
+    public DelegateCommand StartGameCommand { get; }
+    public DelegateCommand SelectSymbolCommand { get; }
+    public DelegateCommand DrawSymbolCommand { get; }
 
     #endregion
 
     #region Symbols
-    public Symbol Cross { get => Symbol.Cross; private set => NotifyPropertyChanged(nameof(Cross)); }
-    public Symbol Nought { get => Symbol.Nought; private set => NotifyPropertyChanged(nameof(Cross)); }
+
+    public Symbol Cross
+    {
+        get => Symbol.Cross;
+        private set
+        {
+            if (value != Symbol.Empty)
+            {
+                NotifyPropertyChanged(nameof(Cross));
+            }
+        }
+    }
+
+    public Symbol Nought
+    {
+        get => Symbol.Nought;
+        private set
+        {
+            if (value != Symbol.Empty)
+            {
+                NotifyPropertyChanged(nameof(Nought));
+            }
+        }
+    }
+
     #endregion
 
-    #region Points
+    #region Properties
+
     public string Points
     {
         get => _gameResult.ToString();
-        set => NotifyPropertyChanged(nameof(Points));
+        set
+        {
+            _gameResult = int.Parse(value);
+            NotifyPropertyChanged(nameof(Points));
+        }
     }
-    #endregion
-
-    #region Difficulty properties
 
     public System.Windows.Media.Brush DifficultyColor
     {
         get => _difficultyColor;
-        set => NotifyPropertyChanged(nameof(DifficultyColor));
+        set
+        {
+            _difficultyColor = value;
+            NotifyPropertyChanged(nameof(DifficultyColor));
+        }
     }
 
     public string DifficultyName
     {
         get => _difficultyName;
-        set => NotifyPropertyChanged(nameof(DifficultyName));
+        set
+        {
+            _difficultyName = value;
+            NotifyPropertyChanged(nameof(DifficultyName));
+        }
     }
 
-    #endregion
-
-    #region Records
     public List<UserRecord> Records
     {
-        get
+        get => _records;
+        private set
         {
-            using var records = new UserRecordsProxy();
-
-            if (records.GetRecords().Count < 0)
-            {
-                throw new IndexOutOfRangeException();
-            }
-
-            return records.GetRecords();
+            _records = value;
+            NotifyPropertyChanged(nameof(Records));
         }
-        private set => NotifyPropertyChanged(nameof(Records));
     }
-    #endregion
 
-    #region Players
-    private static User? _user;
-    private static Opponent? _opponent;
     #endregion
+    
+    #region Fields
 
-    #region Symbols strategies
-    private static readonly Dictionary<Symbol, Func<ISymbolStrategy>> StrategyMap = new()
+    public event PropertyChangedEventHandler? PropertyChanged;
+    
+    private List<UserRecord> _records = [];
+    
+    private readonly StartWindow _startWindow;
+    private readonly GameWindow _gameWindow;
+    
+    private User? _user;
+    private Opponent? _opponent;
+
+    private readonly Dictionary<Symbol, Func<ISymbolStrategy>> _strategyMap = new()
     {
         { Symbol.Cross, () => new CrossesStrategy() },
         { Symbol.Nought, () => new NoughtsStrategy() }
     };
-    #endregion
 
-    #region Game result
+    private int _gameResult;
 
-    private static int _gameResult;
+    private System.Windows.Media.Brush _difficultyColor = System.Windows.Media.Brushes.GreenYellow;
+    private string _difficultyName = "Easy";
 
-    #endregion
+    private string _userName = " ";
 
-    #region Difficulty fields
-
-    private static System.Windows.Media.Brush _difficultyColor = System.Windows.Media.Brushes.GreenYellow;
-    private static string _difficultyName = "Easy";
+    private readonly Matrix _matrix;
 
     #endregion
 
-    #region User name
-
-    private static string _userName = " ";
-
-    #endregion
-
-    private static readonly Dictionary<string, bool> DrawnCellsMap = new();
-    private static Matrix _matrix;
-    
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    public AppViewModel()
+    public AppViewModel(StartWindow startWindow, GameWindow gameWindow)
     {
+        _startWindow = startWindow;
+        _gameWindow = gameWindow;
+
+        _startWindow.DataContext = this;
+        _gameWindow.DataContext = this;
+        
+        _matrix = new Matrix(3, _gameWindow.Field);
+        
         SoundsControl.StartSound.Play();
         _ = new UiRefresher(this);
-    }
 
+        StartGameCommand = new DelegateCommand(StartGame);
+        SelectSymbolCommand = new DelegateCommand(SelectSymbol);
+        DrawSymbolCommand = new DelegateCommand(DrawSymbol);
+    }
+    
     private void NotifyPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    private static void StartGame(object? parameter)
+    private void StartGame(object? parameter)
     {
-        if (StartWindow.LoginLabel.Content is not Grid loginGrid)
+        if (_startWindow.LoginLabel.Content is not Grid loginGrid)
         {
             throw new Exception($"Cannot find element {nameof(loginGrid)}");
         }
@@ -149,24 +175,22 @@ public partial class AppViewModel : INotifyPropertyChanged
             _userName = loginField.Text;
         }
 
-        StartWindow.Hide();
-        ClickMethods.GoBack(StartWindow.LoginLabel);
+        _startWindow.Hide();
+        ClickMethods.GoBack(_startWindow.LoginLabel);
         SoundsControl.StartSound.Stop();
 
-        GameWindow.Height = StartWindow.ActualHeight;
-        GameWindow.Width = StartWindow.ActualWidth;
-        GameWindow.Left = StartWindow.Left;
-        GameWindow.Top = StartWindow.Top;
-        GameWindow.WindowState = StartWindow.WindowState;
+        _gameWindow.Height = _startWindow.ActualHeight;
+        _gameWindow.Width = _startWindow.ActualWidth;
+        _gameWindow.Left = _startWindow.Left;
+        _gameWindow.Top = _startWindow.Top;
+        _gameWindow.WindowState = _startWindow.WindowState;
 
-        GameWindow.Show();
+        _gameWindow.Show();
 
         SoundsControl.GameSound.Play();
-        
-        _matrix = new Matrix(3, GameWindow.Field);
     }
 
-    private static void SelectSymbol(object? parameter)
+    private void SelectSymbol(object? parameter)
     {
         if (parameter is not Symbol symbol)
         {
@@ -175,10 +199,10 @@ public partial class AppViewModel : INotifyPropertyChanged
 
         var symbols = new[] { Symbol.Cross, Symbol.Nought };
 
-        _user = new User(StrategyMap[symbol].Invoke(), _matrix);
-        _opponent = new Opponent(StrategyMap[symbols.Single(x => x != symbol)].Invoke(), _matrix);
+        _user = new User(_strategyMap[symbol].Invoke(), _matrix);
+        _opponent = new Opponent(_strategyMap[symbols.Single(x => x != symbol)].Invoke(), _matrix);
 
-        ClickMethods.GoNext(GameWindow.GameUiContainer);
+        ClickMethods.GoNext(_gameWindow.GameUiContainer);
 
         _matrix.SetPlayersSymbols(_user.CurrentSymbol, _opponent.CurrentSymbol);
 
@@ -202,51 +226,36 @@ public partial class AppViewModel : INotifyPropertyChanged
 
                 using var records = new UserRecordsProxy();
                 records.AddRecord(new UserRecord(_userName, records.GetRecords().Count + 1, record));
-                UiRefresher.RefreshRecordsList();
+                Records = records.GetRecords();
             }
 
-            _gameResult = winsCount;
-            _difficultyColor = _opponent.CurrentDifficulty.Item1;
-            _difficultyName = _opponent.CurrentDifficulty.Item2;
-
-            DrawnCellsMap.Clear();
-            
-            UiRefresher.RefreshPoints(_gameResult);
-            UiRefresher.RefreshDifficultyProperties(_difficultyColor, _difficultyName);
+            Points = winsCount.ToString();
+            DifficultyColor = _opponent.CurrentDifficulty.Item1;
+            DifficultyName = _opponent.CurrentDifficulty.Item2;
         };
     }
 
-    private static void DrawSymbol(object? parameter)
+    private void DrawSymbol(object? parameter)
     {
         if (parameter is not Button control)
         {
             throw new ArgumentException(null, nameof(parameter));
-        }
-
-        if (DrawnCellsMap.TryGetValue(control.Name, out var isFilled))
-        {
-            if (isFilled)
-            {
-                return;
-            }
         }
         
         var row = (int)control.GetValue(Grid.RowProperty);
         var column = (int)control.GetValue(Grid.ColumnProperty);
 
         _user?.Draw(row, column);
-        
-        DrawnCellsMap.Add(control.Name, true);
     }
 
-    private static void SetGameOver()
+    private void SetGameOver()
     {
         SoundsControl.GameSound.Stop();
         SoundsControl.GameOverSound.Play();
 
         SoundsControl.GameOverSound.MediaEnded += (_, _) =>
         {
-            ClickMethods.GoNext(GameWindow.GameOverLabel);
+            ClickMethods.GoNext(_gameWindow.GameOverLabel);
         };
     }
 

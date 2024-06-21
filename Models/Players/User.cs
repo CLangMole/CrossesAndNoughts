@@ -26,6 +26,11 @@ public class User(ISymbolStrategy symbolStrategy, Matrix matrix) : Player(symbol
 
         await Task.Yield();
 
+        if (matrix[row, column] != Symbol.Empty)
+        {
+            return;
+        }
+
         var gameStatus = matrix.GetGameStatus();
 
         if (gameStatus.IsGameOver)

@@ -159,7 +159,7 @@
                         </Viewbox>
 
                         <Viewbox Grid.Row="1" Margin="30">
-                            <TextBlock Text="50" FontFamily="Impact" Foreground="Violet" TextAlignment="Center" />
+                            <TextBlock Text="{Binding Points}" FontFamily="Impact" Foreground="Violet" TextAlignment="Center" />
                         </Viewbox>
                     </Grid>
                 </Label.Content>

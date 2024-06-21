@@ -11,7 +11,7 @@ public partial class Matrix
 {
     private class Line
     {
-        public LineType Type { get; }
+        private LineType Type { get; }
 
         private readonly List<Position> _line = [];
 
