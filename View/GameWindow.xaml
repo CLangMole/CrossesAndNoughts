@@ -159,7 +159,11 @@
                         </Viewbox>
 
                         <Viewbox Grid.Row="1" Margin="30">
+<<<<<<< HEAD
                             <TextBlock Text="{Binding Points}" FontFamily="Impact" Foreground="Violet" TextAlignment="Center" />
+=======
+                            <TextBlock Text="50" FontFamily="Impact" Foreground="Violet" TextAlignment="Center" />
+>>>>>>> f99d01646a33213fca7063b7683d7185685e53ef
                         </Viewbox>
                     </Grid>
                 </Label.Content>

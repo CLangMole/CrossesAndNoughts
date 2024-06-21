@@ -11,7 +11,11 @@ public partial class Matrix
 {
     private class Line
     {
+<<<<<<< HEAD
         private LineType Type { get; }
+=======
+        public LineType Type { get; }
+>>>>>>> f99d01646a33213fca7063b7683d7185685e53ef
 
         private readonly List<Position> _line = [];
 
