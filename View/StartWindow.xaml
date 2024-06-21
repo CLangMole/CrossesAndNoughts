@@ -38,11 +38,7 @@
                 Cursor="Hand" Command="{Binding GoNextCommand}" CommandParameter="{Binding ElementName=RecordsLabel}" />
 
         <Viewbox Grid.Row="0" Grid.ColumnSpan="3" Margin="5" Grid.Column="0">
-<<<<<<< HEAD
             <TextBlock Text="Crosses and Noughts" FontFamily="Impact" Foreground="DarkSlateBlue" TextAlignment="Center" />
-=======
-            <TextBlock Text="Crosses and Noughts" FontFamily="Impact" Foreground="DarkSlateBlue" TextAlignment="Center"/>
->>>>>>> f99d01646a33213fca7063b7683d7185685e53ef
         </Viewbox>
 
         <Image Source="/Resources/Images/TicTacToe.png" Grid.Column="1" Grid.Row="1" MaxHeight="800" MaxWidth="800" />
@@ -96,7 +92,6 @@
                                Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"
                                MinHeight="40" FontSize="40" TextAlignment="Center" />
 
-<<<<<<< HEAD
                     <Viewbox Grid.Row="1" Margin="100, 30, 100, 30" Grid.ColumnSpan="2" Grid.Column="0" MaxHeight="150"
                              MinHeight="44" MaxWidth="1000">
                         <TextBox FontSize="30" BorderBrush="DarkSlateBlue" BorderThickness="2" TextAlignment="Center"
@@ -107,13 +102,6 @@
                     <Button Grid.Row="2" Grid.Column="0" Margin="10" Content="Back"
                             Style="{StaticResource ButtonStyle}" Cursor="Hand" Command="{Binding GoBackCommand}"
                             CommandParameter="{Binding ElementName=LoginLabel}" />
-=======
-                    <Viewbox Grid.Row="1" Margin="100, 30, 100, 30" Grid.ColumnSpan="2" Grid.Column="0" MaxHeight="150" MinHeight="44" MaxWidth="1000">
-                        <TextBox FontSize="30" BorderBrush="DarkSlateBlue" BorderThickness="2" TextAlignment="Center" VerticalContentAlignment="Center" Cursor="IBeam" MaxLines="1" MaxLength="20" MinWidth="300" MinHeight="50" Margin="5"/>
-                    </Viewbox>
-
-                    <Button Grid.Row="2" Grid.Column="0" Margin="10" Content="Back" Style="{StaticResource ButtonStyle}" Cursor="Hand" Command="{Binding GoBackCommand}" CommandParameter="{Binding ElementName=LoginLabel}"/>
->>>>>>> f99d01646a33213fca7063b7683d7185685e53ef
 
                     <Button Grid.Row="2" Grid.Column="1" Margin="10" Content="Start Game"
                             Style="{StaticResource ButtonStyle}" Cursor="Hand" Command="{Binding StartGameCommand}" />

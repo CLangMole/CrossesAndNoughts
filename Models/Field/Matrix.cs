@@ -8,11 +8,8 @@ namespace CrossesAndNoughts.Models.Field;
 
 public partial class Matrix
 {
-<<<<<<< HEAD
     private const int MinSize = 3;
     
-=======
->>>>>>> f99d01646a33213fca7063b7683d7185685e53ef
     public Symbol UserSymbol { get; private set; }
     public Symbol OpponentSymbol { get; private set; }
 
@@ -25,11 +22,7 @@ public partial class Matrix
 
     public Matrix(int size, Grid field)
     {
-<<<<<<< HEAD
         if (size < MinSize)
-=======
-        if (size < 3)
->>>>>>> f99d01646a33213fca7063b7683d7185685e53ef
         {
             throw new ArgumentException("Invalid field size");
         }
@@ -54,13 +47,8 @@ public partial class Matrix
             {
                 _state[i, j] = Symbol.Empty;
 
-<<<<<<< HEAD
                 columnsPositions.Add(new Position(j, i));
                 rowsPositions.Add(new Position(i, j));
-=======
-                columnsPositions.Add(new Position(i, j));
-                rowsPositions.Add(new Position(j, i));
->>>>>>> f99d01646a33213fca7063b7683d7185685e53ef
                 
                 diagonal1Positions.Add(new Position(j, j));
                 diagonal2Positions.Add(new Position(j, size - j - 1));
@@ -228,26 +216,18 @@ public partial class Matrix
             score = -1;
         }
 
-<<<<<<< HEAD
         var iterations = 0;
 
         var middleCells = cells.GetRange(1, Size - 2);
         
         foreach (var middleCell in middleCells)
-=======
-        foreach (var middleCell in cells.Where(x => x != firstCell && x != lastCell))
->>>>>>> f99d01646a33213fca7063b7683d7185685e53ef
         {
             if (middleCell == matrix.UserSymbol)
             {
                 switch (score)
                 {
                     case 1:
-<<<<<<< HEAD
                         score = iterations + 10;
-=======
-                        score = 10;
->>>>>>> f99d01646a33213fca7063b7683d7185685e53ef
                         break;
                     case -1:
                         return 0;
@@ -261,11 +241,7 @@ public partial class Matrix
                 switch (score)
                 {
                     case -1:
-<<<<<<< HEAD
                         score = -(iterations + 10);
-=======
-                        score = -10;
->>>>>>> f99d01646a33213fca7063b7683d7185685e53ef
                         break;
                     case 1:
                         return 0;
@@ -274,11 +250,8 @@ public partial class Matrix
                         break;
                 }
             }
-<<<<<<< HEAD
             
             iterations++;
-=======
->>>>>>> f99d01646a33213fca7063b7683d7185685e53ef
         }
 
         if (lastCell == matrix.UserSymbol)
