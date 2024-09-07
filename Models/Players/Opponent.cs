@@ -78,24 +78,27 @@ public class Opponent(ISymbolStrategy symbolStrategy, Matrix matrix) : Player(sy
             SetButtonsActive(true);
         }
 
-        if (_difficulty < 4)
+        if (gameStatus.WinnerSymbol != CurrentSymbol)
         {
-            _difficulty++;
+            if (_difficulty < 4)
+            {
+                _difficulty++;
+            }
+
+            CurrentDifficulty = _difficulty switch
+            {
+                0 => (Brushes.AliceBlue, "TooEasy"),
+                1 => (Brushes.GreenYellow, "Easy"),
+                2 => (Brushes.Yellow, "Middle"),
+                3 => (Brushes.DarkOrange, "Hard"),
+                4 => (Brushes.Red, "Insane"),
+                _ => throw new ArgumentException("Invalid symbol")
+            };
+            
+            matrix.Reset();
         }
 
-        CurrentDifficulty = _difficulty switch
-        {
-            0 => (Brushes.AliceBlue, "TooEasy"),
-            1 => (Brushes.GreenYellow, "Easy"),
-            2 => (Brushes.Yellow, "Middle"),
-            3 => (Brushes.DarkOrange, "Hard"),
-            4 => (Brushes.Red, "Insane"),
-            _ => throw new ArgumentException("Invalid symbol")
-        };
-
         GameOver?.Invoke(_pointsCount);
-
-        matrix.Reset();
 
         if (CurrentSymbol == Symbol.Cross)
         {

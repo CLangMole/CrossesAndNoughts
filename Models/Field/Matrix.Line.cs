@@ -135,8 +135,6 @@ public partial class Matrix
                             from = new Point(0, 0);
                         else if (column == cellsCount - 1)
                             from = new Point(grid.ActualWidth, 0);
-                        else
-                            throw new NotImplementedException();
 
                         continue;
                     case LineType.Diagonal when row == lineLastCell.Row
@@ -145,8 +143,6 @@ public partial class Matrix
                             to = new Point(0, grid.ActualHeight);
                         else if (column == cellsCount - 1)
                             to = new Point(grid.ActualWidth, grid.ActualHeight);
-                        else
-                            throw new NotImplementedException();
 
                         continue;
                     default:

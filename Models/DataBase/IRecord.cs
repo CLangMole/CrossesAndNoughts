@@ -17,7 +17,7 @@ internal class UserRecordsCollection : IRecord
 
     public UserRecord GetRecord(int number)
     {
-        var record = _dataBase.Records.FirstOrDefault(x => x.Place == number);
+        var record = _dataBase.Records.FirstOrDefault(x => x.PlayOrder == number);
 
         return record ?? throw new IndexOutOfRangeException();
     }
@@ -55,7 +55,7 @@ public class UserRecordsProxy : IRecord
 
     public UserRecord GetRecord(int number)
     {
-        var record = _records.FirstOrDefault(x => x.Place == number);
+        var record = _records.FirstOrDefault(x => x.PlayOrder == number);
 
         if (record is not null)
         {

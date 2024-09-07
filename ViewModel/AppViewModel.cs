@@ -150,6 +150,9 @@ public class AppViewModel : INotifyPropertyChanged
         SelectSymbolCommand = new DelegateCommand(SelectSymbol);
         DrawSymbolCommand = new DelegateCommand(DrawSymbol);
         SetupGridCommand = new DelegateCommand(SetupGrid);
+
+        using var recordsProxy = new UserRecordsProxy();
+        Records = recordsProxy.GetRecords();
     }
 
     private void NotifyPropertyChanged(string propertyName)
