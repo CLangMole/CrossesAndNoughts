@@ -149,7 +149,7 @@ public partial class Matrix
 
     public void Reset()
     {
-        Field.Children.RemoveRange(18, 10);
+        Field.Children.RemoveRange(2 * Size * Size, Size * Size + 1);
 
         foreach (var cell in Field.Children.OfType<Image>())
         {

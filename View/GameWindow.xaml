@@ -6,7 +6,17 @@
         mc:Ignorable="d"
         Height="450" Width="800" Background="Azure" MinWidth="800" MinHeight="450"
         xmlns:viewmodel="clr-namespace:CrossesAndNoughts.ViewModel"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         d:DataContext="{d:DesignInstance Type=viewmodel:AppViewModel}">
+
+    <Window.Resources>
+        <Style x:Key="ButtonStyle">
+            <Setter Property="ItemsControl.FontFamily" Value="Impact" />
+            <Setter Property="ItemsControl.Background" Value="CornflowerBlue" />
+            <Setter Property="ItemsControl.Foreground" Value="DarkSlateBlue" />
+            <Setter Property="ItemsControl.FontSize" Value="30" />
+        </Style>
+    </Window.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -64,6 +74,44 @@
                 </Label.Content>
             </Label>
 
+            <Label Visibility="Collapsed" x:Name="SelectFieldSizeLabel" Background="LightBlue" Grid.Column="0"
+                   Grid.Row="0"
+                   Grid.ColumnSpan="2">
+                <Label.Content>
+                    <Grid Height="{Binding ElementName=SelectFieldSizeLabel, Path=ActualHeight}"
+                          Width="{Binding ElementName=SelectFieldSizeLabel, Path=ActualWidth}"
+                          HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="3.5*" />
+                        </Grid.RowDefinitions>
+
+                        <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0"
+                                 Grid.ColumnSpan="2">
+                            <TextBlock Text="Select field size" TextAlignment="Center" FontSize="50"
+                                       FontFamily="Impact" Foreground="DarkSlateBlue" Margin="5" />
+                        </Viewbox>
+
+                        <DockPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                            <xctk:IntegerUpDown x:Name="UpDown" DockPanel.Dock="Top" Margin="50" Background="White"
+                                                MaxWidth="500" MaxHeight="500" Value="3" TextAlignment="Center"
+                                                FontSize="100" FontFamily="Impact" Foreground="DarkSlateBlue"
+                                                Maximum="10"
+                                                Minimum="3" />
+
+                            <Button DockPanel.Dock="Bottom" Margin="10" MaxWidth="500" MaxHeight="300" Content="Next"
+                                    Style="{StaticResource ButtonStyle}"
+                                    Cursor="Hand" Command="{Binding SetupGridCommand}"
+                                    CommandParameter="{Binding ElementName=UpDown, Path=Value}" />
+                        </DockPanel>
+                    </Grid>
+                </Label.Content>
+            </Label>
+
             <Grid Visibility="Collapsed" Grid.ColumnSpan="2" Grid.Column="0" x:Name="GameUiContainer">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="2*" />
@@ -72,54 +120,6 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2*" />
                 </Grid.RowDefinitions>
-
-                <Grid Margin="50" x:Name="Field" Grid.Column="0" MaxHeight="800" MaxWidth="1000">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <Border Grid.Column="0" Grid.Row="0" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 2, 2" />
-                    <Border Grid.Column="0" Grid.Row="1" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 2, 2" />
-                    <Border Grid.Column="0" Grid.Row="2" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 2, 0" />
-
-                    <Border Grid.Column="1" Grid.Row="0" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 2, 2" />
-                    <Border Grid.Column="1" Grid.Row="1" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 2, 2" />
-                    <Border Grid.Column="1" Grid.Row="2" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 2, 0" />
-
-                    <Border Grid.Column="2" Grid.Row="0" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 0, 2" />
-                    <Border Grid.Column="2" Grid.Row="1" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 0, 2" />
-                    <Border Grid.Column="2" Grid.Row="2" BorderBrush="DarkSlateBlue" BorderThickness="0, 0, 0, 0" />
-
-                    <!--Buttons for drawing symbols-->
-
-                    <Button x:Name="One" Opacity="0" Grid.Column="0" Grid.Row="0" Command="{Binding DrawSymbolCommand}"
-                            CommandParameter="{Binding ElementName=One}" />
-                    <Button x:Name="Two" Opacity="0" Grid.Column="1" Grid.Row="0" Command="{Binding DrawSymbolCommand}"
-                            CommandParameter="{Binding ElementName=Two}" />
-                    <Button x:Name="Three" Opacity="0" Grid.Column="2" Grid.Row="0"
-                            Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Three}" />
-
-                    <Button x:Name="Four" Opacity="0" Grid.Column="0" Grid.Row="1"
-                            Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Four}" />
-                    <Button x:Name="Five" Opacity="0" Grid.Column="1" Grid.Row="1"
-                            Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Five}" />
-                    <Button x:Name="Six" Opacity="0" Grid.Column="2" Grid.Row="1" Command="{Binding DrawSymbolCommand}"
-                            CommandParameter="{Binding ElementName=Six}" />
-
-                    <Button x:Name="Seven" Opacity="0" Grid.Column="0" Grid.Row="2"
-                            Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Seven}" />
-                    <Button x:Name="Eight" Opacity="0" Grid.Column="1" Grid.Row="2"
-                            Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Eight}" />
-                    <Button x:Name="Nine" Opacity="0" Grid.Column="2" Grid.Row="2"
-                            Command="{Binding DrawSymbolCommand}" CommandParameter="{Binding ElementName=Nine}" />
-                </Grid>
 
                 <Viewbox Grid.Column="1" Margin="40">
                     <Grid>
@@ -159,7 +159,8 @@
                         </Viewbox>
 
                         <Viewbox Grid.Row="1" Margin="30">
-                            <TextBlock Text="{Binding Points}" FontFamily="Impact" Foreground="Violet" TextAlignment="Center" />
+                            <TextBlock Text="{Binding Points}" FontFamily="Impact" Foreground="Violet"
+                                       TextAlignment="Center" />
                         </Viewbox>
                     </Grid>
                 </Label.Content>

@@ -31,7 +31,7 @@ public partial class Matrix
         {
             return _line.Count;
         }
-        
+
         internal static void Visualize(Point from, Point to, Grid grid)
         {
             DoubleAnimation lineXAnimation = new()
@@ -58,7 +58,9 @@ public partial class Matrix
                 Stroke = System.Windows.Media.Brushes.Violet,
 
                 StrokeThickness = Math.Abs(grid.ActualWidth - grid.MaxWidth) < float.Epsilon
-                                  || Math.Abs(grid.ActualHeight - grid.MaxHeight) < float.Epsilon ? 20 : 10
+                                  || Math.Abs(grid.ActualHeight - grid.MaxHeight) < float.Epsilon
+                    ? 20
+                    : 10
             };
 
             grid.Children.Add(visualLine);
@@ -74,11 +76,17 @@ public partial class Matrix
         {
             var cellsWithSymbol = grid.Children.OfType<Image>();
 
-            var lineFirstCell = line.GetCell(0);
-            var lineLastCell = line.GetCell(line.GetCount() - 1);
+            var cellsCount = line.GetCount();
 
-            var cellSize = grid.ActualWidth / 3;
-            var margin = cellSize / 2;
+            var lineFirstCell = line.GetCell(0);
+            var lineLastCell = line.GetCell(cellsCount - 1);
+
+            var cellHeight = grid.ActualHeight / line.GetCount();
+            var rowMargin = cellHeight / 2;
+
+            var cellWidth = grid.ActualWidth / line.GetCount();
+            var columnMargin = cellWidth / 2;
+
 
             Point from, to;
 
@@ -91,67 +99,57 @@ public partial class Matrix
                 {
                     case LineType.Column when row == lineFirstCell.Row
                                               && column == lineFirstCell.Column:
-                        from = row switch
-                        {
-                            0 => new Point(0, margin - 15),
-                            1 => new Point(0, grid.ActualHeight / 2),
-                            2 => new Point(0, grid.ActualHeight - margin + 15),
-                            _ => throw new NotImplementedException()
-                        };
+                        if (row == 0)
+                            from = new Point(column * cellWidth + columnMargin, 0);
+                        else if (row == cellsCount - 1)
+                            from = new Point(column * cellWidth + columnMargin, grid.ActualHeight);
 
                         continue;
                     case LineType.Column when row == lineLastCell.Row
                                               && column == lineLastCell.Column:
-                        to = row switch
-                        {
-                            0 => new Point(grid.ActualWidth, margin - 15),
-                            1 => new Point(grid.ActualWidth, grid.ActualHeight / 2),
-                            2 => new Point(grid.ActualWidth, grid.ActualHeight - margin + 15),
-                            _ => throw new NotImplementedException()
-                        };
+                        if (row == 0)
+                            to = new Point(column * cellWidth + columnMargin, 0);
+                        else if (row == cellsCount - 1)
+                            to = new Point(column * cellWidth + columnMargin, grid.ActualHeight);
 
                         continue;
                     case LineType.Row when row == lineFirstCell.Row
                                            && column == lineFirstCell.Column:
-                        from = column switch
-                        {
-                            0 => new Point(margin, 0),
-                            1 => new Point(grid.ActualWidth / 2, 0),
-                            2 => new Point(grid.ActualWidth - margin, 0),
-                            _ => throw new NotImplementedException()
-                        };
+                        if (column == 0)
+                            from = new Point(0, row * cellHeight + rowMargin);
+                        else if (column == cellsCount - 1)
+                            from = new Point(grid.ActualWidth, row * cellHeight + rowMargin);
 
                         continue;
                     case LineType.Row when row == lineLastCell.Row
                                            && column == lineLastCell.Column:
-                        to = column switch
-                        {
-                            0 => new Point(margin, grid.ActualHeight),
-                            1 => new Point(grid.ActualWidth / 2, grid.ActualHeight),
-                            2 => new Point(grid.ActualWidth - margin, grid.ActualHeight),
-                            _ => throw new NotImplementedException()
-                        };
+                        if (column == 0)
+                            to = new Point(0, row * cellHeight + rowMargin);
+                        else if (column == cellsCount - 1)
+                            to = new Point(grid.ActualWidth, row * cellHeight + rowMargin);
 
                         continue;
                     case LineType.Diagonal when row == lineFirstCell.Row
                                                 && column == lineFirstCell.Column:
-                        from = column switch
-                        {
-                            0 => new Point(0, 0),
-                            2 => new Point(grid.ActualWidth, 0),
-                            _ => throw new NotImplementedException()
-                        };
+                        if (column == 0)
+                            from = new Point(0, 0);
+                        else if (column == cellsCount - 1)
+                            from = new Point(grid.ActualWidth, 0);
+                        else
+                            throw new NotImplementedException();
 
                         continue;
                     case LineType.Diagonal when row == lineLastCell.Row
                                                 && column == lineLastCell.Column:
-                        to = column switch
-                        {
-                            0 => new Point(0, grid.ActualHeight),
-                            2 => new Point(grid.ActualWidth, grid.ActualHeight),
-                            _ => throw new NotImplementedException()
-                        };
+                        if (column == 0)
+                            to = new Point(0, grid.ActualHeight);
+                        else if (column == cellsCount - 1)
+                            to = new Point(grid.ActualWidth, grid.ActualHeight);
+                        else
+                            throw new NotImplementedException();
 
+                        continue;
+                    default:
                         continue;
                 }
             }

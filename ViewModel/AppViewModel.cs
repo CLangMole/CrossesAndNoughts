@@ -15,7 +15,7 @@ using CrossesAndNoughts.Models.Field;
 
 namespace CrossesAndNoughts.ViewModel;
 
-public partial class AppViewModel : INotifyPropertyChanged
+public class AppViewModel : INotifyPropertyChanged
 {
     #region Commands
 
@@ -26,7 +26,8 @@ public partial class AppViewModel : INotifyPropertyChanged
 
     public DelegateCommand StartGameCommand { get; }
     public DelegateCommand SelectSymbolCommand { get; }
-    public DelegateCommand DrawSymbolCommand { get; }
+    private DelegateCommand DrawSymbolCommand { get; }
+    public DelegateCommand SetupGridCommand { get; }
 
     #endregion
 
@@ -101,18 +102,21 @@ public partial class AppViewModel : INotifyPropertyChanged
     }
 
     #endregion
-    
+
     #region Fields
 
     public event PropertyChangedEventHandler? PropertyChanged;
-    
+
     private List<UserRecord> _records = [];
-    
+
     private readonly StartWindow _startWindow;
     private readonly GameWindow _gameWindow;
-    
-    private User? _user;
-    private Opponent? _opponent;
+
+    private User _user = null!;
+    private Opponent _opponent = null!;
+
+    private ISymbolStrategy _userSymbolStrategy = null!;
+    private ISymbolStrategy _opponentSymbolStrategy = null!;
 
     private readonly Dictionary<Symbol, Func<ISymbolStrategy>> _strategyMap = new()
     {
@@ -126,8 +130,9 @@ public partial class AppViewModel : INotifyPropertyChanged
     private string _difficultyName = "Easy";
 
     private string _userName = " ";
+    private int _fieldSize = 3;
 
-    private readonly Matrix _matrix;
+    private Matrix _matrix = null!;
 
     #endregion
 
@@ -138,17 +143,15 @@ public partial class AppViewModel : INotifyPropertyChanged
 
         _startWindow.DataContext = this;
         _gameWindow.DataContext = this;
-        
-        _matrix = new Matrix(3, _gameWindow.Field);
-        
+
         SoundsControl.StartSound.Play();
-        _ = new UiRefresher(this);
 
         StartGameCommand = new DelegateCommand(StartGame);
         SelectSymbolCommand = new DelegateCommand(SelectSymbol);
         DrawSymbolCommand = new DelegateCommand(DrawSymbol);
+        SetupGridCommand = new DelegateCommand(SetupGrid);
     }
-    
+
     private void NotifyPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -199,10 +202,85 @@ public partial class AppViewModel : INotifyPropertyChanged
 
         var symbols = new[] { Symbol.Cross, Symbol.Nought };
 
-        _user = new User(_strategyMap[symbol].Invoke(), _matrix);
-        _opponent = new Opponent(_strategyMap[symbols.Single(x => x != symbol)].Invoke(), _matrix);
+        _userSymbolStrategy = _strategyMap[symbol].Invoke();
+        _opponentSymbolStrategy = _strategyMap[symbols.Single(x => x != symbol)].Invoke();
 
+        ClickMethods.GoNext(_gameWindow.SelectFieldSizeLabel);
+    }
+
+    private void SetupGrid(object? parameter)
+    { 
+        if (parameter is int fieldSize)
+        {
+            _fieldSize = fieldSize;
+        }
+
+        var gameField = new Grid { Margin = new Thickness(50), MaxHeight = 800, MaxWidth = 1000 };
+
+        var columnDefinitions = new ColumnDefinition[_fieldSize];
+        var rowDefinitions = new RowDefinition[_fieldSize];
+
+        for (var i = 0; i < _fieldSize; i++)
+        {
+            columnDefinitions[i] = new ColumnDefinition
+            {
+                Width = new GridLength(1, GridUnitType.Star)
+            };
+
+            gameField.ColumnDefinitions.Add(columnDefinitions[i]);
+
+            rowDefinitions[i] = new RowDefinition
+            {
+                Height = new GridLength(1, GridUnitType.Star)
+            };
+
+            gameField.RowDefinitions.Add(rowDefinitions[i]);
+        }
+
+        var borders = new Border[_fieldSize, _fieldSize];
+        var buttons = new Button[_fieldSize, _fieldSize];
+
+        for (var i = 0; i < _fieldSize; i++)
+        {
+            for (var j = 0; j < _fieldSize; j++)
+            {
+                borders[i, j] = new Border
+                {
+                    BorderBrush = System.Windows.Media.Brushes.DarkSlateBlue,
+                    BorderThickness = new Thickness(0, 0, i == _fieldSize - 1 ? 0 : 2, j == _fieldSize - 1 ? 0 : 2)
+                };
+
+                borders[i, j].SetValue(Grid.ColumnProperty, i);
+                borders[i, j].SetValue(Grid.RowProperty, j);
+                gameField.Children.Add(borders[i, j]);
+            }
+        }
+
+        for (var i = 0; i < _fieldSize; i++)
+        {
+            for (var j = 0; j < _fieldSize; j++)
+            {
+                buttons[i, j] = new Button
+                {
+                    Opacity = 0,
+                    Command = DrawSymbolCommand,
+                    CommandParameter = new Position(i, j)
+                };
+
+                buttons[i, j].SetValue(Grid.ColumnProperty, j);
+                buttons[i, j].SetValue(Grid.RowProperty, i);
+                gameField.Children.Add(buttons[i, j]);
+            }
+        }
+
+        _gameWindow.GameUiContainer.Children.Add(gameField);
+        
         ClickMethods.GoNext(_gameWindow.GameUiContainer);
+
+        _matrix = new Matrix(_fieldSize, gameField);
+
+        _user = new User(_userSymbolStrategy, _matrix);
+        _opponent = new Opponent(_opponentSymbolStrategy, _matrix);
 
         _matrix.SetPlayersSymbols(_user.CurrentSymbol, _opponent.CurrentSymbol);
 
@@ -217,9 +295,9 @@ public partial class AppViewModel : INotifyPropertyChanged
             draw.Start();
         };
 
-        Player.GameOver += winsCount =>
+        Player.GameOver += pointsCount =>
         {
-            if (_gameResult != 0 && winsCount == _gameResult || _gameResult == 0 && winsCount == _gameResult)
+            if (pointsCount <= _gameResult)
             {
                 var record = _gameResult;
                 SetGameOver();
@@ -229,7 +307,7 @@ public partial class AppViewModel : INotifyPropertyChanged
                 Records = records.GetRecords();
             }
 
-            Points = winsCount.ToString();
+            Points = pointsCount.ToString();
             DifficultyColor = _opponent.CurrentDifficulty.Item1;
             DifficultyName = _opponent.CurrentDifficulty.Item2;
         };
@@ -237,15 +315,11 @@ public partial class AppViewModel : INotifyPropertyChanged
 
     private void DrawSymbol(object? parameter)
     {
-        if (parameter is not Button control)
+        if (parameter is not Position position)
         {
             throw new ArgumentException(null, nameof(parameter));
         }
-        
-        var row = (int)control.GetValue(Grid.RowProperty);
-        var column = (int)control.GetValue(Grid.ColumnProperty);
-
-        _user?.Draw(row, column);
+        _ = _user.Draw(position.Row, position.Column);
     }
 
     private void SetGameOver()
@@ -253,10 +327,7 @@ public partial class AppViewModel : INotifyPropertyChanged
         SoundsControl.GameSound.Stop();
         SoundsControl.GameOverSound.Play();
 
-        SoundsControl.GameOverSound.MediaEnded += (_, _) =>
-        {
-            ClickMethods.GoNext(_gameWindow.GameOverLabel);
-        };
+        SoundsControl.GameOverSound.MediaEnded += (_, _) => { ClickMethods.GoNext(_gameWindow.GameOverLabel); };
     }
 
     private static void GoBackToMenu(object? parameter)

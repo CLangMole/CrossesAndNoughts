@@ -59,6 +59,14 @@ public class User(ISymbolStrategy symbolStrategy, Matrix matrix) : Player(symbol
 
             matrix.Reset();
 
+            if (CurrentSymbol != Symbol.Nought)
+            {
+                return;
+            }
+            
+            SetButtonsActive(false);
+            UserDrewSymbol?.Invoke();
+
             return;
         }
 

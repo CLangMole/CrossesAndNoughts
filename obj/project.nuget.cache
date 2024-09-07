@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "Y/u/MXesrp2IKGtsdzLzE41f7FFQBttv64uEHkHTf2h3wdzFmsS0v+azoCfoMWVYLTSKFaXia+zuM2VU6vy3/A==",
+  "dgSpecHash": "jA8WXw+3sCLvTDVHaf12idKqLykblP0FS3nZ9f+piQdrrQdFt1T7qje7SmCNuIgoPgbmYO+SppqcXop1b6eowQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\probn\\source\\repos\\CrossesAndNoughts\\CrossesAndNoughts\\CrossesAndNoughts.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\probn\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\probn\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
+    "C:\\Users\\probn\\.nuget\\packages\\extended.wpf.toolkit\\4.6.1\\extended.wpf.toolkit.4.6.1.nupkg.sha512",
     "C:\\Users\\probn\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\probn\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\7.0.0\\microsoft.bcl.asyncinterfaces.7.0.0.nupkg.sha512",
     "C:\\Users\\probn\\.nuget\\packages\\microsoft.build.framework\\16.10.0\\microsoft.build.framework.16.10.0.nupkg.sha512",

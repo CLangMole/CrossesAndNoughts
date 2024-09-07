@@ -12,7 +12,7 @@ public class Opponent(ISymbolStrategy symbolStrategy, Matrix matrix) : Player(sy
 {
     public (Brush, string) CurrentDifficulty { get; private set; } = (Brushes.YellowGreen, "Easy");
 
-    private int _winsCount;
+    private int _pointsCount;
     private int _difficulty = 1;
 
     public override async Task Draw(int row, int column)
@@ -30,46 +30,7 @@ public class Opponent(ISymbolStrategy symbolStrategy, Matrix matrix) : Player(sy
 
         if (gameStatus.IsGameOver)
         {
-            if (gameStatus.WinnerSymbol != CurrentSymbol && gameStatus.WinnerSymbol != Symbol.Empty)
-            {
-                _winsCount += 2;
-                SoundsControl.WinSound.Play();
-                matrix.DrawWinningLine();
-                await Task.Delay(1000);
-            }
-            else if (gameStatus.WinnerSymbol == Symbol.Empty)
-            {
-                _winsCount++;
-                SoundsControl.WinSound.Play();
-            }
-            else
-            {
-                matrix.DrawWinningLine();
-                SetButtonsActive(false);
-                await Task.Delay(1000);
-                SetButtonsActive(true);
-            }
-
-            if (_difficulty < 4)
-            {
-                _difficulty++;
-            }
-
-            CurrentDifficulty = _difficulty switch
-            {
-                0 => (Brushes.AliceBlue, "TooEasy"),
-                1 => (Brushes.GreenYellow, "Easy"),
-                2 => (Brushes.Yellow, "Middle"),
-                3 => (Brushes.DarkOrange, "Hard"),
-                4 => (Brushes.Red, "Insane"),
-                _ => throw new ArgumentException("Invalid symbol")
-            };
-
-            GameOver?.Invoke(_winsCount);
-
-            matrix.Reset();
-            SetButtonsActive(true);
-
+            await CheckGameStatus(gameStatus);
             return;
         }
 
@@ -85,20 +46,67 @@ public class Opponent(ISymbolStrategy symbolStrategy, Matrix matrix) : Player(sy
 
         SetButtonsActive(true);
 
-        gameStatus = matrix.GetGameStatus();
+        var gameStatusAfterDraw = matrix.GetGameStatus();
 
-        if (gameStatus.IsGameOver)
+        await Task.Delay(100);
+        
+        if (gameStatusAfterDraw.IsGameOver)
         {
-            if (gameStatus.WinnerSymbol != Symbol.Empty)
-            {
-                matrix.DrawWinningLine();
-                await Task.Delay(1000);
-            }
-
-            GameOver?.Invoke(_winsCount);
-
-            matrix.Reset();
+            await CheckGameStatus(gameStatusAfterDraw);
         }
+    }
+
+    private async Task CheckGameStatus(GameStatus gameStatus)
+    {
+        if (gameStatus.WinnerSymbol != CurrentSymbol && gameStatus.WinnerSymbol != Symbol.Empty)
+        {
+            _pointsCount += 2;
+            SoundsControl.WinSound.Play();
+            matrix.DrawWinningLine();
+            await Task.Delay(1000);
+        }
+        else if (gameStatus.WinnerSymbol == Symbol.Empty)
+        {
+            _pointsCount++;
+            SoundsControl.WinSound.Play();
+        }
+        else
+        {
+            matrix.DrawWinningLine();
+            SetButtonsActive(false);
+            await Task.Delay(1000);
+            SetButtonsActive(true);
+        }
+
+        if (_difficulty < 4)
+        {
+            _difficulty++;
+        }
+
+        CurrentDifficulty = _difficulty switch
+        {
+            0 => (Brushes.AliceBlue, "TooEasy"),
+            1 => (Brushes.GreenYellow, "Easy"),
+            2 => (Brushes.Yellow, "Middle"),
+            3 => (Brushes.DarkOrange, "Hard"),
+            4 => (Brushes.Red, "Insane"),
+            _ => throw new ArgumentException("Invalid symbol")
+        };
+
+        GameOver?.Invoke(_pointsCount);
+
+        matrix.Reset();
+
+        if (CurrentSymbol == Symbol.Cross)
+        {
+            SetButtonsActive(false);
+            var draw = Draw(-1, -1);
+            draw.Start();
+
+            return;
+        }
+
+        SetButtonsActive(true);
     }
 
     private static Score MiniMax(Matrix matrix, int depth, Symbol symbol, int alpha, int beta)
@@ -123,12 +131,13 @@ public class Opponent(ISymbolStrategy symbolStrategy, Matrix matrix) : Player(sy
                     {
                         continue;
                     }
-                    
+
                     matrixClone[i, j] = symbol;
 
                     if (symbol == matrix.UserSymbol)
                     {
-                        var currentScore = MiniMax(matrixClone, depth - 1, matrix.OpponentSymbol, alpha, beta).BestScore;
+                        var currentScore = MiniMax(matrixClone, depth - 1, matrix.OpponentSymbol, alpha, beta)
+                            .BestScore;
 
                         if (currentScore > bestScore)
                         {
