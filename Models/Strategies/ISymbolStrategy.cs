@@ -9,7 +9,7 @@ public interface ISymbolStrategy
     Symbol PlayerSymbol { get; }
 }
 
-public enum Symbol
+public enum Symbol : byte
 {
     Empty,
     Cross,

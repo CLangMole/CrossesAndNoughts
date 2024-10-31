@@ -6,8 +6,11 @@ namespace CrossesAndNoughts.Models.DataBase;
 
 internal interface IRecord : IDisposable
 {
+    // ReSharper disable once UnusedMemberInSuper.Global
     UserRecord GetRecord(int number);
+    // ReSharper disable once UnusedMemberInSuper.Global
     void AddRecord(UserRecord record);
+    // ReSharper disable once UnusedMemberInSuper.Global
     List<UserRecord> GetRecords();
 }
 

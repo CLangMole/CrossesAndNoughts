@@ -4,6 +4,7 @@ namespace CrossesAndNoughts.Models.DataBase;
 
 internal sealed class ApplicationContext : DbContext
 {
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Global
     public DbSet<UserRecord> Records { get; set; } = null!;
 
     public ApplicationContext()

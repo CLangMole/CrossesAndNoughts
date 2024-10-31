@@ -6,7 +6,7 @@
         xmlns:viewmodel="clr-namespace:CrossesAndNoughts.ViewModel"
         d:DataContext="{d:DesignInstance Type=viewmodel:AppViewModel}"
         mc:Ignorable="d"
-        Title="Crosses and Noughts" Height="450" Width="800" Background="LightBlue" MinHeight="470" MinWidth="690">
+        Title="Tic Tac Toe" Height="450" Width="800" Background="LightBlue" MinHeight="470" MinWidth="690">
     <Window.Resources>
         <Style x:Key="ButtonStyle">
             <Setter Property="ItemsControl.FontFamily" Value="Impact" />
@@ -38,10 +38,10 @@
                 Cursor="Hand" Command="{Binding GoNextCommand}" CommandParameter="{Binding ElementName=RecordsLabel}" />
 
         <Viewbox Grid.Row="0" Grid.ColumnSpan="3" Margin="5" Grid.Column="0">
-            <TextBlock Text="Crosses and Noughts" FontFamily="Impact" Foreground="DarkSlateBlue" TextAlignment="Center" />
+            <TextBlock Text="Tic Tac Toe" FontFamily="Impact" Foreground="DarkSlateBlue" TextAlignment="Center"/>
         </Viewbox>
 
-        <Image Source="/Resources/Images/TicTacToe.png" Grid.Column="1" Grid.Row="1" MaxHeight="800" MaxWidth="800" />
+        <Image Source="/Resources/Images/TicTacToe.png" Grid.Column="1" Grid.Row="1" MaxHeight="800" MaxWidth="800" Margin="20"/>
 
         <Label Visibility="Collapsed" x:Name="RecordsLabel" Background="LightBlue" Grid.Column="0" Grid.Row="0"
                Grid.ColumnSpan="3" Grid.RowSpan="3" x:Uid="CollapsedAtStart">

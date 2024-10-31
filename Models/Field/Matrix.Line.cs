@@ -158,6 +158,6 @@ public partial class Matrix
             Row,
             Column,
             Diagonal
-        };
+        }
     }
 }

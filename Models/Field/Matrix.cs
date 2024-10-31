@@ -32,34 +32,34 @@ public partial class Matrix
         Field = field;
         _state = new Symbol[size, size];
         
-        List<Position> diagonal1Positions = [];
-        List<Position> diagonal2Positions = [];
+        var diagonal1Positions = new Position[size];
+        var diagonal2Positions = new Position[size];
         
         for (var i = 0; i < size; i++)
         {
-            List<Position> columnsPositions = [];
-            List<Position> rowsPositions = [];
-            
-            diagonal1Positions = [];
-            diagonal2Positions = [];
+            diagonal1Positions[i] = new Position(i, i);
+            diagonal2Positions[i] = new Position(i, size - i - 1);
+        }
+        
+        for (var i = 0; i < size; i++)
+        {
+            var columnsPositions = new Position[size];
+            var rowsPositions = new Position[size];
             
             for (var j = 0; j < size; j++)
             {
                 _state[i, j] = Symbol.Empty;
 
-                columnsPositions.Add(new Position(j, i));
-                rowsPositions.Add(new Position(i, j));
-                
-                diagonal1Positions.Add(new Position(j, j));
-                diagonal2Positions.Add(new Position(j, size - j - 1));
+                columnsPositions[j] = new Position(j, i);
+                rowsPositions[j] = new Position(i, j);
             }
 
-            _lines.Add(new Line(Line.LineType.Column, columnsPositions.ToArray()));
-            _lines.Add(new Line(Line.LineType.Row, rowsPositions.ToArray()));
+            _lines.Add(new Line(Line.LineType.Column, columnsPositions));
+            _lines.Add(new Line(Line.LineType.Row, rowsPositions));
         }
         
-        _lines.Add(new Line(Line.LineType.Diagonal, diagonal1Positions.ToArray()));
-        _lines.Add(new Line(Line.LineType.Diagonal, diagonal2Positions.ToArray()));
+        _lines.Add(new Line(Line.LineType.Diagonal, diagonal1Positions));
+        _lines.Add(new Line(Line.LineType.Diagonal, diagonal2Positions));
     }
 
     public Symbol this[int row, int column]

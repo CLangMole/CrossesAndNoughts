@@ -2,7 +2,7 @@
 
 namespace CrossesAndNoughts.Models.Field;
 
-public class GameStatus(bool isGameOver, Symbol winnerSymbol)
+public readonly struct GameStatus(bool isGameOver, Symbol winnerSymbol)
 {
     public Symbol WinnerSymbol { get; } = winnerSymbol;
 

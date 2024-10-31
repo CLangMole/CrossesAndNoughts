@@ -15,6 +15,7 @@ public abstract class Player(ISymbolStrategy symbolStrategy, Grid field)
     public static Action<int>? GameOver { get; set; }
     public Symbol CurrentSymbol => SymbolStrategy.PlayerSymbol;
 
+    // ReSharper disable once UnusedMemberInSuper.Global
     public virtual async Task Draw(int row, int column)
     {
         await Task.Yield();

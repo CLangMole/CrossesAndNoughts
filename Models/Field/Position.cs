@@ -1,6 +1,6 @@
 ﻿namespace CrossesAndNoughts.Models.Field;
 
-public class Position(int row, int column)
+public readonly struct Position(int row, int column)
 {
     public int Row { get; } = row;
 
